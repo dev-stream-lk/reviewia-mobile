@@ -3,11 +3,13 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/components/blue_painter.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:reviewia/screens/home_Page.dart';
+import 'package:reviewia/screens/register_page.dart';
 
 class LoginSystem extends StatefulWidget {
   bool _secureText = false;
-  IconData icon = Icons.supervised_user_circle;
+  IconData icon =Icons.password;
   @override
   _LoginSystemState createState() => _LoginSystemState();
 }
@@ -67,7 +69,7 @@ class _LoginSystemState extends State<LoginSystem> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              padding: EdgeInsets.all(05),
+                              // padding: EdgeInsets.all(05),
                               // color: Colors.cyanAccent,
                               width: double.infinity,
                               child: Text(
@@ -83,7 +85,7 @@ class _LoginSystemState extends State<LoginSystem> {
                               padding: EdgeInsets.fromLTRB(
                                   MediaQuery.of(context).size.width * 0.033,
                                   MediaQuery.of(context).size.height *
-                                      (40 / 692),
+                                      (30 / 692),
                                   MediaQuery.of(context).size.width * 0.033,
                                   MediaQuery.of(context).size.height * 0.0144),
                               child: Column(
@@ -113,7 +115,7 @@ class _LoginSystemState extends State<LoginSystem> {
                                   ),
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
-                                        (25 / 692),
+                                        (15 / 692),
                                   ),
                                   TextField(
                                     decoration: InputDecoration(
@@ -154,7 +156,7 @@ class _LoginSystemState extends State<LoginSystem> {
                                   ),
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
-                                        (25 / 692),
+                                        (15 / 692),
                                   ),
                                 ],
                               ),
@@ -186,9 +188,19 @@ class _LoginSystemState extends State<LoginSystem> {
                               child: Container(
                                 width: MediaQuery.of(context).size.width * .5,
                                 child: FlatButton(
-                                  padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height*(12.5/692),horizontal:MediaQuery.of(context).size.width*(40/360)),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical:
+                                          MediaQuery.of(context).size.height *
+                                              (12.5 / 692),
+                                      horizontal:
+                                          MediaQuery.of(context).size.width *
+                                              (40 / 360)),
                                   color: Kcolor,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                                      return HomePage();
+                                    } ));
+                                  },
                                   child: Text(
                                     'Sign in',
                                     style: KbuttonSignin,
@@ -208,7 +220,11 @@ class _LoginSystemState extends State<LoginSystem> {
                             ),
                             Center(
                               child: Container(
-                                child: Text("--------   OR REGISTER WITH   --------"),
+                                child: Text(
+                                    "-----------------   OR REGISTER WITH   -----------------",style: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  fontSize: 12,
+                                ),),
                               ),
                             ),
                             SizedBox(
@@ -218,14 +234,62 @@ class _LoginSystemState extends State<LoginSystem> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.remove_red_eye_outlined),
-
-                                Icon(Icons.remove_red_eye_outlined),
-
-                                Icon(Icons.remove_red_eye_outlined),
-
-                                Icon(Icons.remove_red_eye_outlined),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(FontAwesomeIcons.facebookF,color: Kcolor,),
+                                ),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(FontAwesomeIcons.google,color: Kcolor,),
+                                ),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(FontAwesomeIcons.twitter,color: Kcolor,),
+                                ),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(FontAwesomeIcons.linkedin,color: Kcolor,),
+                                )
                               ],
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height *
+                                  (10 / 692),
+                            ),
+                            Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    child: Text(
+                                      "Don't Have a An Account?",style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: 14,
+                                    ),),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                        right: MediaQuery.of(context).size.width *
+                                            0.033),
+                                    child: InkWell(
+                                      splashColor: Colors.black,
+                                      child: Text(
+                                        'Register',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          color: Kcolor,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context){
+                                          return Register();
+                                        } ));
+                                      },
+                                    ),
+                                  ),
+
+                                ],
+                              ),
                             )
 
                           ],
