@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:reviewia/Constrains/constrains.dart';
+import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/components/blue_painter.dart';
 import 'package:reviewia/components/button_logon.dart';
 import 'package:reviewia/components/image_box.dart';
