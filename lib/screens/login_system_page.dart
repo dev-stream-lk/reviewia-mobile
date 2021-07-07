@@ -4,6 +4,8 @@ import 'package:flutter/rendering.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/components/blue_painter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:reviewia/screens/home_Page.dart';
+import 'package:reviewia/screens/register_page.dart';
 
 class LoginSystem extends StatefulWidget {
   bool _secureText = false;
@@ -194,7 +196,11 @@ class _LoginSystemState extends State<LoginSystem> {
                                           MediaQuery.of(context).size.width *
                                               (40 / 360)),
                                   color: Kcolor,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                                      return HomePage();
+                                    } ));
+                                  },
                                   child: Text(
                                     'Sign in',
                                     style: KbuttonSignin,
@@ -275,7 +281,9 @@ class _LoginSystemState extends State<LoginSystem> {
                                         ),
                                       ),
                                       onTap: () {
-                                        print('hello I tap');
+                                        Navigator.push(context, MaterialPageRoute(builder: (context){
+                                          return Register();
+                                        } ));
                                       },
                                     ),
                                   ),
