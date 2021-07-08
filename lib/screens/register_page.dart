@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/components/blue_painter.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/home_data.dart';
+import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/login_system_page.dart';
 
 class Register extends StatefulWidget {
   static String id = 'register_page';
+  Color buttonPressed = Kcolor;
+  bool _checkBox = false;
   bool _secureText = false;
-  IconData icon =Icons.password;
+  IconData icon = Icons.password;
 
-  bool _secureTextConfirm=false;
-  IconData iconConfirm=Icons.password;
+  bool _secureTextConfirm = false;
+  IconData iconConfirm = Icons.password;
   @override
   _RegisterState createState() => _RegisterState();
 }
@@ -32,7 +36,7 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: CustomPaint(
         painter: BluePainter(),
         child: SafeArea(
@@ -169,7 +173,7 @@ class _RegisterState extends State<Register> {
                                         onPressed: () {
                                           setState(() {
                                             widget._secureText =
-                                            !widget._secureText;
+                                                !widget._secureText;
                                             if (widget._secureText == false) {
                                               widget.icon =
                                                   Icons.remove_red_eye_outlined;
@@ -210,12 +214,14 @@ class _RegisterState extends State<Register> {
                                         onPressed: () {
                                           setState(() {
                                             widget._secureTextConfirm =
-                                            !widget._secureTextConfirm;
-                                            if (widget._secureTextConfirm == false) {
+                                                !widget._secureTextConfirm;
+                                            if (widget._secureTextConfirm ==
+                                                false) {
                                               widget.iconConfirm =
                                                   Icons.remove_red_eye_outlined;
                                             } else {
-                                              widget.iconConfirm= Icons.password;
+                                              widget.iconConfirm =
+                                                  Icons.password;
                                             }
                                           });
                                         },
@@ -228,28 +234,58 @@ class _RegisterState extends State<Register> {
                                   ),
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
-                                        (15 / 692),
+                                        (0.25 / 692),
                                   ),
                                 ],
                               ),
                             ),
                             Container(
                               width: double.infinity,
-                              padding: EdgeInsets.only(
-                                  right: MediaQuery.of(context).size.width *
-                                      0.033),
-                              child: InkWell(
-                                splashColor: Colors.black,
-                                child: Text(
-                                  'Forget Password ?',
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    color: Kcolor,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      value: widget._checkBox,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          widget._checkBox = value!;
+                                          print(widget._checkBox);
+                                        });
+                                      },checkColor: Colors.white,
+                                    activeColor:Kcolor,
                                   ),
-                                ),
-                                onTap: () {
-                                  print('hello I tap');
-                                },
+                                  Container(
+                                    child: Text(
+                                      "I Read and Agree To",
+                                      style: TextStyle(
+                                        fontFamily: 'Roboto',
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                        right:
+                                        MediaQuery.of(context).size.width *
+                                            0.033),
+                                    child: InkWell(
+                                      splashColor: Colors.black,
+                                      child: Text(
+                                        'Terms & Conditions',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          color: Kcolor,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        // Navigator.push(context, MaterialPageRoute(builder: (context){
+                                        //   return Register();
+                                        // } ));
+                                        Navigator.pushNamed(
+                                            context, HomePage.id,arguments: HomeData('damish'));
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             SizedBox(
@@ -262,16 +298,17 @@ class _RegisterState extends State<Register> {
                                 child: FlatButton(
                                   padding: EdgeInsets.symmetric(
                                       vertical:
-                                      MediaQuery.of(context).size.height *
-                                          (12.5 / 692),
+                                          MediaQuery.of(context).size.height *
+                                              (12.5 / 692),
                                       horizontal:
-                                      MediaQuery.of(context).size.width *
-                                          (40 / 360)),
+                                          MediaQuery.of(context).size.width *
+                                              (40 / 360)),
                                   color: Kcolor,
                                   onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
                                       return LoginSystem();
-                                    } ));
+                                    }));
                                   },
                                   child: Text(
                                     'Register',
@@ -293,10 +330,12 @@ class _RegisterState extends State<Register> {
                             Center(
                               child: Container(
                                 child: Text(
-                                  "-----------------   OR REGISTER WITH   -----------------",style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontSize: 12,
-                                ),),
+                                  "-----------------   OR REGISTER WITH   -----------------",
+                                  style: TextStyle(
+                                    fontFamily: 'Roboto',
+                                    fontSize: 12,
+                                  ),
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -307,20 +346,36 @@ class _RegisterState extends State<Register> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(FontAwesomeIcons.facebookF,color: Kcolor,),
+                                  onPressed: () {
+                                    setState(() {
+                                      widget.buttonPressed = Colors.black;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    FontAwesomeIcons.facebookF,
+                                    color: widget.buttonPressed,
+                                  ),
                                 ),
                                 IconButton(
                                   onPressed: () {},
-                                  icon: Icon(FontAwesomeIcons.google,color: Kcolor,),
+                                  icon: Icon(
+                                    FontAwesomeIcons.google,
+                                    color: Kcolor,
+                                  ),
                                 ),
                                 IconButton(
                                   onPressed: () {},
-                                  icon: Icon(FontAwesomeIcons.twitter,color: Kcolor,),
+                                  icon: Icon(
+                                    FontAwesomeIcons.twitter,
+                                    color: Kcolor,
+                                  ),
                                 ),
                                 IconButton(
                                   onPressed: () {},
-                                  icon: Icon(FontAwesomeIcons.linkedin,color: Kcolor,),
+                                  icon: Icon(
+                                    FontAwesomeIcons.linkedin,
+                                    color: Kcolor,
+                                  ),
                                 )
                               ],
                             ),
@@ -334,15 +389,18 @@ class _RegisterState extends State<Register> {
                                 children: [
                                   Container(
                                     child: Text(
-                                      "Do you Have a An Account?",style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      fontSize: 14,
-                                    ),),
+                                      "Do you Have a An Account?",
+                                      style: TextStyle(
+                                        fontFamily: 'Roboto',
+                                        fontSize: 14,
+                                      ),
+                                    ),
                                   ),
                                   Container(
                                     padding: EdgeInsets.only(
-                                        right: MediaQuery.of(context).size.width *
-                                            0.033),
+                                        right:
+                                            MediaQuery.of(context).size.width *
+                                                0.033),
                                     child: InkWell(
                                       splashColor: Colors.black,
                                       child: Text(
@@ -356,15 +414,14 @@ class _RegisterState extends State<Register> {
                                         // Navigator.push(context, MaterialPageRoute(builder: (context){
                                         //   return Register();
                                         // } ));
-                                        Navigator.pushNamed(context,LoginSystem.id );
+                                        Navigator.pushNamed(
+                                            context, LoginSystem.id);
                                       },
                                     ),
                                   ),
-
                                 ],
                               ),
                             )
-
                           ],
                         ),
                       ),
