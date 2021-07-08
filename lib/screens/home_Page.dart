@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
         title: Text("Reviwia"),
       ) ,
       drawer: Container(
-        width: MediaQuery.of(context).size.width*0.7,
+        width: MediaQuery.of(context).size.width*0.8,
         child: new Drawer(
           child: ListView(
             // Important: Remove any padding from the ListView.
