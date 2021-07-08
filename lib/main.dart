@@ -4,6 +4,7 @@ import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/login_page.dart';
 import 'package:reviewia/screens/login_system_page.dart';
 import 'package:reviewia/screens/register_page.dart';
+import 'package:reviewia/screens/screen_selector.dart';
 
 
 
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         Login.id:(context)=> Login(),
         Register.id:(context)=> Register(),
         LoginSystem.id:(context)=> LoginSystem(),
-        HomePage.id :(context)=>HomePage(),
+        HomePage.id :(context)=>ScreenSelector(),
       },
 
     );
