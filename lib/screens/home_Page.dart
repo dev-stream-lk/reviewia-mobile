@@ -20,13 +20,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  final tabs = [
-    HomePageTopProducts(),
-    AddPost(),
-    ProfilePage(),
-  ];
-
-
   @override
   Widget build(BuildContext context) {
 
@@ -85,42 +78,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body:Center(child: tabs[widget._currntIndex]),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: widget._currntIndex,
-        backgroundColor: Kcolor,
-        selectedLabelStyle: TextStyle(
-          color: Colors.white,
-        ),
-        unselectedLabelStyle: TextStyle(
-          color: Colors.white,
-        ),
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(
-                FontAwesomeIcons.home,
-                color: Colors.white,
-              ),
-              label: "Home"),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.note_add,
-                color: Colors.white,
-              ),
-              label: "Add Post"),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.account_circle_rounded,
-                color: Colors.white,
-              ),
-              label: "Profile"),
-        ],
-        onTap: (index) {
-          setState(() {
-            widget._currntIndex = index;
-          });
-        },
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

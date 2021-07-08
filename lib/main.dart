@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:reviewia/screens/addPost_1.dart';
-import 'package:reviewia/screens/add_post_page2.dart';
-import 'package:reviewia/screens/add_post_page3.dart';
 import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/login_page.dart';
 import 'package:reviewia/screens/login_system_page.dart';
 import 'package:reviewia/screens/register_page.dart';
+import 'package:reviewia/screens/screen_selector.dart';
 
 
 
@@ -32,9 +31,7 @@ class MyApp extends StatelessWidget {
         Login.id:(context)=> Login(),
         Register.id:(context)=> Register(),
         LoginSystem.id:(context)=> LoginSystem(),
-        HomePage.id :(context)=>HomePage(),
-        AddPost2.id :(context)=>AddPost2(),
-        AddPost3.id :(context)=>AddPost3(),
+        HomePage.id :(context)=>ScreenSelector(),
       },
 
     );
