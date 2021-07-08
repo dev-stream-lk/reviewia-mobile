@@ -54,7 +54,7 @@ class _ScreenSelectorState extends State<ScreenSelector> {
             ],
             backgroundColor: Kcolor,
             currentIndex: _currentIndex,
-            selectedItemColor: Color.fromRGBO(254, 101, 65, 1),
+            selectedItemColor: Colors.white,
             unselectedItemColor: Colors.grey,
             onTap: _onItemTapped,
           ),
