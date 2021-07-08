@@ -56,8 +56,8 @@ class _ProductCardState extends State<ProductCard> {
                         flex: 1,
                         child: CircleAvatar(
                           backgroundColor: Color(0xFFC494C4),
-                          backgroundImage: AssetImage('images/loginImage.png'),
-                          radius: MediaQuery.of(context).size.width * 20 / 360,
+                          backgroundImage: AssetImage('images/pep.jpg'),
+                          radius: MediaQuery.of(context).size.width * 22.58 / 360,
                         ),
                       ),
                       Expanded(
@@ -75,8 +75,8 @@ class _ProductCardState extends State<ProductCard> {
                   // color: Color(0xFFCCDCF3),
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                    image: AssetImage('images/loginImage.png'),
-                    fit: BoxFit.cover,
+                    image: AssetImage('images/product_one.jpg'),
+                    fit: BoxFit.fill,
                   )),
                 ),
               ),
