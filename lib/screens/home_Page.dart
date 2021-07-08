@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/addPost_1.dart';
 import 'package:reviewia/screens/add_post_page.dart';
+import 'package:reviewia/screens/add_post_page2.dart';
 import 'package:reviewia/screens/home_page_top_products.dart';
 import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/register_page.dart';
