@@ -14,59 +14,30 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // body: Stack(
-        //   fit: StackFit.expand,
-        //   children: [
-        //     Expanded(
-        //       flex: 1,
-        //       child: Column(
-        //         children: [
-        //           Expanded(
-        //             flex: 1,
-        //             child: Container(
-        //               color: Colors.red,
-        //             ),
-        //           ),
-        //           Expanded(
-        //             flex: 1,
-        //             child: Container(
-        //               color: Colors.yellow,
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //
-        //     searchBarUI(),
-        //
-        //   ],
-        // ),
         body: Container(
-      child: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.fromLTRB(15, 10, 15, 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.035),
-                child: Text(
-                  'Most Viewed',
-                  style: KReviewiaMostTitle,
-                  textAlign: TextAlign.center,
-                ),
+          child: SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.fromLTRB(15, 10, 15, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.015),
+                    child: Text(
+                      'Most Viewed',
+                      style: KReviewiaMostTitle,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  ProductCard(),
+                  ProductCard(),
+                  ProductCard(),
+                  ProductCard(),
+                ],
               ),
-              ProductCard(),
-              ProductCard(),
-              ProductCard(),
-              ProductCard(),
-            ],
+            ),
           ),
-        ),
-      ),
-    ));
-  }
-}
-
-
+        ));
+      }
+    }

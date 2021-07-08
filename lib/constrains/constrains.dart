@@ -10,7 +10,7 @@ const KReviewiaTitle = TextStyle(
 );
 const KReviewiaMostTitle = TextStyle(
   fontFamily: "Roboto",
-  fontSize: 32,
+  fontSize: 22,
   fontWeight: FontWeight.w600,
   color: Colors.black,
 );
