@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/screens/addPost_1.dart';
 import 'package:reviewia/screens/add_post_page.dart';
 import 'package:reviewia/screens/home_page_top_products.dart';
 import 'package:reviewia/screens/profile_page.dart';
@@ -23,8 +24,11 @@ class _HomePageState extends State<HomePage> {
     AddPost(),
     ProfilePage(),
   ];
+
+
   @override
   Widget build(BuildContext context) {
+
     final arguments = ModalRoute.of(context)!.settings.arguments as HomeData;
     print(arguments.title);
     return Scaffold(
