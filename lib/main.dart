@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/login_page.dart';
+import 'package:reviewia/screens/login_system_page.dart';
+import 'package:reviewia/screens/register_page.dart';
 
 
 
@@ -20,7 +23,15 @@ class MyApp extends StatelessWidget {
             backgroundColor: Color(0xFF1A6CD3)
         )
       ),
-      home: Login(),
+      // home: Login(),
+      initialRoute: Login.id,
+      routes:{
+        Login.id:(context)=> Login(),
+        Register.id:(context)=> Register(),
+        LoginSystem.id:(context)=> LoginSystem(),
+        HomePage.id :(context)=>HomePage(),
+      },
+
     );
   }
 }
