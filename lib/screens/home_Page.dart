@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:reviewia/screens/search_page.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/addPost_1.dart';
 import 'package:reviewia/screens/add_post_page.dart';
@@ -12,23 +13,21 @@ import '../home_data.dart';
 class HomePage extends StatefulWidget {
   static const String id = "home_page";
   int _currntIndex = 0;
+  String appBarTitle = 'Reviewia';
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   final tabs = [
     HomePageTopProducts(),
     AddPost(),
     ProfilePage(),
   ];
 
-
   @override
   Widget build(BuildContext context) {
-
     final arguments = ModalRoute.of(context)!.settings.arguments as HomeData;
     print(arguments.title);
     return Scaffold(
@@ -49,6 +48,13 @@ class _HomePageState extends State<HomePage> {
           "Reveiwia",
           style: KappTitle,
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, SearchPage.id);
+              },
+              icon: Icon(Icons.search)),
+        ],
       ),
       drawer: Container(
         width: MediaQuery.of(context).size.width * 0.8,
@@ -84,7 +90,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body:Center(child: tabs[widget._currntIndex]),
+      body: Center(child: tabs[widget._currntIndex]),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: widget._currntIndex,
         backgroundColor: Kcolor,
@@ -119,57 +125,8 @@ class _HomePageState extends State<HomePage> {
             widget._currntIndex = index;
           });
         },
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
 
-// Container(
-// height: MediaQuery.of(context).size.height * 0.0925,
-// color: Kcolor,
-// width: double.infinity,
-// child: Row(
-// children: [
-// Expanded(
-// flex: 1,
-// child: Container(
-// child: Center(
-// child: Column(
-// mainAxisAlignment: MainAxisAlignment.start,
-// crossAxisAlignment: CrossAxisAlignment.center,
-// children: [
-// IconButton(
-// color: Colors.white,
-// iconSize: 20,
-// padding: EdgeInsets.all(2),
-// icon:Icon(FontAwesomeIcons.home),
-// onPressed: () {  } ,
-// ),
-// Text("Home",style: TextStyle(
-// fontSize: 12,
-// color: Colors.white,
-// ),)
-// ],
-// ),
-// ),
-// ),
-// ),
-// Expanded(
-// flex: 1,
-// child: Container(
-// color: Colors.yellow,
-// ),
-// ),
-// Expanded(
-// flex: 1,
-// child: Container(
-// color: Colors.blueGrey,
-// child: IconButton(
-// icon:Icon(FontAwesomeIcons.home),
-// onPressed: () {  } ,
-// ),
-// ),
-// )
-// ],
-// ),
-// ),

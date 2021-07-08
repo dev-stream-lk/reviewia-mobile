@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reviewia/screens/search_page.dart';
 import 'package:reviewia/screens/addPost_1.dart';
 import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/login_page.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         Register.id:(context)=> Register(),
         LoginSystem.id:(context)=> LoginSystem(),
         HomePage.id :(context)=>HomePage(),
+        SearchPage.id:(context)=>SearchPage(),
       },
 
     );
