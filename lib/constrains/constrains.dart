@@ -22,3 +22,18 @@ const KdrawerTextStyle = TextStyle(
   fontFamily: 'Roboto',
   color: Colors.black,
 );
+
+const KappTitle = TextStyle(
+  fontSize: 26,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Roboto',
+  color: Colors.white,
+);
+
+const KbottomNav = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Roboto',
+  color: Colors.white,
+);
+

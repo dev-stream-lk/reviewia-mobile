@@ -1,51 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/screens/add_post_page.dart';
+import 'package:reviewia/screens/home_page_top_products.dart';
+import 'package:reviewia/screens/profile_page.dart';
+import 'package:reviewia/screens/register_page.dart';
 
 import '../home_data.dart';
 
 class HomePage extends StatefulWidget {
   static const String id = "home_page";
-
+  int _currntIndex = 0;
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
 
-
-
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
+  final tabs = [
+    HomePageTopProducts(),
+    AddPost(),
+    ProfilePage(),
+  ];
   @override
   Widget build(BuildContext context) {
-
     final arguments = ModalRoute.of(context)!.settings.arguments as HomeData;
-   print(arguments.title);
+    print(arguments.title);
     return Scaffold(
-      appBar:AppBar(
+      appBar: AppBar(
         backgroundColor: Kcolor,
-        leading:Builder(
-          builder:(BuildContext context) {
+        leading: Builder(
+          builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(Icons.menu),
-              onPressed: () { Scaffold.of(context).openDrawer(); },
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
               tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
             );
           },
-
-        ) ,
-        title: Text("Reviwia"),
-      ) ,
+        ),
+        title: Text(
+          "Reveiwia",
+          style: KappTitle,
+        ),
+      ),
       drawer: Container(
-        width: MediaQuery.of(context).size.width*0.8,
+        width: MediaQuery.of(context).size.width * 0.8,
         child: new Drawer(
           child: ListView(
             // Important: Remove any padding from the ListView.
@@ -55,7 +57,10 @@ class _HomePageState extends State<HomePage> {
                 decoration: BoxDecoration(
                   color: Color(0xFFCCDCF3),
                 ),
-                child: Text('Categories',style: KdrawerTextStyle,),
+                child: Text(
+                  'Categories',
+                  style: KdrawerTextStyle,
+                ),
               ),
               ListTile(
                 title: Text('Item 1'),
@@ -75,27 +80,92 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: Center(
-
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+      body:Center(child: tabs[widget._currntIndex]),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: widget._currntIndex,
+        backgroundColor: Kcolor,
+        selectedLabelStyle: TextStyle(
+          color: Colors.white,
         ),
-      ),
-      bottomNavigationBar:Container(
-        height: MediaQuery.of(context).size.height*0.0825,
-        color: Kcolor,
-        width: double.infinity,
-        child: Text('Hello'),
-      ) , // This trailing comma makes auto-formatting nicer for build methods.
+        unselectedLabelStyle: TextStyle(
+          color: Colors.white,
+        ),
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(
+                FontAwesomeIcons.home,
+                color: Colors.white,
+              ),
+              label: "Home"),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.note_add,
+                color: Colors.white,
+              ),
+              label: "Add Post"),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.account_circle_rounded,
+                color: Colors.white,
+              ),
+              label: "Profile"),
+        ],
+        onTap: (index) {
+          setState(() {
+            widget._currntIndex = index;
+          });
+        },
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+
+// Container(
+// height: MediaQuery.of(context).size.height * 0.0925,
+// color: Kcolor,
+// width: double.infinity,
+// child: Row(
+// children: [
+// Expanded(
+// flex: 1,
+// child: Container(
+// child: Center(
+// child: Column(
+// mainAxisAlignment: MainAxisAlignment.start,
+// crossAxisAlignment: CrossAxisAlignment.center,
+// children: [
+// IconButton(
+// color: Colors.white,
+// iconSize: 20,
+// padding: EdgeInsets.all(2),
+// icon:Icon(FontAwesomeIcons.home),
+// onPressed: () {  } ,
+// ),
+// Text("Home",style: TextStyle(
+// fontSize: 12,
+// color: Colors.white,
+// ),)
+// ],
+// ),
+// ),
+// ),
+// ),
+// Expanded(
+// flex: 1,
+// child: Container(
+// color: Colors.yellow,
+// ),
+// ),
+// Expanded(
+// flex: 1,
+// child: Container(
+// color: Colors.blueGrey,
+// child: IconButton(
+// icon:Icon(FontAwesomeIcons.home),
+// onPressed: () {  } ,
+// ),
+// ),
+// )
+// ],
+// ),
+// ),
