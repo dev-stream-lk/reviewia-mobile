@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../home_data.dart';
+
 class HomePage extends StatefulWidget {
+  static const String id = "home_page";
+
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int _counter = 0;
+
+
+
 
   void _incrementCounter() {
     setState(() {
@@ -17,6 +25,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
+    final arguments = ModalRoute.of(context)!.settings.arguments as HomeData;
+   print(arguments.title);
     return Scaffold(
       body: Center(
 

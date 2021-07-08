@@ -4,10 +4,12 @@ import 'package:flutter/rendering.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/components/blue_painter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:reviewia/home_data.dart';
 import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/register_page.dart';
 
 class LoginSystem extends StatefulWidget {
+  static String id  = 'login_system_page';
   bool _secureText = false;
   IconData icon =Icons.password;
   @override
@@ -197,9 +199,10 @@ class _LoginSystemState extends State<LoginSystem> {
                                               (40 / 360)),
                                   color: Kcolor,
                                   onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context){
-                                      return HomePage();
-                                    } ));
+                                    // Navigator.push(context, MaterialPageRoute(builder: (context){
+                                    //   return HomePage();
+                                    // } ));
+                                    Navigator.pushNamed(context, HomePage.id,arguments:HomeData('damish'));
                                   },
                                   child: Text(
                                     'Sign in',

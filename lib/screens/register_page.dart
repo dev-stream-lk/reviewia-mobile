@@ -5,6 +5,7 @@ import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/login_system_page.dart';
 
 class Register extends StatefulWidget {
+  static String id = 'register_page';
   bool _secureText = false;
   IconData icon =Icons.password;
 
@@ -345,16 +346,17 @@ class _RegisterState extends State<Register> {
                                     child: InkWell(
                                       splashColor: Colors.black,
                                       child: Text(
-                                        'Register',
+                                        'Sign In',
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
                                           color: Kcolor,
                                         ),
                                       ),
                                       onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context){
-                                          return Register();
-                                        } ));
+                                        // Navigator.push(context, MaterialPageRoute(builder: (context){
+                                        //   return Register();
+                                        // } ));
+                                        Navigator.pushNamed(context,LoginSystem.id );
                                       },
                                     ),
                                   ),

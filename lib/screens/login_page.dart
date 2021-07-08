@@ -9,6 +9,7 @@ import 'package:reviewia/screens/login_system_page.dart';
 import 'package:reviewia/screens/register_page.dart';
 
 class Login extends StatefulWidget {
+  static String id = 'login_page';
   @override
   _LoginState createState() => _LoginState();
 }
