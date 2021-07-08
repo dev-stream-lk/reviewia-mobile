@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/components/image_box.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class ProductCard extends StatelessWidget {
-  const ProductCard({
-    Key? key,
-  }) : super(key: key);
+class ProductCard extends StatefulWidget {
+  @override
+  _ProductCardState createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  double rate = 3.0;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +21,7 @@ class ProductCard extends StatelessWidget {
           print("Hello");
         },
         child: Container(
-          height: 280,
+          height: MediaQuery.of(context).size.height * 0.5,
           margin: EdgeInsets.only(bottom: 10, top: 10),
           decoration: BoxDecoration(
             // color: Colors.cyan,
@@ -38,7 +42,7 @@ class ProductCard extends StatelessWidget {
                 flex: 2,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Color(0xFFC4C4C4),
+                    color: Color(0xFFFFFEFE),
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(5),
                         topRight: Radius.circular(5)),
@@ -46,7 +50,6 @@ class ProductCard extends StatelessWidget {
 
                   // color:Colors.blueGrey,
                   child: Row(
-
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Expanded(
@@ -54,12 +57,14 @@ class ProductCard extends StatelessWidget {
                         child: CircleAvatar(
                           backgroundColor: Color(0xFFC494C4),
                           backgroundImage: AssetImage('images/loginImage.png'),
-                          radius: MediaQuery.of(context).size.width*20/360,
+                          radius: MediaQuery.of(context).size.width * 20 / 360,
                         ),
                       ),
-                      Expanded(flex: 3, child: Text("Chamari Wikrmawardna",style:KPostCard)),
                       Expanded(
-                          flex: 1, child: Icon(Icons.settings))
+                          flex: 3,
+                          child:
+                              Text("Chamari Wikrmawardna", style: KPostCard)),
+                      Expanded(flex: 1, child: Icon(Icons.settings))
                     ],
                   ),
                 ),
@@ -70,24 +75,71 @@ class ProductCard extends StatelessWidget {
                   // color: Color(0xFFCCDCF3),
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('images/loginImage.png'),
-                        fit: BoxFit.cover,
-                      )
-                  ) ,
+                    image: AssetImage('images/loginImage.png'),
+                    fit: BoxFit.cover,
+                  )),
                 ),
               ),
               Expanded(
                 flex: 2,
                 child: Container(
+                  padding:
+                      EdgeInsets.only(left: 15, top: 10, right: 15, bottom: 10),
                   decoration: BoxDecoration(
                     // color: Color(0xFFAAAAAA),
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(15),
                         bottomRight: Radius.circular(15)),
                   ),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          flex: 2,
+                          child: Text(
+                            "Product-1",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Color(0xFF1A6CD3),
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w700,
 
-
+                            ),
+                          )),
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          child: Row(
+                            children: [
+                              Text(rate.toString()),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              RatingBar.builder(
+                                initialRating: rate,
+                                minRating: 1,
+                                direction: Axis.horizontal,
+                                allowHalfRating: true,
+                                itemCount: 5,
+                                itemSize: 20,
+                                itemPadding:
+                                    EdgeInsets.symmetric(horizontal: 4.0),
+                                itemBuilder: (context, _) => Icon(
+                                  Icons.star,
+                                  color: Kcolor,
+                                ),
+                                onRatingUpdate: (rating) {
+                                 setState(() {
+                                   rate= rating;
+                                 });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
               )
