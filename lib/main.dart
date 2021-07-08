@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
         Register.id:(context)=> Register(),
         LoginSystem.id:(context)=> LoginSystem(),
         HomePage.id :(context)=>HomePage(),
-        AddPost_1.id :(context)=>AddPost_1(),
       },
 
     );
