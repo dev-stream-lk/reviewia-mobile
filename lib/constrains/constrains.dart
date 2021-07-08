@@ -15,3 +15,10 @@ const  KbuttonSignin = TextStyle(
   fontFamily: 'Roboto',
   color: Colors.white,
 );
+
+const KdrawerTextStyle = TextStyle(
+  fontSize: 24,
+  fontWeight: FontWeight.w700,
+  fontFamily: 'Roboto',
+  color: Colors.black,
+);
