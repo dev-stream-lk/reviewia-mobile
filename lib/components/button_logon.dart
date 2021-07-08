@@ -21,7 +21,7 @@ class _ButtonLogonState extends State<ButtonLogon> {
           }));
         },
         style: ElevatedButton.styleFrom(
-          primary: Color(0xFF1A6CD3),
+          primary: Color(0xFF15317E),
           padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.05,right: MediaQuery.of(context).size.width*0.05),
         ),
         child: Text(widget.title,style: TextStyle(
