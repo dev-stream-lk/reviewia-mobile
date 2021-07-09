@@ -1,10 +1,8 @@
 
 import 'package:find_dropdown/find_dropdown.dart';
 import 'package:flutter/material.dart';
-import 'package:reviewia/components/button_logon.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/add_post_page2.dart';
-import 'package:reviewia/screens/home_Page.dart';
 
 class AddPost extends StatefulWidget {
   const AddPost({Key? key}) : super(key: key);
@@ -329,7 +327,7 @@ class _AddPostState extends State<AddPost> {
 
                 // Button next....
                 Container(
-                    width: MediaQuery.of(context).size.width * 0.25,
+                    width: MediaQuery.of(context).size.width * 0.27,
                     margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 10),
 
                     child: RaisedButton(
