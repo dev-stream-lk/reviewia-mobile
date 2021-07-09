@@ -45,6 +45,8 @@ class _ProductViewState extends State<ProductView> {
             children: [
               ProductViewCard(),
               ReviewCards(),
+              ReviewCards(),
+              ReviewCards(),
               // ReviewCards(),
             ],
           ),

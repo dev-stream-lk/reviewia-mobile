@@ -9,9 +9,10 @@ class ReviewCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.3,
+      height: MediaQuery.of(context).size.height * 0.275,
       margin:
       EdgeInsets.only(bottom: 10, top: 10, left: 10, right: 10),
+      // padding:EdgeInsets.only(bottom: 10, top: 10, left: 10, right: 10),
       decoration: KBoxDeco,
       child: Column(
         children: [
