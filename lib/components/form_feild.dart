@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:reviewia/constrains/constrains.dart';
 
 class FormFeild extends StatefulWidget {
-  String name;
-  String type;
-  FormFeild(this.name,this.type);
+  final ValueChanged<String> onChanged;
+  final String name;
+  final String type;
+
+  String chageFeild(String val){
+      return val;
+  }
+  FormFeild({required this.name, required this.type,required this.onChanged});
 
   bool _canEdit = false;
 
@@ -84,6 +89,10 @@ class _FormFeildState extends State<FormFeild> {
                 ),
               ),
               onChanged: (val) {
+                if(widget.type=='Name'){
+                  widget.chageFeild(val);
+                }
+                widget.onChanged(val);
                 print(val);
               },
             ),

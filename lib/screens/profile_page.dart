@@ -4,14 +4,27 @@ import 'package:reviewia/constrains/constrains.dart';
 
 class ProfilePage extends StatefulWidget {
   bool _canEdit = true;
+  String Nameval ='';
+  String NamePass ='';
+
+
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  void getValueName(String va){
+    widget.Nameval=va;
+    print("Your Name"+widget.Nameval);
+  }
+  void getValuePassword(String va){
+    widget.NamePass=va;
+    print("Your Password"+widget.NamePass);
+  }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Kcolor,
@@ -99,15 +112,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 // color: Colors.blue,
                 child: Column(
                   children: [
-                    FormFeild("darsha Damayanthi","Name"),
+                    FormFeild(name:"darsha Damayanthi", type:"Name",onChanged:getValueName),
                     SizedBox(
                       height: MediaQuery.of(context).size.height*10/659,
                     ),
-                    FormFeild("*********","Password"),
+                    FormFeild(name:"********", type:"Password",onChanged:getValuePassword),
                     SizedBox(
                       height: MediaQuery.of(context).size.height*10/659,
                     ),
-                    FormFeild("Darsha@gmail.com","Email"),
+                    FormFeild(name:"darsha@gmail.com", type:"Email",onChanged:getValueName),
                   ],
                 ),
               ),
@@ -121,4 +134,9 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+}
+
+String onChanged(val){
+  print(val);
+  return (val);
 }
