@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 const Kcolor = Color(0xFF15317E);
+const KBoxColor =Colors.grey;
 const KReviewiaTitle = TextStyle(
   fontFamily: "Roboto",
   fontSize: 48,
@@ -17,6 +18,12 @@ const KReviewiaMostTitle = TextStyle(
 const  KPostCard = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w500,
+  fontFamily: 'Roboto',
+  color: Colors.black,
+);
+const  KPostReviewCard = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.w300,
   fontFamily: 'Roboto',
   color: Colors.black,
 );
@@ -48,5 +55,21 @@ const KbottomNav = TextStyle(
   fontWeight: FontWeight.w700,
   fontFamily: 'Roboto',
   color: Colors.white,
+);
+
+const KBoxDeco = BoxDecoration(
+  // color: Colors.cyan,
+  color: Colors.white,
+  borderRadius: BorderRadius.all(Radius.circular(5)),
+  boxShadow: [
+    KBoxShadow
+  ],
+);
+
+const KBoxShadow = BoxShadow(
+  color: KBoxColor,
+  spreadRadius: 5,
+  blurRadius: 7,
+  offset: Offset(0, 3), // changes position of shadow
 );
 
