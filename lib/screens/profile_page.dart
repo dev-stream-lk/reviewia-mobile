@@ -4,27 +4,26 @@ import 'package:reviewia/constrains/constrains.dart';
 
 class ProfilePage extends StatefulWidget {
   bool _canEdit = true;
-  String Nameval ='';
-  String NamePass ='';
-
-
+  String Nameval = '';
+  String NamePass = '';
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  void getValueName(String va){
-    widget.Nameval=va;
-    print("Your Name"+widget.Nameval);
+  void getValueName(String va) {
+    widget.Nameval = va;
+    print("Your Name" + widget.Nameval);
   }
-  void getValuePassword(String va){
-    widget.NamePass=va;
-    print("Your Password"+widget.NamePass);
+
+  void getValuePassword(String va) {
+    widget.NamePass = va;
+    print("Your Password" + widget.NamePass);
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Kcolor,
@@ -112,21 +111,78 @@ class _ProfilePageState extends State<ProfilePage> {
                 // color: Colors.blue,
                 child: Column(
                   children: [
-                    FormFeild(name:"darsha Damayanthi", type:"Name",onChanged:getValueName),
+                    FormFeild(
+                        name: "darsha Damayanthi",
+                        type: "Name",
+                        onChanged: getValueName),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height*10/659,
+                      height: MediaQuery.of(context).size.height * 10 / 659,
                     ),
-                    FormFeild(name:"********", type:"Password",onChanged:getValuePassword),
+                    FormFeild(
+                        name: "********",
+                        type: "Password",
+                        onChanged: getValuePassword),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height*10/659,
+                      height: MediaQuery.of(context).size.height * 10 / 659,
                     ),
-                    FormFeild(name:"darsha@gmail.com", type:"Email",onChanged:getValueName),
+                    FormFeild(
+                        name: "darsha@gmail.com",
+                        type: "Email",
+                        onChanged: getValueName),
                   ],
                 ),
               ),
               Container(
+                // width: double.infinity,
+                // padding: EdgeInsets.only(left:MediaQuery.of(context).),
+                // color: Colors.blueGrey,
+                  child: Text(
+                "Your posts",
+                textAlign: TextAlign.left,
+                    style: KPostCard,
+              )),
+              Container(
+                width: double.infinity,
+                margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 15 / 360,right:MediaQuery.of(context).size.width * 15 / 360,),
+                // margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 15 / 659,),
                 height: MediaQuery.of(context).size.height * 150 / 659,
                 color: Color(0xFF39667F),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 11 / 659,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 15 / 360,right:MediaQuery.of(context).size.width * 15 / 360,),
+                        height: MediaQuery.of(context).size.height * 110 / 659,
+                        decoration: BoxDecoration(
+                          color: Color(0xFFAAAAAA),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                              bottomLeft: Radius.circular(15),
+                              bottomRight: Radius.circular(15)),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              color:Colors.blueGrey,
+                            )
+                          ],
+                        ),
+
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 11 / 659,
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.height * 110 / 659,
+                        color: Colors.red,
+                      )
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -136,7 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-String onChanged(val){
+String onChanged(val) {
   print(val);
   return (val);
 }
