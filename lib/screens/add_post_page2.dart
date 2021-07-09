@@ -34,7 +34,7 @@ class _AddPost2State extends State<AddPost2> {
         //   },
         // ),
         title: Text(
-          "Reveiwia",
+          "Add new post",
           style: KappTitle,
         ),
       ),
