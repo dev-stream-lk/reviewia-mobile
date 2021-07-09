@@ -34,7 +34,7 @@ class BluePainter extends CustomPainter{
     // Close line to reset it back
     ovalPath.close();
 
-    paint.color = Color(0xFF1A6CD3);;
+    paint.color = Color(0xFF15317E);;
     canvas.drawPath(ovalPath, paint);
   }
 
