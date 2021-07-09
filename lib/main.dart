@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:reviewia/screens/add_post_page2.dart';
 import 'package:reviewia/screens/add_post_page3.dart';
+import 'package:reviewia/screens/product_view.dart';
 import 'package:reviewia/screens/search_page.dart';
 import 'package:reviewia/screens/addPost_1.dart';
 import 'package:reviewia/screens/home_Page.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         HomePage.id :(context)=>ScreenSelector(),
         AddPost2.id :(context)=>AddPost2(),
         AddPost3.id :(context)=>AddPost3(),
+        ProductView.id:(context)=>ProductView(),
 
       },
 

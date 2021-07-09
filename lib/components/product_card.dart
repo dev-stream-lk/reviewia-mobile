@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/components/image_box.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:reviewia/screens/product_view.dart';
 
 class ProductCard extends StatefulWidget {
   @override
@@ -18,7 +19,7 @@ class _ProductCardState extends State<ProductCard> {
     return Container(
       child: InkWell(
         onTap: () {
-          print("Hello");
+            Navigator.pushNamed(context, ProductView.id);
         },
         child: Container(
           height: MediaQuery.of(context).size.height * 0.5,
