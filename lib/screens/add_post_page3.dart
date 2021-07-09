@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reviewia/components/button_logon.dart';
 import 'package:reviewia/constrains/constrains.dart';
-import 'package:reviewia/screens/home_Page.dart';
 
 class AddPost3 extends StatefulWidget {
   static const String id = "AddPost3";
@@ -91,7 +89,7 @@ class _AddPost3State extends State<AddPost3> {
                   Container(
                       margin: EdgeInsets.only(top: 30 ,left: 2, right: 2, bottom: 10) ,
                       height: MediaQuery.of(context).size.height * 0.15,
-                      padding: EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.008),
                       decoration: BoxDecoration(
                         color: Colors.blue[50],
                         borderRadius: BorderRadius.only(
@@ -131,7 +129,7 @@ class _AddPost3State extends State<AddPost3> {
                   Container(
                     margin: EdgeInsets.only(top: 10 ,left: 2, right: 2, bottom: 10) ,
                     height: MediaQuery.of(context).size.height * 0.18,
-                    padding: EdgeInsets.all(10.0),
+                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.008),
                     decoration: BoxDecoration(
                       color: Colors.blue[50],
                       borderRadius: BorderRadius.only(
