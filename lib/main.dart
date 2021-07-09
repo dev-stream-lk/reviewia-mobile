@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:reviewia/screens/add_post_page2.dart';
 import 'package:reviewia/screens/add_post_page3.dart';
+import 'package:reviewia/screens/contactUs.dart';
+import 'package:reviewia/screens/fogotPassword.dart';
 import 'package:reviewia/screens/product_view.dart';
 import 'package:reviewia/screens/search_page.dart';
 import 'package:reviewia/screens/addPost_1.dart';
@@ -41,6 +43,8 @@ class MyApp extends StatelessWidget {
         AddPost2.id :(context)=>AddPost2(),
         AddPost3.id :(context)=>AddPost3(),
         ProductView.id:(context)=>ProductView(),
+        ContactUs.id :(context)=> ContactUs(),
+        ForgotPassword.id :(context)=> ForgotPassword(),
 
       },
 

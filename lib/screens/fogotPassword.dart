@@ -1,36 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/components/blue_painter.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:reviewia/home_data.dart';
-import 'package:reviewia/screens/fogotPassword.dart';
+import 'package:reviewia/components/button_logon.dart';
+import 'package:reviewia/components/image_box.dart';
 import 'package:reviewia/screens/home_Page.dart';
+import 'package:reviewia/screens/login_system_page.dart';
 import 'package:reviewia/screens/register_page.dart';
 
-class LoginSystem extends StatefulWidget {
-  static String id  = 'login_system_page';
-  bool _secureText = false;
-  IconData icon =Icons.password;
+class ForgotPassword extends StatefulWidget {
+  static String id = 'ForgotPassword';
   @override
-  _LoginSystemState createState() => _LoginSystemState();
+  _ForgotPasswordState createState() => _ForgotPasswordState();
 }
 
-class _LoginSystemState extends State<LoginSystem> {
+class _ForgotPasswordState extends State<ForgotPassword> {
+  double h = 0;
+  double w = 0;
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
-    if (widget._secureText == false) {
-      widget._secureText = true;
-      widget.icon = Icons.password;
-    }
+    // h = MediaQuery.of(context).size.height;
+    // w = MediaQuery.of(context).size.width;
+
+    print(h);
   }
 
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size.width.toString());
     return Scaffold(
       body: CustomPaint(
         painter: BluePainter(),
@@ -39,16 +37,23 @@ class _LoginSystemState extends State<LoginSystem> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+              children: <Widget>[
                 Expanded(
                   flex: 2,
                   child: Center(
                     child: Container(
+
                       child: Text(
                         "Reviewia",
                         style: KReviewiaTitle,
                       ),
                     ),
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Center(
+                    child: ImageBox(),
                   ),
                 ),
                 Expanded(
@@ -65,7 +70,7 @@ class _LoginSystemState extends State<LoginSystem> {
                     ),
                     child: Container(
                       width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.645,
+                      height: MediaQuery.of(context).size.height * 0.4,
                       // color: Colors.blueGrey,
                       child: SingleChildScrollView(
                         child: Column(
@@ -76,7 +81,7 @@ class _LoginSystemState extends State<LoginSystem> {
                               // color: Colors.cyanAccent,
                               width: double.infinity,
                               child: Text(
-                                "Sign In",
+                                "Forgot Password?",
                                 style: TextStyle(
                                   fontSize: 24,
                                   fontFamily: 'Roboto',
@@ -88,15 +93,19 @@ class _LoginSystemState extends State<LoginSystem> {
                               padding: EdgeInsets.fromLTRB(
                                   MediaQuery.of(context).size.width * 0.033,
                                   MediaQuery.of(context).size.height *
-                                      (30 / 692),
+                                      (20 / 692),
                                   MediaQuery.of(context).size.width * 0.033,
                                   MediaQuery.of(context).size.height * 0.0144),
                               child: Column(
                                 children: [
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        (15 / 692),
+                                  ),
                                   TextField(
                                     decoration: InputDecoration(
-                                      hintText: "UserName or Email",
-                                      labelText: "User Name",
+                                      hintText: "Email",
+                                      labelText: "Email",
                                       labelStyle: TextStyle(
                                         fontSize: 12,
                                         color: Colors.black,
@@ -107,7 +116,7 @@ class _LoginSystemState extends State<LoginSystem> {
                                       ),
                                       border: OutlineInputBorder(),
                                       suffixIcon: Icon(
-                                        Icons.supervised_user_circle,
+                                        FontAwesomeIcons.envelope,
                                         color: Colors.black,
                                       ),
                                     ),
@@ -120,67 +129,15 @@ class _LoginSystemState extends State<LoginSystem> {
                                     height: MediaQuery.of(context).size.height *
                                         (15 / 692),
                                   ),
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      hintText: "Password",
-                                      labelText: "Password",
-                                      labelStyle: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black,
-                                      ),
-                                      hintStyle: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.black,
-                                      ),
-                                      border: OutlineInputBorder(),
-                                      suffixIcon: IconButton(
-                                        icon: Icon(
-                                          widget.icon,
-                                          color: Colors.black,
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            widget._secureText =
-                                                !widget._secureText;
-                                            if (widget._secureText == false) {
-                                              widget.icon =
-                                                  Icons.remove_red_eye_outlined;
-                                            } else {
-                                              widget.icon = Icons.password;
-                                            }
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    obscureText: widget._secureText,
-                                    onChanged: (val) {
-                                      print(val);
-                                    },
-                                  ),
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
                                         (15 / 692),
                                   ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.only(
-                                  right: MediaQuery.of(context).size.width *
-                                      0.033),
-                              child: InkWell(
-                                splashColor: Colors.black,
-                                child: Text(
-                                  'Forget Password ?',
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    color: Kcolor,
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        (0.25 / 692),
                                   ),
-                                ),
-                                onTap: () {
-                                  Navigator.pushNamed(context, ForgotPassword.id);
-                                },
+                                ],
                               ),
                             ),
                             SizedBox(
@@ -189,24 +146,24 @@ class _LoginSystemState extends State<LoginSystem> {
                             ),
                             Center(
                               child: Container(
-                                width: MediaQuery.of(context).size.width * .5,
+                                width: MediaQuery.of(context).size.width * .6,
                                 child: FlatButton(
                                   padding: EdgeInsets.symmetric(
                                       vertical:
-                                          MediaQuery.of(context).size.height *
-                                              (12.5 / 692),
+                                      MediaQuery.of(context).size.height *
+                                          (12.5 / 692),
                                       horizontal:
-                                          MediaQuery.of(context).size.width *
-                                              (40 / 360)),
+                                      MediaQuery.of(context).size.width *
+                                          (40 / 360)),
                                   color: Kcolor,
                                   onPressed: () {
-                                    // Navigator.push(context, MaterialPageRoute(builder: (context){
-                                    //   return HomePage();
-                                    // } ));
-                                    Navigator.pushNamed(context, HomePage.id,arguments:HomeData('damish'));
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                          return LoginSystem();
+                                        }));
                                   },
                                   child: Text(
-                                    'Sign in',
+                                    'SEND RESET LINK',
                                     style: KbuttonSignin,
                                   ),
                                   shape: RoundedRectangleBorder(
@@ -222,40 +179,6 @@ class _LoginSystemState extends State<LoginSystem> {
                               height: MediaQuery.of(context).size.height *
                                   (10 / 692),
                             ),
-                            Center(
-                              child: Container(
-                                child: Text(
-                                    "-----------------   OR REGISTER WITH   -----------------",style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontSize: 12,
-                                ),),
-                              ),
-                            ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height *
-                                  (10 / 692),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(FontAwesomeIcons.facebookF,color: Kcolor,),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(FontAwesomeIcons.google,color: Kcolor,),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(FontAwesomeIcons.twitter,color: Kcolor,),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(FontAwesomeIcons.linkedin,color: Kcolor,),
-                                )
-                              ],
-                            ),
                             SizedBox(
                               height: MediaQuery.of(context).size.height *
                                   (10 / 692),
@@ -266,49 +189,50 @@ class _LoginSystemState extends State<LoginSystem> {
                                 children: [
                                   Container(
                                     child: Text(
-                                      "Don't Have a An Account?",style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      fontSize: 14,
-                                    ),),
+                                      "Back to ",
+                                      style: TextStyle(
+                                        fontFamily: 'Roboto',
+                                        fontSize: 14,
+                                      ),
+                                    ),
                                   ),
                                   Container(
                                     padding: EdgeInsets.only(
-                                        right: MediaQuery.of(context).size.width *
+                                        right:
+                                        MediaQuery.of(context).size.width *
                                             0.033),
                                     child: InkWell(
                                       splashColor: Colors.black,
                                       child: Text(
-                                        'Register',
+                                        'Sign In',
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
                                           color: Kcolor,
                                         ),
                                       ),
                                       onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context){
-                                          return Register();
-                                        } ));
+                                        // Navigator.push(context, MaterialPageRoute(builder: (context){
+                                        //   return Register();
+                                        // } ));
+                                        Navigator.pushNamed(
+                                            context, LoginSystem.id);
                                       },
                                     ),
                                   ),
-
                                 ],
                               ),
                             )
-
                           ],
                         ),
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
         ),
       ),
-
-      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
