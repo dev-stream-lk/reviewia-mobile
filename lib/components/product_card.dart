@@ -4,7 +4,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/components/image_box.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:reviewia/screens/login_system_page.dart';
 import 'package:reviewia/screens/product_view.dart';
+import 'package:reviewia/screens/profile_page.dart';
 
 class ProductCard extends StatefulWidget {
   @override
@@ -17,7 +19,7 @@ class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: InkWell(
+      child: GestureDetector(
         onTap: () {
             Navigator.pushNamed(context, ProductView.id);
         },
