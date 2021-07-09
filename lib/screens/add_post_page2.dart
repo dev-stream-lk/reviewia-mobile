@@ -168,7 +168,7 @@ class _AddPost2State extends State<AddPost2> {
                                       MaterialPageRoute(builder: (context) => AddPost3()),
                                     );
                                   },
-                                  color: Colors.blue,
+                                  color: Kcolor,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10)),
                                   child:Row(

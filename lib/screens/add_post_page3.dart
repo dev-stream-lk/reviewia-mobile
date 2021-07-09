@@ -11,6 +11,10 @@ class AddPost3 extends StatefulWidget {
 }
 
 class _AddPost3State extends State<AddPost3> {
+
+  bool checkBox_1_Val = false;
+  bool checkBox_2_Val = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,25 +85,12 @@ class _AddPost3State extends State<AddPost3> {
                     ),
                   ),
                   // for choose image..
-                  Container(
-                    margin: EdgeInsets.only(top: 2 ,left: 2, right: 2) ,
-                    height: MediaQuery.of(context).size.height * 0.35,
-                    padding: EdgeInsets.all(10.0),
-                    color: Colors.blue,
-                  ),
 
-                  // for choosed images line..
-                  Container(
-                    margin: EdgeInsets.only(top: 2 ,left: 2, right: 2) ,
-                    height: MediaQuery.of(context).size.height * 0.12,
-                    padding: EdgeInsets.all(10.0),
-                    color: Colors.blue,
-                  ),
 
                   // for Title text feild..
                   Container(
-                      margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 10) ,
-                      height: MediaQuery.of(context).size.height * 0.06,
+                      margin: EdgeInsets.only(top: 30 ,left: 2, right: 2, bottom: 10) ,
+                      height: MediaQuery.of(context).size.height * 0.15,
                       padding: EdgeInsets.all(10.0),
                       decoration: BoxDecoration(
                         color: Colors.blue[50],
@@ -110,41 +101,72 @@ class _AddPost3State extends State<AddPost3> {
                             bottomRight: Radius.circular(10)
                         ),
                       ),
-                      child: TextField(
-                          cursorColor: Colors.black,
-                          //keyboardType: inputType,
-                          decoration: InputDecoration(
-                            hintStyle: TextStyle(fontSize: 17),
-                            hintText: 'Post Title',
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                              value: checkBox_1_Val,
+                              activeColor: Kcolor,
+                              onChanged:(newVal){
+                                setState(() {
+                                  checkBox_1_Val = newVal!;
+                                });
+                              },
+                              ),
+                          Container(
+                            width:  MediaQuery.of(context).size.width * 0.70,
+                            margin: EdgeInsets.only(top: 10),
+                            child: Text(
+                              'You will not be allowed to edit or delete a product or service post once it is submitted.',
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           )
-                      )
+                        ],
+                      ),
                   ),
                   Container(
-                      margin: EdgeInsets.only(top: 10 ,left: 2, right: 2) ,
-                      height: MediaQuery.of(context).size.height * 0.20,
-                      padding: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: Colors.blue[50],
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10)
-                        ),
+                    margin: EdgeInsets.only(top: 10 ,left: 2, right: 2, bottom: 10) ,
+                    height: MediaQuery.of(context).size.height * 0.18,
+                    padding: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10)
                       ),
-                      child: TextField(
-                          cursorColor: Colors.black,
-                          maxLines: null,
-                          keyboardType: TextInputType.multiline,
-                          decoration: InputDecoration(
-                            hintStyle: TextStyle(fontSize: 17),
-                            hintText: 'Description',
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
-                          )
-                      )
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Checkbox(
+                          value: checkBox_2_Val,
+                          activeColor: Kcolor,
+                          onChanged:(newVal){
+                            setState(() {
+                              checkBox_2_Val = newVal!;
+                            });
+                          },
+                        ),
+                        Container(
+                          width:  MediaQuery.of(context).size.width * 0.70,
+                          margin: EdgeInsets.only(top: 10),
+                          child: Text(
+                            'You will agree to follow the Terms & Conditions and refrain from adding any sort of inapprpriate, plagarized or invalid details.',
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
 
                   // Button next....
@@ -154,7 +176,7 @@ class _AddPost3State extends State<AddPost3> {
 
                       child: RaisedButton(
                         onPressed: (){},
-                        color: Colors.blue,
+                        color: Kcolor,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                         child:Row(
@@ -168,10 +190,6 @@ class _AddPost3State extends State<AddPost3> {
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.w300,
                               ),
-                            ),
-                            Icon(
-                              Icons.navigate_next,
-                              color: Colors.white,
                             ),
                           ],
                         ) ,

@@ -1,3 +1,5 @@
+
+import 'package:find_dropdown/find_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:reviewia/components/button_logon.dart';
 import 'package:reviewia/constrains/constrains.dart';
@@ -13,21 +15,43 @@ class AddPost extends StatefulWidget {
 
 class _AddPostState extends State<AddPost> {
 
+  //Date time format..
+  DateTime date = DateTime.now();
+  Future<Null> selectTimePicker(BuildContext) async{
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: date,
+        firstDate: DateTime(1940),
+        lastDate: DateTime(2050)
+    );
+    if(picked != null && picked != date){
+      setState(() {
+        date = picked;
+        print(date.toString());
+      });
+    }
+  }
+
+
+
   String valueType = "";
 
-  List _type = ["Service","Product"];
-  List _brands = [
+  List<String> type = ["Service","Product"];
+  List<String> brands = [
     "Home Lands",
     "Arduino",
     "Atlas",
   ];
-  List _category = [
+  List<String> category = [
     "Education",
     "Electronic",
     "Jobs",
     "Properties",
   ];
 
+  //for type selection..
+  final typeSelected = TextEditingController();
+  String selectType = "";
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +113,6 @@ class _AddPostState extends State<AddPost> {
                   color: Colors.blue,
                 ),
 
-                //Text for Picture Area..
                 Text(
                   'Basic Info',
                   style: TextStyle(
@@ -125,13 +148,13 @@ class _AddPostState extends State<AddPost> {
                     )
                 ),
 
-                // for Title text feild..
+                // for type selection dropdown field..
                 Container(
-                    margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 10) ,
-                    height: MediaQuery.of(context).size.height * 0.06,
-                    padding: EdgeInsets.all(10.0),
+                    margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
+                    height: MediaQuery.of(context).size.height * 0.10,
+                    padding: EdgeInsets.all(0.0),
                     decoration: BoxDecoration(
-                      color: Colors.blue[50],
+                      color: Colors.white,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           topRight: Radius.circular(10),
@@ -140,27 +163,70 @@ class _AddPostState extends State<AddPost> {
                       ),
                     ),
 
-                    child: DropdownButton(
-                        hint: Text('Select type'),
-                        value: valueType,
-                        onChanged: (newValue){
-                          setState(() {
-                            valueType = newValue;
-                          }); 
-                        },
-                      // items: _type.map((e) => {
-                      //   return DropdownMenuItem(
-                      //
-                      // );
-                      }),
+                  //Type selection dropdown..
+                    child: FindDropdown(
+                      items: type,
+                      onChanged: (item) {
+                        print(item);
+                      },
+                      selectedItem: "Select type",
+                      showSearchBox: false,
+                      searchBoxDecoration: InputDecoration(hintText: "Search", border: OutlineInputBorder()),
+                      backgroundColor: Colors.white,
+                      titleStyle: TextStyle(color: Colors.blue),
+                      validate: (String? item) {
+                        if (item == null)
+                          return "Required field";
+                        else if (item == "Brasil")
+                          return "Invalid item";
+                        else
+                          return null;
+                      },
                     )
                 ),
 
-                // for Title text feild..
+                // for Category selection dropdown field..
                 Container(
-                    margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 10) ,
+                    margin: EdgeInsets.only( left: 2, right: 2) ,
+                    height: MediaQuery.of(context).size.height * 0.10,
+                    padding: EdgeInsets.all(0.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10)
+                      ),
+                    ),
+
+                    //Type selection dropdown..
+                    child: FindDropdown(
+                      items: category,
+                      onChanged: (item) {
+                        print(item);
+                      },
+                      selectedItem: "Select category",
+                      showSearchBox: true,
+                      searchBoxDecoration: InputDecoration(hintText: "Search", border: OutlineInputBorder()),
+                      backgroundColor: Colors.white,
+                      titleStyle: TextStyle(color: Colors.blue),
+                      validate: (String? item) {
+                        if (item == null)
+                          return "Required field";
+                        else if (item == "Brasil")
+                          return "Invalid item";
+                        else
+                          return null;
+                      },
+                    )
+                ),
+
+                // for date picker..
+                Container(
+                    margin: EdgeInsets.only(left: 2, right: 2, bottom: 10) ,
                     height: MediaQuery.of(context).size.height * 0.06,
-                    padding: EdgeInsets.all(10.0),
+                    padding: EdgeInsets.only(top: 5.0, left: 10),
                     decoration: BoxDecoration(
                       color: Colors.blue[50],
                       borderRadius: BorderRadius.only(
@@ -172,15 +238,69 @@ class _AddPostState extends State<AddPost> {
                     ),
                     child: TextField(
                         cursorColor: Colors.black,
+                        readOnly: true ,
+                        onTap: (){
+                          selectTimePicker(context);
+                        },
                         //keyboardType: inputType,
                         decoration: InputDecoration(
                           hintStyle: TextStyle(fontSize: 17),
-                          hintText: 'Post Title',
+                          hintText: 'Select Date',
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                selectTimePicker(context);
+                              },
+                              icon: Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: Icon(Icons.calendar_today_outlined),
+                              ),
+                              color: Kcolor,
+                            ),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
                         )
+
                     )
                 ),
+
+
+                // for Category selection dropdown field..
+                Container(
+                    margin: EdgeInsets.only( top: 20,left: 2, right: 2) ,
+                    height: MediaQuery.of(context).size.height * 0.10,
+                    padding: EdgeInsets.all(0.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10)
+                      ),
+                    ),
+
+                    //Type selection dropdown..
+                    child: FindDropdown(
+                      items: brands,
+                      onChanged: (item) {
+                        print(item);
+                      },
+                      selectedItem: "Select Brand",
+                      showSearchBox: true,
+                      searchBoxDecoration: InputDecoration(hintText: "Search", border: OutlineInputBorder()),
+                      backgroundColor: Colors.white,
+                      titleStyle: TextStyle(color: Colors.blue),
+                      validate: (String? item) {
+                        if (item == null)
+                          return "Required field";
+                        else if (item == "Brasil")
+                          return "Invalid item";
+                        else
+                          return null;
+                      },
+                    )
+                ),
+
                 Container(
                     margin: EdgeInsets.only(top: 10 ,left: 2, right: 2) ,
                     height: MediaQuery.of(context).size.height * 0.20,
@@ -219,7 +339,7 @@ class _AddPostState extends State<AddPost> {
                           MaterialPageRoute(builder: (context) => AddPost2()),
                         );
                       },
-                      color: Colors.blue,
+                      color: Kcolor,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       child:Row(
