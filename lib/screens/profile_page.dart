@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/components/form_feild.dart';
+import 'package:reviewia/components/post_on_profile.dart';
 import 'package:reviewia/constrains/constrains.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -133,8 +136,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               Container(
+
                 // width: double.infinity,
-                // padding: EdgeInsets.only(left:MediaQuery.of(context).),
+                margin: EdgeInsets.only(bottom:MediaQuery.of(context).size.height*10/692),
                 // color: Colors.blueGrey,
                   child: Text(
                 "Your posts",
@@ -142,44 +146,40 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: KPostCard,
               )),
               Container(
+                decoration: BoxDecoration(
+                  // color: Colors.cyan,
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
                 width: double.infinity,
                 margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 15 / 360,right:MediaQuery.of(context).size.width * 15 / 360,),
                 // margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 15 / 659,),
-                height: MediaQuery.of(context).size.height * 150 / 659,
-                color: Color(0xFF39667F),
+                height: MediaQuery.of(context).size.height * 105*3/692,
+                // color: Color(0xFF39667F),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 11 / 659,
                       ),
-                      Container(
-                        margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 15 / 360,right:MediaQuery.of(context).size.width * 15 / 360,),
-                        height: MediaQuery.of(context).size.height * 110 / 659,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFAAAAAA),
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                              bottomLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15)),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              color:Colors.blueGrey,
-                            )
-                          ],
-                        ),
-
-                      ),
+                      PostsOnProfile(),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 11 / 659,
                       ),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 110 / 659,
-                        color: Colors.red,
-                      )
+                      PostsOnProfile(),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 11 / 659,
+                      ),
+                      PostsOnProfile(),
+
                     ],
                   ),
                 ),
@@ -191,6 +191,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+
+
 
 String onChanged(val) {
   print(val);
