@@ -164,7 +164,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   },
                                   child: Text(
                                     'SEND RESET LINK',
-                                    style: KbuttonSignin,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Roboto',
+                                      color: Colors.white,
+                                    ),
                                   ),
                                   shape: RoundedRectangleBorder(
                                       side: BorderSide(

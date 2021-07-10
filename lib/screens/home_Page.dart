@@ -1,6 +1,7 @@
 import 'package:find_dropdown/find_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:reviewia/screens/chatList.dart';
 import 'package:reviewia/screens/contactUs.dart';
 import 'package:reviewia/screens/login_page.dart';
 import 'package:reviewia/screens/search_page.dart';
@@ -166,6 +167,23 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.all(0.0)
               ),
             ),
+
+              Divider(height: MediaQuery.of(context).size.height * 0.02),
+              ListTile(
+                title: Text(
+                  'My Groups',
+                  style: TextStyle(
+                    color: Kcolor,
+                    fontSize: 20,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w500,
+                  ),
+
+                ),
+                onTap: () {
+                  Navigator.pushNamed(context, ChatList.id);
+                },
+              ),
               Divider(height: MediaQuery.of(context).size.height * 0.02),
               ListTile(
                 title: Text(
