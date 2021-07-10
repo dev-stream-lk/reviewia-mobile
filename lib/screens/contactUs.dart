@@ -176,11 +176,25 @@ class _ContactUsState extends State<ContactUs> {
                   // Button next....
                   Container(
                       width: MediaQuery.of(context).size.width * 1,
-                      margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 10),
+                      margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 2),
 
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Column(
+                            children: [
+                              Container(
+                                  width: MediaQuery.of(context).size.width * 0.35,
+                                  height: MediaQuery.of(context).size.width * 0.30,
+                                  decoration: new BoxDecoration(
+                                    image: new DecorationImage(
+                                      image: ExactAssetImage('images/contactUs.png'),
+                                      fit: BoxFit.fitHeight,
+                                    ),
+                                  )),
+                            ],
+                          ),
                           RaisedButton(
                             onPressed: (){},
                             color: Kcolor,
@@ -206,26 +220,26 @@ class _ContactUsState extends State<ContactUs> {
                       )
                   ),
                   // Button next....
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.15,
-                      margin: EdgeInsets.only(left: 2, right: 2),
-
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                              width: MediaQuery.of(context).size.width * 0.5,
-                              height: MediaQuery.of(context).size.width * 0.5,
-                              decoration: new BoxDecoration(
-                                image: new DecorationImage(
-                                  image: ExactAssetImage('images/contactUs.png'),
-                                  fit: BoxFit.fitHeight,
-                                ),
-                              )),
-                        ],
-                      ),
-                  )
+                  // Container(
+                  //   height: MediaQuery.of(context).size.height * 0.10,
+                  //   margin: EdgeInsets.only(left: 2, right: 2),
+                  //
+                  //     child: Row(
+                  //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //       mainAxisAlignment: MainAxisAlignment.start,
+                  //       children: [
+                  //         Container(
+                  //             width: MediaQuery.of(context).size.width * 0.2,
+                  //             height: MediaQuery.of(context).size.width * 0.2,
+                  //             decoration: new BoxDecoration(
+                  //               image: new DecorationImage(
+                  //                 image: ExactAssetImage('images/contactUs.png'),
+                  //                 fit: BoxFit.fitHeight,
+                  //               ),
+                  //             )),
+                  //       ],
+                  //     ),
+                  // )
 
                 ],
               ),

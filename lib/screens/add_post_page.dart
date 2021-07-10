@@ -149,7 +149,7 @@ class _AddPostState extends State<AddPost> {
                 // for type selection dropdown field..
                 Container(
                     margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
-                    height: MediaQuery.of(context).size.height * 0.10,
+                    height: MediaQuery.of(context).size.height * 0.12,
                     padding: EdgeInsets.all(0.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -186,7 +186,7 @@ class _AddPostState extends State<AddPost> {
                 // for Category selection dropdown field..
                 Container(
                     margin: EdgeInsets.only( left: 2, right: 2) ,
-                    height: MediaQuery.of(context).size.height * 0.10,
+                    height: MediaQuery.of(context).size.height * 0.12,
                     padding: EdgeInsets.all(0.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -245,17 +245,15 @@ class _AddPostState extends State<AddPost> {
                           hintStyle: TextStyle(fontSize: 17),
                           hintText: 'Select Date',
                             suffixIcon: IconButton(
+                              padding: EdgeInsets.only(bottom:MediaQuery.of(context).size.height * 0.022),
                               onPressed: () {
                                 selectTimePicker(context);
                               },
-                              icon: Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: Icon(Icons.calendar_today_outlined),
-                              ),
+                              icon: Icon(Icons.calendar_today_outlined),
                               color: Kcolor,
                             ),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
+                          contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: MediaQuery.of(context).size.height * 0.022),
                         )
 
                     )
@@ -265,7 +263,7 @@ class _AddPostState extends State<AddPost> {
                 // for Category selection dropdown field..
                 Container(
                     margin: EdgeInsets.only( top: 20,left: 2, right: 2) ,
-                    height: MediaQuery.of(context).size.height * 0.10,
+                    height: MediaQuery.of(context).size.height * 0.12,
                     padding: EdgeInsets.all(0.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
