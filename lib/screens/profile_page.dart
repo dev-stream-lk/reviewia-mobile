@@ -1,9 +1,14 @@
+import 'package:find_dropdown/find_dropdown.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/components/form_feild.dart';
 import 'package:reviewia/components/post_on_profile.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/screens/chatList.dart';
+import 'package:reviewia/screens/contactUs.dart';
+import 'package:reviewia/screens/login_page.dart';
+import 'package:reviewia/screens/search_page.dart';
 
 class ProfilePage extends StatefulWidget {
   bool _canEdit = true;
@@ -15,6 +20,20 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
+  List<String> type = ["Service","Product"];
+  List<String> brands = [
+    "Home Lands",
+    "Arduino",
+    "Atlas",
+  ];
+  List<String> category = [
+    "Education",
+    "Electronic",
+    "Jobs",
+    "Properties",
+  ];
+
   void getValueName(String va) {
     widget.Nameval = va;
     print("Your Name" + widget.Nameval);
@@ -42,9 +61,16 @@ class _ProfilePageState extends State<ProfilePage> {
           },
         ),
         title: Text(
-          "User Profile",
+          "Profile",
           style: KappTitle,
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, SearchPage.id);
+              },
+              icon: Icon(Icons.search)),
+        ],
       ),
       drawer: Container(
         width: MediaQuery.of(context).size.width * 0.8,
@@ -53,29 +79,148 @@ class _ProfilePageState extends State<ProfilePage> {
             // Important: Remove any padding from the ListView.
             padding: EdgeInsets.zero,
             children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Color(0xFFCCDCF3),
-                ),
-                child: Text(
-                  'Categories',
-                  style: KdrawerTextStyle,
+              Container(
+                height: MediaQuery.of(context).size.height * 0.5,
+
+                child: DrawerHeader(
+
+                    child: Padding(
+                      padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
+                      child: Column(
+
+                        children: [
+                          Text('Search for..',
+                            style: TextStyle(
+                              color: Kcolor,
+                              fontSize: 24,
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w500,
+                            ),
+
+                          ),
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                          FindDropdown(
+                            items: type,
+                            onChanged: (item) {
+                              print(item);
+                            },
+                            selectedItem: "Select type",
+                            showSearchBox: false,
+                            searchBoxDecoration: InputDecoration(
+                                hintText: "Search",
+                                border: OutlineInputBorder()),
+                            backgroundColor: Colors.white,
+                            validate: (String? item) {
+                              if (item == null)
+                                return "Required field";
+                              else if (item == "Brasil")
+                                return "Invalid item";
+                              else
+                                return null;
+                            },
+                          ),
+                          FindDropdown(
+                            items: category,
+                            onChanged: (item) {
+                              print(item);
+                            },
+                            selectedItem: "Select category",
+                            showSearchBox: true,
+                            searchBoxDecoration: InputDecoration(
+                                hintText: "Search",
+                                border: OutlineInputBorder()),
+                            backgroundColor: Colors.white,
+                            validate: (String? item) {
+                              if (item == null)
+                                return "Required field";
+                              else if (item == "Brasil")
+                                return "Invalid item";
+                              else
+                                return null;
+                            },
+                          ),
+                          FindDropdown(
+                            items: brands,
+                            onChanged: (item) {
+                              print(item);
+                            },
+                            selectedItem: "Select brand",
+                            showSearchBox: true,
+                            searchBoxDecoration: InputDecoration(
+                                hintText: "Search",
+                                border: OutlineInputBorder()),
+                            backgroundColor: Colors.white,
+                            validate: (String? item) {
+                              if (item == null)
+                                return "Required field";
+                              else if (item == "Brasil")
+                                return "Invalid item";
+                              else
+                                return null;
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      color: Color(0xFFCCDCF3),
+                    ),
+                    margin: EdgeInsets.all(0.0),
+                    padding: EdgeInsets.all(0.0)
                 ),
               ),
+
+              Divider(height: MediaQuery.of(context).size.height * 0.02),
               ListTile(
-                title: Text('Item 1'),
+                title: Text(
+                  'Contact Us',
+                  style: TextStyle(
+                    color: Kcolor,
+                    fontSize: 20,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w500,
+                  ),
+
+                ),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
+                  Navigator.pushNamed(context, ContactUs.id);
                 },
               ),
+              Divider(height: MediaQuery.of(context).size.height * 0.02),
+
               ListTile(
-                title: Text('Item 2'),
+                title: Text(
+                  'My Groups',
+                  style: TextStyle(
+                    color: Kcolor,
+                    fontSize: 20,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w500,
+                  ),
+
+                ),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
+                  Navigator.pushNamed(context, ChatList.id);
                 },
               ),
+              Divider(height: MediaQuery.of(context).size.height * 0.02),
+              ListTile(
+                title: Text(
+                  'Log Out',
+                  style: TextStyle(
+                    color: Kcolor,
+                    fontSize: 20,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w500,
+                  ),
+
+                ),
+                onTap: () {
+                  Navigator.pushNamed(context, Login.id);
+                },
+              ),
+              Divider(height: MediaQuery.of(context).size.height * 0.02),
+
             ],
           ),
         ),
