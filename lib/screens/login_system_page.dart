@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/components/blue_painter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:reviewia/constrains/validation.dart';
 import 'package:reviewia/home_data.dart';
 import 'package:reviewia/screens/fogotPassword.dart';
 import 'package:reviewia/screens/home_Page.dart';
@@ -18,6 +19,29 @@ class LoginSystem extends StatefulWidget {
 }
 
 class _LoginSystemState extends State<LoginSystem> {
+  String userName='' ;
+  String passWord='';
+  GlobalKey<FormState>formKey = GlobalKey<FormState>();
+  Validation validateForm = new Validation();
+
+  void validate(){
+    if(formKey.currentState!.validate()){
+      print("your user name is ="+ userName);
+      print("your user password is ="+ passWord);
+      Navigator.pushNamed(context, HomePage.id,arguments:HomeData('damish'));
+    }else{
+      print('Not Validate');
+    }
+  }
+
+  // String? validateUserName(value){
+  //   if(value!.isEmpty){
+  //     return "Required Field";
+  //   }else{
+  //     return null;
+  //   }
+  // }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -84,84 +108,98 @@ class _LoginSystemState extends State<LoginSystem> {
                                 ),
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.fromLTRB(
-                                  MediaQuery.of(context).size.width * 0.033,
-                                  MediaQuery.of(context).size.height *
-                                      (30 / 692),
-                                  MediaQuery.of(context).size.width * 0.033,
-                                  MediaQuery.of(context).size.height * 0.0144),
-                              child: Column(
-                                children: [
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      hintText: "UserName or Email",
-                                      labelText: "User Name",
-                                      labelStyle: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black,
-                                      ),
-                                      hintStyle: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.black,
-                                      ),
-                                      border: OutlineInputBorder(),
-                                      suffixIcon: Icon(
-                                        Icons.supervised_user_circle,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    obscureText: false,
-                                    onChanged: (val) {
-                                      print(val);
-                                    },
-                                  ),
-                                  SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        (15 / 692),
-                                  ),
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      hintText: "Password",
-                                      labelText: "Password",
-                                      labelStyle: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black,
-                                      ),
-                                      hintStyle: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.black,
-                                      ),
-                                      border: OutlineInputBorder(),
-                                      suffixIcon: IconButton(
-                                        icon: Icon(
-                                          widget.icon,
+                            Form(
+                              key: formKey,
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.033,
+                                    MediaQuery.of(context).size.height *
+                                        (30 / 692),
+                                    MediaQuery.of(context).size.width * 0.033,
+                                    MediaQuery.of(context).size.height * 0.0144),
+                                child: Column(
+                                  children: [
+                                    TextFormField(
+                                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                                      validator: validateForm.validateUserName,
+                                      decoration: InputDecoration(
+                                        hintText: "UserName or Email",
+                                        labelText: "User Name",
+                                        labelStyle: TextStyle(
+                                          fontSize: 12,
                                           color: Colors.black,
                                         ),
-                                        onPressed: () {
-                                          setState(() {
-                                            widget._secureText =
-                                                !widget._secureText;
-                                            if (widget._secureText == false) {
-                                              widget.icon =
-                                                  Icons.remove_red_eye_outlined;
-                                            } else {
-                                              widget.icon = Icons.password;
-                                            }
-                                          });
-                                        },
+                                        hintStyle: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.black,
+                                        ),
+                                        border: OutlineInputBorder(),
+                                        suffixIcon: Icon(
+                                          Icons.supervised_user_circle,
+                                          color: Colors.black,
+                                        ),
                                       ),
+                                      obscureText: false,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          userName=val.toString();
+                                        });
+                                        print(val);
+                                      },
+
                                     ),
-                                    obscureText: widget._secureText,
-                                    onChanged: (val) {
-                                      print(val);
-                                    },
-                                  ),
-                                  SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        (15 / 692),
-                                  ),
-                                ],
+                                    SizedBox(
+                                      height: MediaQuery.of(context).size.height *
+                                          (15 / 692),
+                                    ),
+                                    TextFormField(
+                                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                                      validator: validateForm.validatePassword,
+                                      decoration: InputDecoration(
+                                        hintText: "Password",
+                                        labelText: "Password",
+                                        labelStyle: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                        ),
+                                        hintStyle: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.black,
+                                        ),
+                                        border: OutlineInputBorder(),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            widget.icon,
+                                            color: Colors.black,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+
+                                              widget._secureText =
+                                                  !widget._secureText;
+                                              if (widget._secureText == false) {
+                                                widget.icon =
+                                                    Icons.remove_red_eye_outlined;
+                                              } else {
+                                                widget.icon = Icons.password;
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      obscureText: widget._secureText,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          passWord=val.toString();
+                                        });
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: MediaQuery.of(context).size.height *
+                                          (15 / 692),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             Container(
@@ -199,12 +237,16 @@ class _LoginSystemState extends State<LoginSystem> {
                                           MediaQuery.of(context).size.width *
                                               (40 / 360)),
                                   color: Kcolor,
-                                  onPressed: () {
+                                  onPressed: validate ,
                                     // Navigator.push(context, MaterialPageRoute(builder: (context){
                                     //   return HomePage();
                                     // } ));
-                                    Navigator.pushNamed(context, HomePage.id,arguments:HomeData('damish'));
-                                  },
+                                    // print(formKey.currentState.toString());
+
+
+                                    // Navigator.pushNamed(context, HomePage.id,arguments:HomeData('damish'));
+
+
                                   child: Text(
                                     'Sign in',
                                     style: KbuttonSignin,
