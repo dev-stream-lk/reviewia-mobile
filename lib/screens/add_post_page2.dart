@@ -90,7 +90,6 @@ class _AddPost2State extends State<AddPost2> {
                               margin: EdgeInsets.only(top: 2 ,left: 2, right: 2) ,
                               height: MediaQuery.of(context).size.height * 0.05,
                               padding: EdgeInsets.all(10.0),
-                              color: Colors.blue,
                             ),
 
                             //Text for Picture Area..
@@ -104,21 +103,39 @@ class _AddPost2State extends State<AddPost2> {
                             ),
                             // for choose image..
                             Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10)
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 5,
+                                    blurRadius: 3,
+                                    offset: Offset(0, 3), // changes position of shadow
+                                  ),
+                                ],
+                              ),
                               margin: EdgeInsets.only(top: 2 ,left: 2, right: 2) ,
-                              height: MediaQuery.of(context).size.height * 0.35,
+                              height: MediaQuery.of(context).size.height * 0.45,
                               padding: EdgeInsets.all(10.0),
-                              color: Colors.blue,
                               child: Column(
                                 children: [
                                   null == _imageFile
                                       ? Container()
-                                      : Image.file(
+                                      : Expanded(
+                                        child: Image.file(
                                     File(_imageFile.path),
                                     filterQuality: FilterQuality.high,
                                   ),
+                                      ),
                                   SizedBox(height: 10),
-                                  Text(_status),
                                   SizedBox(height: 10),
+                                  Divider(height: 10,),
                                   Container(
                                       child: RaisedButton(
                                         onPressed: () async {
@@ -128,17 +145,16 @@ class _AddPost2State extends State<AddPost2> {
                                           });
                                           PickedFile file = await _loadImage(ImageSource.gallery);
                                           if(null != file){
+
                                             setState(() {
                                               _imageFile = file;
                                               _imageLoading = false;
-                                              _status = "Loaded";
                                             });
                                           }
                                           else{
                                             setState(() {
                                               _imageFile = null;
                                               _imageLoading = false;
-                                              _status = "Error";
                                             });
                                           }
                                         },
@@ -147,6 +163,7 @@ class _AddPost2State extends State<AddPost2> {
                                             borderRadius: BorderRadius.circular(10)),
                                         child:Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Text(
                                               'choose Image',
@@ -162,6 +179,7 @@ class _AddPost2State extends State<AddPost2> {
 
                                       )
                                   ),
+                                  Divider(height: 10,),
 
                                 ],
                               ),
@@ -169,7 +187,7 @@ class _AddPost2State extends State<AddPost2> {
 
                             // for choosed images line..
                             Container(
-                              margin: EdgeInsets.only(top: 2 ,left: 2, right: 2) ,
+                              margin: EdgeInsets.only(top: 10 ,left: 2, right: 2) ,
                               height: MediaQuery.of(context).size.height * 0.12,
                               padding: EdgeInsets.all(10.0),
                               color: Colors.blue,
@@ -194,32 +212,7 @@ class _AddPost2State extends State<AddPost2> {
                                     //keyboardType: inputType,
                                     decoration: InputDecoration(
                                       hintStyle: TextStyle(fontSize: 17),
-                                      hintText: 'Post Title',
-                                      border: InputBorder.none,
-                                      contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
-                                    )
-                                )
-                            ),
-                            Container(
-                                margin: EdgeInsets.only(top: 10 ,left: 2, right: 2) ,
-                                height: MediaQuery.of(context).size.height * 0.20,
-                                padding: EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue[50],
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10),
-                                      bottomLeft: Radius.circular(10),
-                                      bottomRight: Radius.circular(10)
-                                  ),
-                                ),
-                                child: TextField(
-                                    cursorColor: Colors.black,
-                                    maxLines: null,
-                                    keyboardType: TextInputType.multiline,
-                                    decoration: InputDecoration(
-                                      hintStyle: TextStyle(fontSize: 17),
-                                      hintText: 'Description',
+                                      hintText: 'Caption',
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
                                     )
