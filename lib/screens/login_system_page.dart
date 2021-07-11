@@ -9,6 +9,7 @@ import 'package:reviewia/home_data.dart';
 import 'package:reviewia/screens/fogotPassword.dart';
 import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/register_page.dart';
+import 'package:reviewia/services/user.dart';
 
 class LoginSystem extends StatefulWidget {
   static String id  = 'login_system_page';
@@ -21,14 +22,35 @@ class LoginSystem extends StatefulWidget {
 class _LoginSystemState extends State<LoginSystem> {
   String userName='' ;
   String passWord='';
+  String mobileEmu = "http://10.0.2.2:8080/api/login";
+  String realDevice = "http://192.168.8.102:8080/api/login";
   GlobalKey<FormState>formKey = GlobalKey<FormState>();
   Validation validateForm = new Validation();
 
+
+  Future<void> login() async {
+    UserServices user = UserServices(realDevice, userName, passWord, "","");
+    var userLogin = await user.getLogin();
+    // print("your user name is ="+ userName);
+    // print("your user password is ="+ passWord);
+    print(userLogin);
+    if(userLogin == "Can Login"){
+      Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName));
+    }else{
+      print("cant Login");
+    }
+
+  }
+
+
+
   void validate(){
     if(formKey.currentState!.validate()){
-      print("your user name is ="+ userName);
-      print("your user password is ="+ passWord);
-      Navigator.pushNamed(context, HomePage.id,arguments:HomeData('damish'));
+
+      login();
+
+
+
     }else{
       print('Not Validate');
     }
@@ -123,8 +145,8 @@ class _LoginSystemState extends State<LoginSystem> {
                                       autovalidateMode: AutovalidateMode.onUserInteraction,
                                       validator: validateForm.validateUserName,
                                       decoration: InputDecoration(
-                                        hintText: "UserName or Email",
-                                        labelText: "User Name",
+                                        hintText: "Email",
+                                        labelText: "Email",
                                         labelStyle: TextStyle(
                                           fontSize: 12,
                                           color: Colors.black,
