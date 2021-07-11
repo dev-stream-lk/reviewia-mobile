@@ -6,6 +6,9 @@ import 'package:reviewia/constrains/validation.dart';
 import 'package:reviewia/home_data.dart';
 import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/login_system_page.dart';
+import 'package:reviewia/services/user.dart';
+
+import 'login_page.dart';
 
 class Register extends StatefulWidget {
   static String id = 'register_page';
@@ -20,8 +23,14 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  String firstName="";
+  String lastName="";
   String password ='';
+  String email = '';
+  String mobileEmu = "http://10.0.2.2:8080/api/registration";
+  String realDevice = "http://192.168.8.102:8080/api/registration";
   @override
+
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -38,6 +47,33 @@ class _RegisterState extends State<Register> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Validation validateRegForm = new Validation();
+
+  Future<void> register() async {
+    UserServices user = UserServices(realDevice, email, password, firstName,lastName);
+    var userLogin = await user.getRegister();
+    // print("your user name is ="+ userName);
+    // print("your user password is ="+ passWord);
+    print(userLogin);
+    if(userLogin == "Account is Created"){
+      Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                    return LoginSystem();
+                  }));
+    }else{
+      print("cant Login");
+    }
+
+  }
+
+  void validate(){
+    if(formKey.currentState!.validate()){
+      register();
+    }else{
+      print('Not Validate');
+    }
+  }
+
+
 
 
   String? validatePasswordSame(value){
@@ -121,8 +157,8 @@ class _RegisterState extends State<Register> {
                                   children: [
                                     TextFormField(
                                       decoration: InputDecoration(
-                                        hintText: "Name",
-                                        labelText: "Name",
+                                        hintText: "First Name",
+                                        labelText: "First Name",
                                         labelStyle: TextStyle(
                                           fontSize: 12,
                                           color: Colors.black,
@@ -142,7 +178,38 @@ class _RegisterState extends State<Register> {
                                       obscureText: false,
                                       onChanged: (val) {
                                         setState(() {
-
+                                            firstName = val;
+                                        });
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: MediaQuery.of(context).size.height *
+                                          (15 / 692),
+                                    ),
+                                    TextFormField(
+                                      decoration: InputDecoration(
+                                        hintText: "Last Name",
+                                        labelText: "Last Name",
+                                        labelStyle: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                        ),
+                                        hintStyle: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.black,
+                                        ),
+                                        border: OutlineInputBorder(),
+                                        suffixIcon: Icon(
+                                          FontAwesomeIcons.user,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                                      validator: validateRegForm.validateName,
+                                      obscureText: false,
+                                      onChanged: (val) {
+                                        setState(() {
+                                            lastName = val;
                                         });
                                       },
                                     ),
@@ -173,7 +240,7 @@ class _RegisterState extends State<Register> {
                                       obscureText: false,
                                       onChanged: (val) {
                                         setState(() {
-
+                                            email=val;
                                         });
                                       },
 
@@ -353,17 +420,18 @@ class _RegisterState extends State<Register> {
                                     color: Kcolor,
                                     onPressed: () {
 
-                                      if(formKey.currentState!.validate()){
-                                        if(widget._checkBox==true){
-                                          Navigator.push(context,
-                                              MaterialPageRoute(builder: (context) {
-                                                return LoginSystem();
-                                              }));
-                                        }
-
-                                      }else{
-                                        print('Not Validate');
-                                      }
+                                      validate();
+                                      // if(formKey.currentState!.validate()){
+                                      //   if(widget._checkBox==true){
+                                      //     Navigator.push(context,
+                                      //         MaterialPageRoute(builder: (context) {
+                                      //           return LoginSystem();
+                                      //         }));
+                                      //   }
+                                      //
+                                      // }else{
+                                      //   print('Not Validate');
+                                      // }
 
 
 
@@ -469,6 +537,7 @@ class _RegisterState extends State<Register> {
                                           ),
                                         ),
                                         onTap: () {
+
                                           // Navigator.push(context, MaterialPageRoute(builder: (context){
                                           //   return Register();
                                           // } ));
