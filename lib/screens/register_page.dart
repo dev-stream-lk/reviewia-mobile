@@ -65,7 +65,7 @@ class _RegisterState extends State<Register> {
           DialogButton(
             color: Kcolor,
             child: Text(
-              "Login to Account",
+              "Login",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             onPressed: () => Navigator.push(context,
@@ -88,7 +88,7 @@ class _RegisterState extends State<Register> {
           DialogButton(
             color: Kcolor,
             child: Text(
-              "Okey",
+              "Okay",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             onPressed: () => Navigator.push(context,

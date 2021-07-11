@@ -43,14 +43,14 @@ class _LoginSystemState extends State<LoginSystem> {
       print("cant Login");
       Alert(
         context: context,
-        type: AlertType.error,
+        type: AlertType.warning,
         title: "Problem in Login",
-        desc: "User name or Password is incorrect",
+        desc: "Username or Password is incorrect",
         buttons: [
           DialogButton(
             color: Kcolor,
             child: Text(
-              "Okey",
+              "Okay",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             onPressed: () => Navigator.pop(context),
