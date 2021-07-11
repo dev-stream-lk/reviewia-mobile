@@ -7,6 +7,7 @@ import 'package:reviewia/home_data.dart';
 import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/login_system_page.dart';
 import 'package:reviewia/services/user.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'login_page.dart';
 
@@ -55,12 +56,49 @@ class _RegisterState extends State<Register> {
     // print("your user password is ="+ passWord);
     print(userLogin);
     if(userLogin == "Account is Created"){
-      Navigator.push(context,
-                  MaterialPageRoute(builder: (context) {
-                    return LoginSystem();
-                  }));
+      Alert(
+        context: context,
+        type: AlertType.success,
+        title: "Account Created",
+        desc: "Verification link sent to the email",
+        buttons: [
+          DialogButton(
+            color: Kcolor,
+            child: Text(
+              "Login",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) {
+                  return LoginSystem();
+                })),
+            width: MediaQuery.of(context).size.width*100/360,
+          )
+        ],
+      ).show();
+
     }else{
       print("cant Login");
+      Alert(
+        context: context,
+        type: AlertType.warning,
+        title: "Account not Created",
+        desc: "Already Account exits",
+        buttons: [
+          DialogButton(
+            color: Kcolor,
+            child: Text(
+              "Okay",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) {
+                  return LoginSystem();
+                })),
+            width: MediaQuery.of(context).size.width*100/360,
+          )
+        ],
+      ).show();
     }
 
   }

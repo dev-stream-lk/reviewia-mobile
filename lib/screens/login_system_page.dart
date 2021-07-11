@@ -4,12 +4,15 @@ import 'package:flutter/rendering.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/components/blue_painter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/constrains/validation.dart';
 import 'package:reviewia/home_data.dart';
 import 'package:reviewia/screens/fogotPassword.dart';
 import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/register_page.dart';
 import 'package:reviewia/services/user.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class LoginSystem extends StatefulWidget {
   static String id  = 'login_system_page';
@@ -38,6 +41,25 @@ class _LoginSystemState extends State<LoginSystem> {
       Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName));
     }else{
       print("cant Login");
+      Alert(
+        context: context,
+        type: AlertType.warning,
+        title: "Problem in Login",
+        desc: "Username or Password is incorrect",
+        buttons: [
+          DialogButton(
+            color: Kcolor,
+            child: Text(
+              "Okay",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+            width: MediaQuery.of(context).size.width*100/360,
+          )
+        ],
+      ).show();
+
+
     }
 
   }
