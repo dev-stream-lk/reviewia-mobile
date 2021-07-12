@@ -12,6 +12,8 @@ import 'package:reviewia/screens/add_post_page2.dart';
 import 'package:reviewia/screens/home_page_top_products.dart';
 import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/register_page.dart';
+import 'package:reviewia/services/userState.dart';
+
 
 import '../home_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,7 +27,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
+  UserState userState = new UserState();
+  String userName = '';
+  String k='';
   List<String> type = ["Service","Product"];
   List<String> brands = [
     "Home Lands",
@@ -40,10 +44,24 @@ class _HomePageState extends State<HomePage> {
   ];
 
 
+  void  settheUserProfile(String s) async {
+     k =  await userState.setStateUserName(s);
+     print(k);
+  }
+
+
   @override
   Widget build(BuildContext context) {
+
     final arguments = ModalRoute.of(context)!.settings.arguments as HomeData;
-    print(arguments.title);
+    print("user name is saved "+ arguments.title);
+    print("user name is"+ userState.getUserName().toString());
+
+    // setState(() {
+    //   settheUserProfile(arguments.title.toString());
+    // });
+
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Kcolor,
@@ -213,6 +231,7 @@ class _HomePageState extends State<HomePage> {
 
                 ),
                 onTap: () {
+                  settheUserProfile('');
                   Navigator.pushNamed(context, Login.id);
                 },
               ),
