@@ -4,7 +4,7 @@ class Validation {
 
   String? validateUserName(value){
     if(value!.isEmpty){
-      return "Required Field";
+      return "A Required Field";
     }else{
       return null;
     }
@@ -12,7 +12,7 @@ class Validation {
 
   String? validatePassword(value){
     if(value!.isEmpty){
-      return "Required Field";
+      return "A Required Field";
     }else if(value.toString().length<8){
       return "Password must be 8 characters";
     }else{
@@ -23,11 +23,11 @@ class Validation {
   String? validateName(value){
     // print((value.toString().contains(new RegExp(r'[^a-zA-Z]')).toString()));
     if(value!.isEmpty){
-      return "Required Field";
+      return "A Required Field";
     }else if(value.toString().contains(new RegExp(r'[0-9]'))){
-      return "Cannot Be contains Numbers";
+      return "Cannot contain Numbers";
     }else if((value.toString().contains(new RegExp(r'[^a-zA-Z]')))){
-      return "Cannot Be Speacial Charcters";
+      return "Cannot include Special Characters";
     }else{
       return null;
     }
@@ -36,7 +36,7 @@ class Validation {
   String? validateEmail(value){
     // print((value.toString().contains(new RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+"))).toString());
     if(value!.isEmpty){
-      return "Required Field";
+      return "A Required Field";
     }else if(!(value.toString().contains(new RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")))){
       return "Not a valid type of Email";
     }else{
@@ -52,15 +52,15 @@ class Validation {
     String sc = r'(?=.*?[!@#\$&*~])';
     print(value.toString().contains(new RegExp(pattern)).toString());
     if(value!.isEmpty){
-      return "Required Field";
+      return "A Required Field";
     }else if(!(value.toString().contains(new RegExp(upperCase)))){
-      return "include Minimum 1 upper case";
+      return "Should include Minimum 1 upper case";
     }else if(!(value.toString().contains(new RegExp(lowerCase)))){
-      return "include Minimum 1 lower case";
+      return "Should include Minimum 1 lower case";
     }else if(!(value.toString().contains(new RegExp(number)))){
-      return "include Minimum 1 Number";
+      return "Should include Minimum 1 Number";
     }else if(!(value.toString().contains(new RegExp(sc)))){
-      return "include Minimum 1 special character";
+      return "Should include Minimum 1 special character";
     }
     else if(value.toString().length<8){
       return "Minimum length must be 8";

@@ -26,13 +26,17 @@ class _LoginSystemState extends State<LoginSystem> {
   String userName='' ;
   String passWord='';
   String mobileEmu = "http://10.0.2.2:8080/api/login";
-  String realDevice = "http://192.168.8.102:8080/api/login";
+  // String realDevice = "http://192.168.8.102:8080/api/login";
+
+  // String realDevice = "http://192.168.8.100:8080/api/login";
+
+  // 192.168.43.163
   GlobalKey<FormState>formKey = GlobalKey<FormState>();
   Validation validateForm = new Validation();
 
 
   Future<void> login() async {
-    UserServices user = UserServices(realDevice, userName, passWord, "","");
+    UserServices user = UserServices(mobileEmu, userName, passWord, "","");
     var userLogin = await user.getLogin();
     // print("your user name is ="+ userName);
     // print("your user password is ="+ passWord);
@@ -43,7 +47,7 @@ class _LoginSystemState extends State<LoginSystem> {
       print("cant Login");
       Alert(
         context: context,
-        type: AlertType.warning,
+        type: AlertType.error,
         title: "Problem in Login",
         desc: "Username or Password is incorrect",
         buttons: [
@@ -68,7 +72,7 @@ class _LoginSystemState extends State<LoginSystem> {
 
   void validate(){
     if(formKey.currentState!.validate()){
-
+      print("sssss");
       login();
 
 

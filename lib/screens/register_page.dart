@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/components/blue_painter.dart';
@@ -8,6 +10,8 @@ import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/login_system_page.dart';
 import 'package:reviewia/services/user.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:dart_ipify/dart_ipify.dart';
+
 
 import 'login_page.dart';
 
@@ -29,10 +33,13 @@ class _RegisterState extends State<Register> {
   String password ='';
   String email = '';
   String mobileEmu = "http://10.0.2.2:8080/api/registration";
-  String realDevice = "http://192.168.8.102:8080/api/registration";
+  // String realDevice = "http://192.168.8.102:8080/api/registration";
+  String realDevice = "http://192.168.8.100:8080/api/registration";
+
   @override
 
   void initState() {
+
     // TODO: implement initState
     super.initState();
     if (widget._secureText == false) {
@@ -49,8 +56,14 @@ class _RegisterState extends State<Register> {
 
   Validation validateRegForm = new Validation();
 
+  Future<void>  getIP()async{
+    final ipv4 = await Ipify.ipv4();
+    print(ipv4);
+  }
+
   Future<void> register() async {
-    UserServices user = UserServices(realDevice, email, password, firstName,lastName);
+    // getIP();
+    UserServices user = UserServices(mobileEmu, email, password, firstName,lastName);
     var userLogin = await user.getRegister();
     // print("your user name is ="+ userName);
     // print("your user password is ="+ passWord);
@@ -60,7 +73,7 @@ class _RegisterState extends State<Register> {
         context: context,
         type: AlertType.success,
         title: "Account Created",
-        desc: "Verification link sent to the email",
+        desc: "Verification link is sent to your email",
         buttons: [
           DialogButton(
             color: Kcolor,
@@ -82,8 +95,8 @@ class _RegisterState extends State<Register> {
       Alert(
         context: context,
         type: AlertType.warning,
-        title: "Account not Created",
-        desc: "Already Account exits",
+        title: "Account cannot be created",
+        desc: "A similar account already exists",
         buttons: [
           DialogButton(
             color: Kcolor,
@@ -105,6 +118,7 @@ class _RegisterState extends State<Register> {
 
   void validate(){
     if(formKey.currentState!.validate()){
+
       register();
     }else{
       print('Not Validate');
