@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
 
     final arguments = ModalRoute.of(context)!.settings.arguments as HomeData;
     print("user name is saved "+ arguments.title);
-    print("user name is"+ userState.getUserName().toString());
+    print("user name is now "+ userState.getUserName().toString());
 
     // setState(() {
     //   settheUserProfile(arguments.title.toString());

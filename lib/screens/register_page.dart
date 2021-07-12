@@ -63,7 +63,7 @@ class _RegisterState extends State<Register> {
 
   Future<void> register() async {
     // getIP();
-    UserServices user = UserServices(realDevice, email, password, firstName,lastName);
+    UserServices user = UserServices(mobileEmu, email, password, firstName,lastName);
     var userLogin = await user.getRegister();
     // print("your user name is ="+ userName);
     // print("your user password is ="+ passWord);

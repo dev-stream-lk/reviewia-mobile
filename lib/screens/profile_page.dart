@@ -8,9 +8,12 @@ import 'package:reviewia/components/post_on_profile.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/chatList.dart';
 import 'package:reviewia/screens/contactUs.dart';
+import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/login_page.dart';
 import 'package:reviewia/screens/search_page.dart';
 import 'package:reviewia/services/userState.dart';
+
+import '../home_data.dart';
 
 class ProfilePage extends StatefulWidget {
   bool _canEdit = true;
@@ -68,6 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     // getUser ();
+    print("build it ");
     return Scaffold(
       appBar: AppBar(
 
@@ -282,27 +286,72 @@ class _ProfilePageState extends State<ProfilePage> {
                 Container(
                   height: MediaQuery.of(context).size.height * 200 / 659,
                   // color: Colors.blue,
-                  child: Column(
-                    children: [
-                      FormFeild(
-                          name: email.toString(),
-                          type: "Name",
-                          onChanged: getValueName),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 10 / 659,
-                      ),
-                      FormFeild(
-                          name: "********",
-                          type: "Password",
-                          onChanged: getValuePassword),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 10 / 659,
-                      ),
-                      FormFeild(
-                          name: email.toString(),
-                          type: "Email",
-                          onChanged: getValueName),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        FormFeild(
+                            name: email.toString(),
+                            type: "Name",
+                            onChanged: getValueName),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 10 / 659,
+                        ),
+                        FormFeild(
+                            name: "********",
+                            type: "Password",
+                            onChanged: getValuePassword),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 10 / 659,
+                        ),
+                        FormFeild(
+                            name: email,
+                            type: "Email",
+                            onChanged: getValueName),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 10 / 659,
+                        ),
+                        RaisedButton(
+                          onPressed: (){
+                            setState(() {
+                              email="Damish";
+                            });
+                            // Navigator.pushReplacement(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (BuildContext context) => super.widget));
+                            // Navigator.of(context).push(new MaterialPageRoute(builder: (context) => ProfilePage()));
+                            // Navigator.pushNamed(context, HomePage.id,arguments:HomeData(email.toString()));
+                          },
+                          color: Kcolor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child:Container(
+                            width: MediaQuery.of(context).size.width*80/360,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'update',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontFamily: 'Roboto',
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.navigate_next,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ) ,
+
+                        )
+
+
+                      ],
+                    ),
                   ),
                 ),
                 Container(
