@@ -14,7 +14,7 @@ import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/register_page.dart';
 
 import '../home_data.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class HomePage extends StatefulWidget {
   static const String id = "home_page";
   int _currntIndex = 0;
@@ -131,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                           validate: (String? item) {
                             if (item == null)
                               return "Required field";
-                            else if (item == "Brasil")
+                            else if (item == "Brazil")
                               return "Invalid item";
                             else
                               return null;
