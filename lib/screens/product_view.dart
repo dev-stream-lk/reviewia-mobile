@@ -38,7 +38,7 @@ class _ProductViewState extends State<ProductView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Kcolor,
-        title: Text("Prodict View"),
+        title: Text("Product View"),
         actions: [
           IconButton(
             onPressed: () {

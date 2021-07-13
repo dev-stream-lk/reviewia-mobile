@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
           },
         ),
         title: Text(
-          "Reveiwia",
+          "Reviewia",
           style: KappTitle,
         ),
         actions: [

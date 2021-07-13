@@ -63,7 +63,7 @@ class _SearchPageState extends State<SearchPage> {
               child: Column(
                 children: [
                   ListTile(
-                    title: Text('Serached Products'),
+                    title: Text('Searched Products'),
                     subtitle: Text('more info here........'),
                   ),
                 ],
