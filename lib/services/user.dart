@@ -109,6 +109,18 @@ class UserServices {
 
   }
 
+  Future updatedProfile()async{
+    http.Response response = await http.put(
+      Uri.parse(url),
+      headers:  <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if(response.statusCode==200){
+      return "Updated completd";
+    }
+
+  }
 
 
 

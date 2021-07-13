@@ -13,13 +13,12 @@ import 'package:reviewia/screens/login_page.dart';
 import 'package:reviewia/screens/search_page.dart';
 import 'package:reviewia/services/user.dart';
 import 'package:reviewia/services/userState.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../home_data.dart';
 
 class ProfilePage extends StatefulWidget {
   bool _canEdit = true;
-  String Nameval = '';
-  String NamePass = '';
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -30,9 +29,12 @@ class _ProfilePageState extends State<ProfilePage> {
   // UserState userState = new UserState();
   String email = '';
   String realDevice = "http://192.168.8.101:8080/api/user?email=";
+  String realDeviceUpdateProfile = "http://192.168.8.101:8080/api/registration/update?email=";
   // String mobileEmu = "http://10.0.2.2:8080/api/user?email=";
   String firstName = '';
+  String lasteName ='';
   String url ='';
+  // String updateProfileUrl=realDeviceUpdateProfile;
   List<String> type = ["Service","Product"];
   List<String> brands = [
     "Home Lands",
@@ -60,11 +62,13 @@ class _ProfilePageState extends State<ProfilePage> {
     url = realDevice+emailit;
     print("thus");
     var userDetails =await UserServices(url, "email"," password", "firstName", "lastName").getUserDetails();
-    String  n = userDetails['firstName'];
-    print("userDetails:  "+ n);
+    String  _firstName = userDetails['firstName'];
+    String  _lastName = userDetails['lastName'];
+    // print("userDetails:  "+ n);
     setState(() {
       email = emailit;
-      firstName=n;
+      firstName=_firstName;
+      lasteName =_lastName;
     });
 
 
@@ -73,13 +77,15 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void getValueName(String va) {
-    widget.Nameval = va;
-    print("Your Name" + widget.Nameval);
+    firstName = va;
   }
 
   void getValuePassword(String va) {
-    widget.NamePass = va;
-    print("Your Password" + widget.NamePass);
+
+     }
+
+  void getLastName(String va){
+    lasteName= va;
   }
 
   @override
@@ -305,30 +311,69 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                         FormFeild(
                             name: firstName,
-                            type: "Name",
+                            type: "First Name",
                             onChanged: getValueName),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 10 / 659,
                         ),
                         FormFeild(
-                            name: "********",
-                            type: "Password",
-                            onChanged: getValuePassword),
+                            name: lasteName,
+                            type: "Last Name",
+                            onChanged: getLastName ),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 10 / 659,
                         ),
-                        FormFeild(
-                            name: email,
-                            type: "Email",
-                            onChanged: getValueName),
+                        // FormFeild(
+                        //     name: "********",
+                        //     type: "Password",
+                        //     onChanged: getValuePassword),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 10 / 659,
                         ),
                         RaisedButton(
-                          onPressed: (){
-                            setState(() {
-                              email="Damish";
-                            });
+                          onPressed: () async {
+                            var updatedUrl = realDeviceUpdateProfile+email+"&first="+firstName+"&last="+lasteName;
+                            print(updatedUrl);
+                            var userDetails =await UserServices(updatedUrl, "email"," ", firstName, lasteName).updatedProfile();
+                            if(userDetails.toString()=="Updated completd"){
+                              Alert(
+                                context: context,
+                                type: AlertType.success,
+                                title: "Profile is Updated",
+                                desc: "First Name and Last Name Updated",
+                                buttons: [
+                                  DialogButton(
+                                    color: Kcolor,
+                                    child: Text(
+                                      "Okay",
+                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                    ),
+                                    onPressed: () => Navigator.pushNamed(context, HomePage.id,arguments:HomeData(email)),
+                                    width: MediaQuery.of(context).size.width*100/360,
+                                  )
+                                ],
+                              ).show();
+                            }else{
+                              Alert(
+                                context: context,
+                                type: AlertType.error,
+                                title: "Problem in Updating",
+                                buttons: [
+                                  DialogButton(
+                                    color: Kcolor,
+                                    child: Text(
+                                      "Retry",
+                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                    ),
+                                    onPressed: () => Navigator.pop(context),
+                                    width: MediaQuery.of(context).size.width*100/360,
+                                  )
+                                ],
+                              ).show();
+                            }
+
+
+
                             // Navigator.pushReplacement(
                             //     context,
                             //     MaterialPageRoute(
