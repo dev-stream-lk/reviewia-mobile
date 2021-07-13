@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -25,10 +26,50 @@ class UserServices {
           "password": password,
         })
     );
-    if (response.statusCode==200){
-        await userState.setStateUserName(email);
-      return "Can Login";
+
+    // print(response.headers);
+    var S = response.headers.toString();
+    print("It is a String "+ S);
+
+     // print(slist);
+    // for(var header in slist){
+    //   if (header.isEmpty) {
+    //     continue;
+    //   }
+    //   var splitIdx = header.indexOf(': ');
+    //   if (splitIdx == -1) {
+    //     continue;
+    //   }
+    //   print("Header is: "+ header+"\n");
+    //   print("index: "+ splitIdx.toString()+"\n");
+    //   var key = header.substring(1, splitIdx).toLowerCase();
+    //   var value = header.substring(splitIdx + 2);
+    //   print("keys: "+ key + "\n");
+    //   // if (S.containsKey(key)) {
+    //   //   headers[key] = '${headers[key]}, $value';
+    //   // } else {
+    //   //   headers[key] = value;
+    //   // }
+    //   // print("index: "+ splitIdx.toString());
+    //
+    //   // print("ss: "+ header);
+    // }
+
+    var ss = S.indexOf('authorization');
+    print("It is a String "+ ss.toString());
+    if(ss.toString()!='-1'){
+      var e = S.indexOf("access-control-max-age");
+      print(e.toString());
+      var sString = S.substring(ss.toInt()+15,e.toInt()-1);
+      print(sString);
+      if (response.statusCode==200 && ss != -1){
+        await userState.setStateUserName(email,sString);
+        return "Can Login";
+      }
     }
+
+
+
     // if(response.)
   }
 
@@ -50,6 +91,19 @@ class UserServices {
       return "Account is Created";
     }
     // if(response.)
+  }
+  
+  Future getUserDetails()async{
+    String t = await userState.getToken();
+    print("print token is "+ t);
+    http.Response response = await http.get(
+      Uri.parse(url),
+      headers: {
+       'Authorization': t,
+      },
+    );
+    print(response.body);
+
   }
 
 

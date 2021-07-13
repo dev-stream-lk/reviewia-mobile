@@ -32,9 +32,9 @@ class _RegisterState extends State<Register> {
   String lastName="";
   String password ='';
   String email = '';
-  String mobileEmu = "http://10.0.2.2:8080/api/registration";
-  // String realDevice = "http://192.168.8.102:8080/api/registration";
-  String realDevice = "http://192.168.8.100:8080/api/registration";
+  // String mobileEmu = "http://10.0.2.2:8080/api/registration";
+  String realDevice = "http://192.168.8.101:8080/api/registration";
+  // String realDevice = "http://192.168.8.100:8080/api/registration";
 
   @override
 
@@ -63,7 +63,7 @@ class _RegisterState extends State<Register> {
 
   Future<void> register() async {
     // getIP();
-    UserServices user = UserServices(mobileEmu, email, password, firstName,lastName);
+    UserServices user = UserServices(realDevice, email, password, firstName,lastName);
     var userLogin = await user.getRegister();
     // print("your user name is ="+ userName);
     // print("your user password is ="+ passWord);

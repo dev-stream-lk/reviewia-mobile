@@ -11,6 +11,7 @@ import 'package:reviewia/screens/contactUs.dart';
 import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/login_page.dart';
 import 'package:reviewia/screens/search_page.dart';
+import 'package:reviewia/services/user.dart';
 import 'package:reviewia/services/userState.dart';
 
 import '../home_data.dart';
@@ -55,6 +56,9 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       email = emailit;
     });
+
+    // UserServices us = UserServices("http://localhost:8080/api/user?email=d@gmail.com", "email"," password", "firstName", "lastName");
+    UserServices("http://192.168.8.101:8080/api/user?email=d@gmail.com", "email"," password", "firstName", "lastName").getUserDetails();
 
   }
 
