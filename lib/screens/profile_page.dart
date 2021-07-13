@@ -29,6 +29,10 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   // UserState userState = new UserState();
   String email = '';
+  String realDevice = "http://192.168.8.101:8080/api/user?email=";
+  // String mobileEmu = "http://10.0.2.2:8080/api/user?email=";
+  String firstName = '';
+  String url ='';
   List<String> type = ["Service","Product"];
   List<String> brands = [
     "Home Lands",
@@ -53,12 +57,18 @@ class _ProfilePageState extends State<ProfilePage> {
   void getUser () async {
     String emailit = (await UserState().getUserName());
     print("your email is = "+ emailit.toString());
+    url = realDevice+emailit;
+    print("thus");
+    var userDetails =await UserServices(url, "email"," password", "firstName", "lastName").getUserDetails();
+    String  n = userDetails['firstName'];
+    print("userDetails:  "+ n);
     setState(() {
       email = emailit;
+      firstName=n;
     });
 
+
     // UserServices us = UserServices("http://localhost:8080/api/user?email=d@gmail.com", "email"," password", "firstName", "lastName");
-    UserServices("http://192.168.8.101:8080/api/user?email=d@gmail.com", "email"," password", "firstName", "lastName").getUserDetails();
 
   }
 
@@ -294,7 +304,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       children: [
                         FormFeild(
-                            name: email.toString(),
+                            name: firstName,
                             type: "Name",
                             onChanged: getValueName),
                         SizedBox(

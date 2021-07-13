@@ -102,7 +102,10 @@ class UserServices {
        'Authorization': t,
       },
     );
-    print(response.body);
+    String data = response.body;
+    var decodedUserData = jsonDecode(data);
+    print(decodedUserData);
+    return decodedUserData;
 
   }
 
