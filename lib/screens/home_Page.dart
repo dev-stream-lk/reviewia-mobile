@@ -44,8 +44,8 @@ class _HomePageState extends State<HomePage> {
   ];
 
 
-  void  settheUserProfile(String s) async {
-     k =  await userState.setStateUserName(s);
+  void  settheUserProfile(String s,String t) async {
+     k =  await userState.setStateUserName(s,t);
      print(k);
   }
 
@@ -231,7 +231,7 @@ class _HomePageState extends State<HomePage> {
 
                 ),
                 onTap: () {
-                  settheUserProfile('');
+                  settheUserProfile('','');
                   Navigator.pushNamed(context, Login.id);
                 },
               ),
