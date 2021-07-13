@@ -166,7 +166,7 @@ class _AddPost2State extends State<AddPost2> {
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Text(
-                                              'choose Image',
+                                              'Choose Image',
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 18,

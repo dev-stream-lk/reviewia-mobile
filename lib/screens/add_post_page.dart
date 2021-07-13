@@ -204,7 +204,7 @@ class _AddPostState extends State<AddPost> {
                       onChanged: (item) {
                         print(item);
                       },
-                      selectedItem: "Select category",
+                      selectedItem: "Select Category",
                       showSearchBox: true,
                       searchBoxDecoration: InputDecoration(hintText: "Search", border: OutlineInputBorder()),
                       backgroundColor: Colors.white,
