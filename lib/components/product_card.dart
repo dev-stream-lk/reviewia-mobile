@@ -21,7 +21,7 @@ class _ProductCardState extends State<ProductCard> {
     return Container(
       child: GestureDetector(
         onTap: () {
-            Navigator.pushNamed(context, ProductView.id);
+          Navigator.pushNamed(context, ProductView.id);
         },
         child: Container(
           height: MediaQuery.of(context).size.height * 0.5,
@@ -60,14 +60,29 @@ class _ProductCardState extends State<ProductCard> {
                         child: CircleAvatar(
                           backgroundColor: Color(0xFFC494C4),
                           backgroundImage: AssetImage('images/pep.jpg'),
-                          radius: MediaQuery.of(context).size.width * 22.58 / 360,
+                          radius:
+                              MediaQuery.of(context).size.width * 22.58 / 360,
                         ),
                       ),
                       Expanded(
-                          flex: 3,
+                          flex: 4,
                           child:
                               Text("Chamari Wikrmawardna", style: KPostCard)),
-                      Expanded(flex: 1, child: Icon(Icons.settings))
+                      Expanded(
+                          flex: 1,
+                          child: PopupMenuButton(
+                            icon: Icon(Icons.more_vert),
+                            onSelected: (item) => {print(item)},
+                            itemBuilder: (context) => [
+                              PopupMenuItem<int>(
+                                value: 0,
+                                child: Text(
+                                  "Report",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            ],
+                          ))
                     ],
                   ),
                 ),
@@ -107,7 +122,6 @@ class _ProductCardState extends State<ProductCard> {
                               color: Color(0xFF1A6CD3),
                               fontFamily: 'Roboto',
                               fontWeight: FontWeight.w700,
-
                             ),
                           )),
                       Expanded(
@@ -133,9 +147,9 @@ class _ProductCardState extends State<ProductCard> {
                                   color: Kcolor,
                                 ),
                                 onRatingUpdate: (rating) {
-                                 setState(() {
-                                   rate= rating;
-                                 });
+                                  setState(() {
+                                    rate = rating;
+                                  });
                                 },
                               ),
                             ],
