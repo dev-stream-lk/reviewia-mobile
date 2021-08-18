@@ -10,7 +10,7 @@ class ProductViewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * 0.70,
       margin: EdgeInsets.only(bottom: 10, top: 10, left: 10, right: 10),
       decoration: BoxDecoration(
         // color: Colors.cyan,

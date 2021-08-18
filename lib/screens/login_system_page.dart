@@ -6,6 +6,7 @@ import 'package:reviewia/components/blue_painter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/constrains/validation.dart';
 import 'package:reviewia/home_data.dart';
 import 'package:reviewia/screens/fogotPassword.dart';
@@ -27,6 +28,7 @@ class _LoginSystemState extends State<LoginSystem> {
   String passWord='';
   String mobileEmu = "http://10.0.2.2:8080/api/login";
   String realDevice = "http://192.168.8.101:8080/api/login";
+  String url = KBaseUrl+"api/login";
 
   // String realDevice = "http://192.168.8.100:8080/api/login";
 
@@ -36,7 +38,7 @@ class _LoginSystemState extends State<LoginSystem> {
 
 
   Future<void> login() async {
-    UserServices user = UserServices(realDevice, userName, passWord, "","");
+    UserServices user = UserServices(url, userName, passWord, "","");
     var userLogin = await user.getLogin();
     // print("your user name is ="+ userName);
     // print("your user password is ="+ passWord);
