@@ -28,8 +28,8 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   // UserState userState = new UserState();
   String email = '';
-  String realDevice = "http://192.168.8.101:8080/api/user?email=";
-  String realDeviceUpdateProfile = "http://192.168.8.101:8080/api/registration/update?email=";
+  String realDevice = "http://192.168.43.241:8080/api/user?email=";
+  String realDeviceUpdateProfile = "http://192.168.43.241:8080/api/registration/update?email=";
   // String mobileEmu = "http://10.0.2.2:8080/api/user?email=";
   String firstName = '';
   String lasteName ='';
