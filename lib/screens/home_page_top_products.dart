@@ -4,6 +4,9 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:reviewia/components/product_card.dart';
 import 'package:reviewia/components/selction_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/screens/chatList.dart';
+import 'package:reviewia/screens/product_list.dart';
+import 'package:reviewia/screens/profile_page.dart';
 import 'package:search_choices/search_choices.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
@@ -15,7 +18,7 @@ class HomePageTopProducts extends StatefulWidget {
 }
 
 class _HomePageTopProductsState extends State<HomePageTopProducts> {
-  List<String> locations = ["1","2","3","4","5"];
+  List<String> locations = ["1", "2", "3", "4", "5"];
   String? selectedValueSingleDialog;
   @override
   Widget build(BuildContext context) {
@@ -28,20 +31,23 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                margin: EdgeInsets.symmetric(vertical:MediaQuery.of(context).size.height * 0.015),
+                  margin: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height * 0.015),
                   child: CupertinoSearchTextField(
                     padding: EdgeInsets.all(20),
                     placeholder: "Search Here",
-
                   )),
               Container(
                 // margin: EdgeInsets.symmetric(horizontal:MediaQuery.of(context).size.height * 0.020),
-                height: MediaQuery.of(context).size.height*0.1485,
+                height: MediaQuery.of(context).size.height * 0.1485,
                 child: ListView(
                   padding: EdgeInsets.all(15),
                   scrollDirection: Axis.horizontal,
                   children: <Widget>[
-                    SelectionCard(title: "Products"),
+                    GestureDetector(
+                      child: SelectionCard(title: "Products"),
+                      onTap: () => {Navigator.pushNamed(context, ProductList.id)},
+                    ),
                     Divider(
                       indent: 12,
                       thickness: 25,
@@ -65,8 +71,8 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical:MediaQuery.of(context).size.height * 0.015),
-
+                margin: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height * 0.015),
                 child: Text(
                   'Most Recent Posts',
                   style: KReviewiaMostTitle,
@@ -79,7 +85,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                     scrollDirection: Axis.vertical,
                     itemCount: locations.length,
                     shrinkWrap: true,
-                    itemBuilder: (context,index){
+                    itemBuilder: (context, index) {
                       return ProductCard();
                     }),
               ),
@@ -92,7 +98,6 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
               // ProductCard(),
               // ProductCard(),
               // ProductCard(),
-
             ],
           ),
         ),
@@ -100,4 +105,3 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
     ));
   }
 }
-
