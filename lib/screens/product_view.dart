@@ -108,7 +108,12 @@ void _bootomPage(BuildContext context) {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: Text("Add a text"),
+                    child: TextField(
+                      decoration: InputDecoration(
+                          border:InputBorder.none,
+                          hintText: 'Enter a Your Review'
+                      ),
+                    ),
                   ),
                 ),
               ),

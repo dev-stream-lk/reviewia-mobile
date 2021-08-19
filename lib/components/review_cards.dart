@@ -25,9 +25,9 @@ class ReviewCards extends StatelessWidget {
                   flex: 1,
                   child: CircleAvatar(
                     backgroundColor: Color(0xFFC494C4),
-                    backgroundImage: AssetImage('images/pep.jpg'),
+                    backgroundImage: AssetImage('images/rev_img.png'),
                     radius: MediaQuery.of(context).size.width *
-                        22.58 /
+                        18.58 /
                         360,
                   ),
                 ),
@@ -35,7 +35,19 @@ class ReviewCards extends StatelessWidget {
                     flex: 3,
                     child: Text("Chamari Wikrmawardna",
                         style: KPostCard)),
-                Expanded(flex: 1, child: Icon(Icons.settings))
+                Expanded(flex: 1, child: PopupMenuButton(
+                  icon: Icon(Icons.more_vert),
+                  onSelected: (item) => {print(item)},
+                  itemBuilder: (context) => [
+                    PopupMenuItem<int>(
+                      value: 0,
+                      child: Text(
+                        "Report",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ],
+                ))
               ],
             ),
           ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/components/blue_painter.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/constrains/validation.dart';
 import 'package:reviewia/home_data.dart';
 import 'package:reviewia/screens/home_Page.dart';
@@ -32,8 +33,11 @@ class _RegisterState extends State<Register> {
   String lastName="";
   String password ='';
   String email = '';
-  // String mobileEmu = "http://10.0.2.2:8080/api/registration";
-  String realDevice = "http://192.168.43.241:8080/api/registration";
+
+  String mobileEmu = "http://10.0.2.2:8080/api/registration";
+  String url = KBaseUrl+"api/registration";
+  // String realDevice = "http://192.168.8.101:8080/api/registration";
+
   // String realDevice = "http://192.168.8.100:8080/api/registration";
 
   @override
@@ -63,7 +67,7 @@ class _RegisterState extends State<Register> {
 
   Future<void> register() async {
     // getIP();
-    UserServices user = UserServices(realDevice, email, password, firstName,lastName);
+    UserServices user = UserServices(url, email, password, firstName,lastName);
     var userLogin = await user.getRegister();
     // print("your user name is ="+ userName);
     // print("your user password is ="+ passWord);

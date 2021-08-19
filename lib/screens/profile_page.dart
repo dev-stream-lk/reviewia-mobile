@@ -6,6 +6,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/components/form_feild.dart';
 import 'package:reviewia/components/post_on_profile.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/screens/chatList.dart';
 import 'package:reviewia/screens/contactUs.dart';
 import 'package:reviewia/screens/home_Page.dart';
@@ -28,12 +29,18 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   // UserState userState = new UserState();
   String email = '';
-  String realDevice = "http://192.168.43.241:8080/api/user?email=";
-  String realDeviceUpdateProfile = "http://192.168.43.241:8080/api/registration/update?email=";
-  // String mobileEmu = "http://10.0.2.2:8080/api/user?email=";
+
+  String realDevice = "http://192.168.8.101:8080/api/user?email=";
+  String realDeviceUpdateProfile = "http://192.168.8.101:8080/api/registration/update?email=";
+  String mobileEmu = "http://10.0.2.2:8080/api/user?email=";
+  String emuDeviceUpdateProfile ="http://10.0.2.2:8080/api/registration/update?email=";
+  String url = KBaseUrl+"api/user?email=";
+  String urlUpdate = KBaseUrl+"api/registration/update?email=";
+
   String firstName = '';
   String lasteName ='';
-  String url ='';
+  String urlReal ='';
+  String urlEmu='';
   // String updateProfileUrl=realDeviceUpdateProfile;
   List<String> type = ["Service","Product"];
   List<String> brands = [
@@ -59,7 +66,9 @@ class _ProfilePageState extends State<ProfilePage> {
   void getUser () async {
     String emailit = (await UserState().getUserName());
     print("your email is = "+ emailit.toString());
-    url = realDevice+emailit;
+    urlReal = realDevice+emailit;
+    urlEmu =mobileEmu+emailit;
+    url = url+emailit;
     print("thus");
     var userDetails =await UserServices(url, "email"," password", "firstName", "lastName").getUserDetails();
     String  _firstName = userDetails['firstName'];
@@ -332,8 +341,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         RaisedButton(
                           onPressed: () async {
-                            var updatedUrl = realDeviceUpdateProfile+email+"&first="+firstName+"&last="+lasteName;
-                            print(updatedUrl);
+                            var updatedUrlReal = realDeviceUpdateProfile+email+"&first="+firstName+"&last="+lasteName;
+                            var updatedUrlEmu = emuDeviceUpdateProfile+email+"&first="+firstName+"&last="+lasteName;
+                            var updatedUrl = urlUpdate+email+"&first="+firstName+"&last="+lasteName;
+                            print(updatedUrlReal);
+                             print(updatedUrlEmu);
                             var userDetails =await UserServices(updatedUrl, "email"," ", firstName, lasteName).updatedProfile();
                             if(userDetails.toString()=="Updated completd"){
                               Alert(
