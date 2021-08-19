@@ -35,7 +35,19 @@ class ReviewCards extends StatelessWidget {
                     flex: 3,
                     child: Text("Chamari Wikrmawardna",
                         style: KPostCard)),
-                Expanded(flex: 1, child: Icon(Icons.settings))
+                Expanded(flex: 1, child: PopupMenuButton(
+                  icon: Icon(Icons.more_vert),
+                  onSelected: (item) => {print(item)},
+                  itemBuilder: (context) => [
+                    PopupMenuItem<int>(
+                      value: 0,
+                      child: Text(
+                        "Report",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ],
+                ))
               ],
             ),
           ),
