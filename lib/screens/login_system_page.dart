@@ -27,8 +27,10 @@ class _LoginSystemState extends State<LoginSystem> {
   String userName='' ;
   String passWord='';
   String mobileEmu = "http://10.0.2.2:8080/api/login";
+
   String realDevice = "http://192.168.8.101:8080/api/login";
   String url = KBaseUrl+"api/login";
+
 
   // String realDevice = "http://192.168.8.100:8080/api/login";
 
