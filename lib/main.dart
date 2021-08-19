@@ -6,6 +6,7 @@ import 'package:reviewia/screens/chatList.dart';
 import 'package:reviewia/screens/contactUs.dart';
 import 'package:reviewia/screens/fogotPassword.dart';
 import 'package:reviewia/screens/groupChat.dart';
+import 'package:reviewia/screens/product_list.dart';
 import 'package:reviewia/screens/product_view.dart';
 import 'package:reviewia/screens/search_page.dart';
 import 'package:reviewia/screens/addPost_1.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
         ForgotPassword.id :(context)=> ForgotPassword(),
         ChatList.id :(context)=> ChatList(),
         GroupChat.id :(context)=> GroupChat(),
+        ProductList.id:(context)=> ProductList(),
 
       },
 
