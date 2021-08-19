@@ -18,7 +18,7 @@ class _ContactUsState extends State<ContactUs> {
       appBar: AppBar(
         backgroundColor: Kcolor,
         title: Text(
-          "Contact Us",
+          "Contact You",
           style: KappTitle,
         ),
       ),
