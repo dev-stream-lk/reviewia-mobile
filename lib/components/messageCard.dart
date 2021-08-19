@@ -25,7 +25,7 @@ class MessageCards extends StatelessWidget {
                   flex: 1,
                   child: CircleAvatar(
                     backgroundColor: Color(0xFFC494C4),
-                    backgroundImage: AssetImage('images/pep.jpg'),
+                    backgroundImage: AssetImage('images/rev_img.png'),
                     radius: MediaQuery.of(context).size.width *
                         22.58 /
                         360,
