@@ -48,15 +48,27 @@ class ProductViewCard extends StatelessWidget {
                     child: CircleAvatar(
                       backgroundColor: Color(0xFFC494C4),
                       backgroundImage: AssetImage('images/pep.jpg'),
-                      radius:
-                      MediaQuery.of(context).size.width * 22.58 / 360,
+                      radius: MediaQuery.of(context).size.width * 22.58 / 360,
                     ),
                   ),
                   Expanded(
                       flex: 3,
-                      child:
-                      Text("Chamari Wikrmawardna", style: KPostCard)),
-                  Expanded(flex: 1, child: Icon(Icons.settings))
+                      child: Text("Chamari Wikrmawardna", style: KPostCard)),
+                  Expanded(
+                      flex: 1,
+                      child: PopupMenuButton(
+                        icon: Icon(Icons.more_vert),
+                        onSelected: (item) => {print(item)},
+                        itemBuilder: (context) => [
+                          PopupMenuItem<int>(
+                            value: 0,
+                            child: Text(
+                              "Report",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ],
+                      ))
                 ],
               ),
             ),
@@ -67,16 +79,16 @@ class ProductViewCard extends StatelessWidget {
               // color: Color(0xFFCCDCF3),
               decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('images/product_one.jpg'),
-                    fit: BoxFit.fill,
-                  )),
+                image: AssetImage('images/product_one.jpg'),
+                fit: BoxFit.fill,
+              )),
             ),
           ),
           Expanded(
             flex: 2,
             child: Container(
               padding:
-              EdgeInsets.only(left: 15, top: 10, right: 15, bottom: 10),
+                  EdgeInsets.only(left: 15, top: 10, right: 15, bottom: 10),
               decoration: BoxDecoration(
                 // color: Color(0xFFAAAAAA),
                 borderRadius: BorderRadius.only(
@@ -114,8 +126,7 @@ class ProductViewCard extends StatelessWidget {
                             allowHalfRating: true,
                             itemCount: 5,
                             itemSize: 20,
-                            itemPadding:
-                            EdgeInsets.symmetric(horizontal: 4.0),
+                            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
                             itemBuilder: (context, _) => Icon(
                               Icons.star,
                               color: Kcolor,
@@ -126,7 +137,6 @@ class ProductViewCard extends StatelessWidget {
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -136,12 +146,14 @@ class ProductViewCard extends StatelessWidget {
             child: Container(
               alignment: Alignment.centerLeft,
               padding:
-              EdgeInsets.only(left: 15, top: 10, right: 15, bottom: 10),
+                  EdgeInsets.only(left: 15, top: 10, right: 15, bottom: 10),
               width: double.infinity,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Barnd",),
+                  Text(
+                    "Barnd",
+                  ),
                   Text(
                     "Year",
                   ),
@@ -150,7 +162,8 @@ class ProductViewCard extends StatelessWidget {
                   ),
                 ],
               ),
-            ),),
+            ),
+          ),
         ],
       ),
     );
