@@ -7,6 +7,7 @@ import 'package:reviewia/components/image_box.dart';
 import 'package:reviewia/screens/login_system_page.dart';
 import 'package:reviewia/screens/register_page.dart';
 
+
 class Login extends StatefulWidget {
   static String id = 'login_page';
   @override
@@ -19,11 +20,13 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     // TODO: implement initState
+
     // h = MediaQuery.of(context).size.height;
     // w = MediaQuery.of(context).size.width;
-
+    super.initState();
     print(h);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -85,5 +88,6 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+
   }
 }

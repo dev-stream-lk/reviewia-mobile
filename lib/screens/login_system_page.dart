@@ -13,6 +13,7 @@ import 'package:reviewia/screens/fogotPassword.dart';
 import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/register_page.dart';
 import 'package:reviewia/services/user.dart';
+import 'package:reviewia/services/userState.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class LoginSystem extends StatefulWidget {
@@ -97,10 +98,21 @@ class _LoginSystemState extends State<LoginSystem> {
   @override
   void initState() {
     // TODO: implement initState
+    getLogin();
     super.initState();
     if (widget._secureText == false) {
       widget._secureText = true;
       widget.icon = Icons.password;
+    }
+  }
+
+  getLogin() async{
+    UserState userState = new UserState();
+    String un = await userState.getUserName();
+    String to = await userState.getToken();
+    print("Login State UserName is = "+ un + "and Token is "+ to);
+    if(un.isNotEmpty){
+      Navigator.pushNamed(context, HomePage.id,arguments:HomeData(un));
     }
   }
 
