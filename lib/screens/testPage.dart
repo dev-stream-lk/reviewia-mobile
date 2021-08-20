@@ -80,8 +80,7 @@ class _TestAddPostState extends State<TestAddPost> {
   bool checkBox_1_Val = false;
   bool checkBox_2_Val = false;
 
-  int activeStep = 2; // Initial step set to 5.
-
+  int activeStep = 0;
   int upperBound = 2;
   @override
   Widget build(BuildContext context) {
