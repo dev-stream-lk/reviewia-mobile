@@ -23,6 +23,14 @@ class _AddPost2State extends State<AddPost2> {
   bool _imageLoading;
   ImagePicker _imagePicker;
 
+  Future<PickedFile> _loadImage( ImageSource imageSource ) async{
+    PickedFile file = await _imagePicker.getImage(source: imageSource);
+    if(null!= file){
+      //
+    }
+    return file;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -31,14 +39,6 @@ class _AddPost2State extends State<AddPost2> {
     _imageLoading = false;
     _imagePicker = ImagePicker();
 
-  }
-
-  Future<PickedFile> _loadImage( ImageSource imageSource ) async{
-    PickedFile file = await _imagePicker.getImage(source: imageSource);
-    if(null!= file){
-      //
-    }
-    return file;
   }
 
   @override
