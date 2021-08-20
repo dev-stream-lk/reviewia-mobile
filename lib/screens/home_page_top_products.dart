@@ -99,13 +99,13 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                  margin: EdgeInsets.symmetric(
-                      vertical: MediaQuery.of(context).size.height * 0.015),
-                  child: CupertinoSearchTextField(
-                    padding: EdgeInsets.all(20),
-                    placeholder: "Search Here",
-                  )),
+              // Container(
+              //     margin: EdgeInsets.symmetric(
+              //         vertical: MediaQuery.of(context).size.height * 0.015),
+              //     child: CupertinoSearchTextField(
+              //       padding: EdgeInsets.all(20),
+              //       placeholder: "Search Here",
+              //     )),
               Container(
                 // margin: EdgeInsets.symmetric(horizontal:MediaQuery.of(context).size.height * 0.020),
                 height: MediaQuery.of(context).size.height * 0.1485,
