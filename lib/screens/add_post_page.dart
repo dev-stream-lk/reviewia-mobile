@@ -56,17 +56,7 @@ class _AddPostState extends State<AddPost> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Kcolor,
-          // leading: Builder(
-          //   builder: (BuildContext context) {
-          //     return IconButton(
-          //       icon: const Icon(Icons.menu),
-          //       onPressed: () {
-          //         Scaffold.of(context).openDrawer();
-          //       },
-          //       tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          //     );
-          //   },
-          // ),
+
           title: Text(
             "Add new post",
             style: KappTitle,

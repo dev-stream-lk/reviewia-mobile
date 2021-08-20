@@ -4,6 +4,7 @@ import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/profile_page.dart';
 import 'add_post_page.dart';
 import 'home_Page.dart';
+import 'testPage.dart';
 import 'home_page_top_products.dart';
 
 class ScreenSelector extends StatefulWidget {
@@ -17,7 +18,7 @@ class _ScreenSelectorState extends State<ScreenSelector> {
   int _currentIndex = 0;
   List<Widget> _screenContainer = [
     HomePage(),
-    AddPost(),
+    TestAddPost(),
     ProfilePage(),
   ];
 
