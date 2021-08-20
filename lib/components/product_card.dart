@@ -9,6 +9,12 @@ import 'package:reviewia/screens/product_view.dart';
 import 'package:reviewia/screens/profile_page.dart';
 
 class ProductCard extends StatefulWidget {
+
+  final String title;
+  ProductCard({required this.title});
+
+
+
   @override
   _ProductCardState createState() => _ProductCardState();
 }
@@ -24,7 +30,7 @@ class _ProductCardState extends State<ProductCard> {
           Navigator.pushNamed(context, ProductView.id);
         },
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.5,
+          height: MediaQuery.of(context).size.height * 0.62,
           margin: EdgeInsets.only(bottom: 10, top: 10),
           decoration: BoxDecoration(
             // color: Colors.cyan,
@@ -115,7 +121,7 @@ class _ProductCardState extends State<ProductCard> {
                       Expanded(
                           flex: 2,
                           child: Text(
-                            "Product-1",
+                            widget.title.toString(),
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               fontSize: 18,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:reviewia/components/loading.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/components/blue_painter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -31,7 +32,7 @@ class _LoginSystemState extends State<LoginSystem> {
 
   String realDevice = "http://192.168.8.101:8080/api/login";
   String url = KBaseUrl+"api/login";
-
+  bool loading = false;
 
   // String realDevice = "http://192.168.8.100:8080/api/login";
 
@@ -47,8 +48,14 @@ class _LoginSystemState extends State<LoginSystem> {
     // print("your user password is ="+ passWord);
     print(userLogin);
     if(userLogin == "Can Login"){
+      setState(() {
+        loading = false;
+      });
       Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName));
     }else{
+      setState(() {
+        loading = false;
+      });
       print("cant Login");
       Alert(
         context: context,
@@ -78,6 +85,9 @@ class _LoginSystemState extends State<LoginSystem> {
   void validate(){
     if(formKey.currentState!.validate()){
       print("sssss");
+      setState(() {
+        loading = true;
+      });
       login();
 
 
@@ -119,11 +129,11 @@ class _LoginSystemState extends State<LoginSystem> {
   @override
   Widget build(BuildContext context) {
     print(MediaQuery.of(context).size.width.toString());
-    return Scaffold(
+    return  Scaffold(
       body: CustomPaint(
         painter: BluePainter(),
         child: SafeArea(
-          child: Center(
+          child:Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -289,7 +299,7 @@ class _LoginSystemState extends State<LoginSystem> {
                               height: MediaQuery.of(context).size.height *
                                   (15 / 692),
                             ),
-                            Center(
+                            loading ? Loading():Center(
                               child: Container(
                                 width: MediaQuery.of(context).size.width * .5,
                                 child: FlatButton(
