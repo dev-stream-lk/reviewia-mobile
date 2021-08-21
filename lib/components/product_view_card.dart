@@ -3,14 +3,17 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/constrains/constrains.dart';
 
 class ProductViewCard extends StatelessWidget {
-  const ProductViewCard({
-    Key? key,
-  }) : super(key: key);
+  late String title;
+  late String description;
+  ProductViewCard({required this.title, required this.description});
+  // const ProductViewCard({
+  //   Key? key,
+  // }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.70,
+      height: MediaQuery.of(context).size.height * 0.75,
       margin: EdgeInsets.only(bottom: 10, top: 10, left: 10, right: 10),
       decoration: BoxDecoration(
         // color: Colors.cyan,
@@ -101,7 +104,7 @@ class ProductViewCard extends StatelessWidget {
                   Expanded(
                       flex: 2,
                       child: Text(
-                        "Product-1",
+                        title,
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontSize: 18,
@@ -143,24 +146,35 @@ class ProductViewCard extends StatelessWidget {
           ),
           Expanded(
             flex: 2,
-            child: Container(
-              alignment: Alignment.centerLeft,
-              padding:
-                  EdgeInsets.only(left: 15, top: 10, right: 15, bottom: 10),
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Barnd",
-                  ),
-                  Text(
-                    "Year",
-                  ),
-                  Text(
-                    "Review Count",
-                  ),
-                ],
+            child: SingleChildScrollView(
+              child: Container(
+                alignment: Alignment.centerLeft,
+                padding:
+                    EdgeInsets.only(left: 15, top: 10, right: 15, bottom: 10),
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Sub Category: " + title,
+                    ),
+                    Text(
+                      "Year",
+                    ),
+                    Text(
+                      "Description: " + description,
+                    ),
+                    Text(
+                      "Year",
+                    ),
+                    Text(
+                      "Year",
+                    ),
+                    Text(
+                      "Year",
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -3,6 +3,7 @@ import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:reviewia/components/product_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/services/post.dart';
@@ -52,7 +53,7 @@ class _ProductListState extends State<ProductList> {
   }
 
   _listItemView(index){
-    print(_postDisplayView[index].title);
+    print(_postDisplayView[index].reviews);
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: Card(
@@ -76,6 +77,13 @@ class _ProductListState extends State<ProductList> {
         ),
       ),
     );
+  }
+
+  _listItemViewProductCards(index){
+    print("created by " + _postDisplayView[index].createdBy);
+    return Container(
+        margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.040),
+        child: ProductCard(title: _postDisplayView[index].title,detail:_postDisplayView[index]));
   }
 
   _searchBar(){
@@ -147,7 +155,7 @@ class _ProductListState extends State<ProductList> {
       body: ListView.builder(
         itemBuilder: (context, index) {
             if(!_isLoading){
-              return index == 0 ? _searchBarView() : _listItemView(index-1);
+              return index == 0 ? _searchBarView() : _listItemViewProductCards(index-1);
               // return _listItem(index);
             }else{
               return Center(

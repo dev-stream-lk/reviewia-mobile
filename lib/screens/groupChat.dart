@@ -56,7 +56,7 @@ class _GroupChatState extends State<GroupChat> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ProductViewCard(),
+              ProductViewCard(title: 'Test-1', description: '',),
               MessageCards(),
               // ReviewCards(),
             ],

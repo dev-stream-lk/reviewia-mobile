@@ -7,12 +7,15 @@ import 'package:reviewia/components/review_cards.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/search_page.dart';
+import 'package:reviewia/services/postView.dart';
 
 import 'add_post_page.dart';
 import 'home_Page.dart';
 
 class ProductView extends StatefulWidget {
-  const ProductView({Key? key}) : super(key: key);
+  late PostsView todos;
+  ProductView({required this.todos});
+  // const ProductView({Key? key,required this.todos}) : super(key: key);
   static String id = "ProductView";
 
   @override
@@ -42,7 +45,6 @@ class _ProductViewState extends State<ProductView> {
         actions: [
           IconButton(
             onPressed: () {
-              print('pop up');
               _bootomPage(context);
               ;
             },
@@ -56,7 +58,7 @@ class _ProductViewState extends State<ProductView> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ProductViewCard(),
+              ProductViewCard(title: widget.todos.title.toString(),description:widget.todos.description),
               ReviewCards(),
               ReviewCards(),
               ReviewCards(),
