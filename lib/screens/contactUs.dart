@@ -189,7 +189,7 @@ class _ContactUsState extends State<ContactUs> {
                                   height: MediaQuery.of(context).size.width * 0.30,
                                   decoration: new BoxDecoration(
                                     image: new DecorationImage(
-                                      image: ExactAssetImage('images/contactUs.png'),
+                                      image: AssetImage('images/contactUs.png'),
                                       fit: BoxFit.fitHeight,
                                     ),
                                   )),

@@ -14,6 +14,7 @@ class _SelectionCardState extends State<SelectionCard> {
       alignment: Alignment.center,
       width: MediaQuery.of(context).size.height*0.165,
       child: Text(widget.title,style: TextStyle(color: Colors.black),),
+
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(MediaQuery.of(context).size.height * 0.020),
