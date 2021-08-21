@@ -7,7 +7,7 @@ import 'package:im_stepper/main.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:conditioned/conditioned.dart';
 import 'package:find_dropdown/find_dropdown.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:multi_image_picker2/multi_image_picker2.dart';
 
 class TestAddPost extends StatefulWidget {
   const TestAddPost({Key? key}) : super(key: key);
@@ -52,33 +52,66 @@ class _TestAddPostState extends State<TestAddPost> {
   ];
 
   //****************** for picture area ******************************
+  List<Asset> images = [];
+  String _error = 'No Error Dectected';
 
-  // PickedFile _imageFile;
-  // // String _status;
-  // // bool _imageLoading;
-  // ImagePicker _imagePicker;
-  //
-  // Future<PickedFile> _loadImage( ImageSource imageSource ) async{
-  //   PickedFile file = await _imagePicker.getImage(source: imageSource);
-  //   if(null!= file){
-  //     //
-  //   }
-  //   return file;
-  // }
-  //
-  // @override
-  // void initState() {
-  //   super.initState();
-  //
-  //   _status = "";
-  //   _imageLoading = false;
-  //   _imagePicker = ImagePicker();
-  //
-  // }
+  @override
+  void initState() {
+    super.initState();
+  }
 
+  Widget buildGridView() {
+    return GridView.count(
+      crossAxisCount: 3,
+      children: List.generate(images.length, (index) {
+        Asset asset = images[index];
+        return AssetThumb(
+          asset: asset,
+          width: 300,
+          height: 300,
+        );
+      }),
+    );
+  }
+
+  Future<void> loadAssets() async {
+    List<Asset> resultList = [];
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 3,
+        enableCamera: true,
+        selectedAssets: images,
+        cupertinoOptions: CupertinoOptions(
+          takePhotoIcon: "chat",
+          doneButtonTitle: "Fatto",
+        ),
+        materialOptions: MaterialOptions(
+          actionBarColor: "#abcdef",
+          actionBarTitle: "Reviewia",
+          allViewTitle: "All Photos",
+          useDetailsView: true,
+          selectCircleStrokeColor: "#000000",
+        ),
+      );
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      images = resultList;
+    });
+  }
   //******************for terms and conditions ******************************
   bool checkBox_1_Val = false;
   bool checkBox_2_Val = false;
+
+
 
   int activeStep = 0;
   int upperBound = 2;
@@ -351,179 +384,56 @@ class _TestAddPostState extends State<TestAddPost> {
                           ),
                         ],
                       )),
-                      // Case(activeStep == 1, builder: () => Column(
-                      //   mainAxisAlignment: MainAxisAlignment.start,
-                      //   crossAxisAlignment: CrossAxisAlignment.center,
-                      //   children: [
-                      //     // smooth page indicator..
-                      //     Container(
-                      //       margin: EdgeInsets.only(top: 2 ,left: 2, right: 2) ,
-                      //       height: MediaQuery.of(context).size.height * 0.05,
-                      //       padding: EdgeInsets.all(10.0),
-                      //     ),
-                      //     // for choose image..
-                      //     Container(
-                      //       decoration: BoxDecoration(
-                      //         color: Colors.white,
-                      //         borderRadius: BorderRadius.only(
-                      //             topLeft: Radius.circular(10),
-                      //             topRight: Radius.circular(10),
-                      //             bottomLeft: Radius.circular(10),
-                      //             bottomRight: Radius.circular(10)
-                      //         ),
-                      //         boxShadow: [
-                      //           BoxShadow(
-                      //             color: Colors.grey.withOpacity(0.5),
-                      //             spreadRadius: 5,
-                      //             blurRadius: 3,
-                      //             offset: Offset(0, 3), // changes position of shadow
-                      //           ),
-                      //         ],
-                      //       ),
-                      //       margin: EdgeInsets.only(top: 2 ,left: 2, right: 2) ,
-                      //       height: MediaQuery.of(context).size.height * 0.45,
-                      //       padding: EdgeInsets.all(10.0),
-                      //       child: Column(
-                      //         children: [
-                      //           null == _imageFile
-                      //               ? Container()
-                      //               : Expanded(
-                      //             child: Image.file(
-                      //               File(_imageFile.path),
-                      //               filterQuality: FilterQuality.high,
-                      //             ),
-                      //           ),
-                      //           SizedBox(height: 10),
-                      //           SizedBox(height: 10),
-                      //           Divider(height: 10,),
-                      //           Container(
-                      //               child: RaisedButton(
-                      //                 onPressed: () async {
-                      //                   setState(() {
-                      //                     _imageLoading = true;
-                      //                     _imageFile = null;
-                      //                   });
-                      //                   PickedFile file = await _loadImage(ImageSource.gallery);
-                      //                   if(null != file){
-                      //
-                      //                     setState(() {
-                      //                       _imageFile = file;
-                      //                       _imageLoading = false;
-                      //                     });
-                      //                   }
-                      //                   else{
-                      //                     setState(() {
-                      //                       _imageFile = null;
-                      //                       _imageLoading = false;
-                      //                     });
-                      //                   }
-                      //                 },
-                      //                 color: Kcolor,
-                      //                 shape: RoundedRectangleBorder(
-                      //                     borderRadius: BorderRadius.circular(10)),
-                      //                 child:Row(
-                      //                   mainAxisAlignment: MainAxisAlignment.center,
-                      //                   crossAxisAlignment: CrossAxisAlignment.center,
-                      //                   children: [
-                      //                     Text(
-                      //                       'Choose Image',
-                      //                       style: TextStyle(
-                      //                         color: Colors.white,
-                      //                         fontSize: 18,
-                      //                         fontFamily: 'Roboto',
-                      //                         fontWeight: FontWeight.w300,
-                      //                       ),
-                      //                     ),
-                      //                   ],
-                      //                 ) ,
-                      //
-                      //               )
-                      //           ),
-                      //           Divider(height: 10,),
-                      //
-                      //         ],
-                      //       ),
-                      //     ),
-                      //
-                      //     // for choosed images line..
-                      //     Container(
-                      //       margin: EdgeInsets.only(top: 10 ,left: 2, right: 2) ,
-                      //       height: MediaQuery.of(context).size.height * 0.12,
-                      //       padding: EdgeInsets.all(10.0),
-                      //       color: Colors.blue,
-                      //     ),
-                      //
-                      //     // for Title text feild..
-                      //     Container(
-                      //         margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 10) ,
-                      //         height: MediaQuery.of(context).size.height * 0.06,
-                      //         padding: EdgeInsets.all(10.0),
-                      //         decoration: BoxDecoration(
-                      //           color: Colors.blue[50],
-                      //           borderRadius: BorderRadius.only(
-                      //               topLeft: Radius.circular(10),
-                      //               topRight: Radius.circular(10),
-                      //               bottomLeft: Radius.circular(10),
-                      //               bottomRight: Radius.circular(10)
-                      //           ),
-                      //         ),
-                      //         child: TextField(
-                      //             cursorColor: Colors.black,
-                      //             //keyboardType: inputType,
-                      //             decoration: InputDecoration(
-                      //               hintStyle: TextStyle(fontSize: 17),
-                      //               hintText: 'Caption',
-                      //               border: InputBorder.none,
-                      //               contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
-                      //             )
-                      //         )
-                      //     ),
-                      //
-                      //     // Button next....
-                      //     Container(
-                      //         width: MediaQuery.of(context).size.width * 0.27,
-                      //         margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 10),
-                      //
-                      //         child: RaisedButton(
-                      //           onPressed: (){
-                      //             Navigator.push(
-                      //               context,
-                      //               MaterialPageRoute(builder: (context) => AddPost3()),
-                      //             );
-                      //           },
-                      //           color: Kcolor,
-                      //           shape: RoundedRectangleBorder(
-                      //               borderRadius: BorderRadius.circular(10)),
-                      //           child:Row(
-                      //             mainAxisAlignment: MainAxisAlignment.center,
-                      //             children: [
-                      //               Text(
-                      //                 'Next',
-                      //                 style: TextStyle(
-                      //                   color: Colors.white,
-                      //                   fontSize: 18,
-                      //                   fontFamily: 'Roboto',
-                      //                   fontWeight: FontWeight.w300,
-                      //                 ),
-                      //               ),
-                      //               Icon(
-                      //                 Icons.navigate_next,
-                      //                 color: Colors.white,
-                      //               ),
-                      //             ],
-                      //           ) ,
-                      //
-                      //         )
-                      //     )
-                      //
-                      //   ],
-                      // )),
+                      Case(activeStep == 1, builder: () =>Expanded(
+                          child:Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.05, bottom: MediaQuery.of(context).size.height * 0.05),
+                                child: RaisedButton(
+                                  onPressed:loadAssets ,
+                                  child: Text("Pick Image"),
+                                ),
+                              ),
+                              true == images.isEmpty?
+                                  Text("Choose maximum 3 photos"):Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: Offset(0, 3), // changes position of shadow
+                                      ),]
+                                ),
+                                height: MediaQuery.of(context).size.height * 0.3,
+                                padding: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.height * 0.05,
+                                    left: MediaQuery.of(context).size.height * 0.01,
+                                    right: MediaQuery.of(context).size.height * 0.01,
+                                    bottom: MediaQuery.of(context).size.height * 0.05),
+
+                                child: Center(
+                                  child: Expanded(
+                                    child: buildGridView(),
+                                  ),
+                                ),
+
+                              ),
+
+
+                            ],
+                          )
+                      )),
                       Case(activeStep == 1, builder: () => Icon(Icons.wb_cloudy)),
                       Case(activeStep == 2, builder: () => Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          
+
                           // for Title text feild..
                           Container(
                             margin: EdgeInsets.only(top: 30 ,left: 2, right: 2, bottom: 10) ,
