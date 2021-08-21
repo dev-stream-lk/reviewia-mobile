@@ -7,11 +7,13 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/screens/login_system_page.dart';
 import 'package:reviewia/screens/product_view.dart';
 import 'package:reviewia/screens/profile_page.dart';
+import 'package:reviewia/services/postView.dart';
 
 class ProductCard extends StatefulWidget {
 
   final String title;
-  ProductCard({required this.title});
+  late PostsView detail;
+  ProductCard({required this.title, required this.detail});
 
 
 
@@ -27,7 +29,13 @@ class _ProductCardState extends State<ProductCard> {
     return Container(
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, ProductView.id);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductView( todos:widget.detail),
+            ),
+          );
+          // Navigator.pushNamed(context, ProductView.id);
         },
         child: Container(
           height: MediaQuery.of(context).size.height * 0.62,

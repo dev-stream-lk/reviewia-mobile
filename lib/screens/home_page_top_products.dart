@@ -157,7 +157,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                   itemBuilder: (context, index) {
                     if (!_isLoading) {
 
-                      return index == 0 ? _searchBar() : ProductCard(title: _postDisplay[index-1].title);
+                      return index == 0 ? _searchBar() : _listItem(index-1);
                       // return _listItem(index);
                     } else {
                       return Center(
