@@ -88,9 +88,9 @@ class _TestAddPostState extends State<TestAddPost> {
         ),
         materialOptions: MaterialOptions(
           actionBarColor: "#abcdef",
-          actionBarTitle: "Example App",
+          actionBarTitle: "Reviewia",
           allViewTitle: "All Photos",
-          useDetailsView: false,
+          useDetailsView: true,
           selectCircleStrokeColor: "#000000",
         ),
       );
@@ -396,16 +396,17 @@ class _TestAddPostState extends State<TestAddPost> {
                                   child: Text("Pick Image"),
                                 ),
                               ),
-                              Container(
+                              true == images.isEmpty?
+                                  Text("Choose maximum 3 photos"):Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
                                     boxShadow: [
                                       BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(0, 3), // changes position of shadow
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: Offset(0, 3), // changes position of shadow
                                       ),]
                                 ),
                                 height: MediaQuery.of(context).size.height * 0.3,
@@ -422,7 +423,6 @@ class _TestAddPostState extends State<TestAddPost> {
                                 ),
 
                               ),
-
 
 
                             ],
