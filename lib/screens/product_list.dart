@@ -26,7 +26,7 @@ class _ProductListState extends State<ProductList> {
 
   bool _isLoading = true;
 
-  _listItem(index){
+  _listItem(index) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: Card(
@@ -44,7 +44,6 @@ class _ProductListState extends State<ProductList> {
               Text(
                 _postDisplay[index].body,
               )
-
             ],
           ),
         ),
@@ -52,7 +51,7 @@ class _ProductListState extends State<ProductList> {
     );
   }
 
-  _listItemView(index){
+  _listItemView(index) {
     print(_postDisplayView[index].reviews);
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
@@ -71,7 +70,6 @@ class _ProductListState extends State<ProductList> {
               Text(
                 _postDisplayView[index].description,
               )
-
             ],
           ),
         ),
@@ -79,22 +77,27 @@ class _ProductListState extends State<ProductList> {
     );
   }
 
-  _listItemViewProductCards(index){
+  _listItemViewProductCards(index) {
     print("created by " + _postDisplayView[index].createdBy);
     return Container(
-        margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.040),
-        child: ProductCard(title: _postDisplayView[index].title,detail:_postDisplayView[index]));
+        margin: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.040),
+        child: ProductCard(
+          title: _postDisplayView[index].title,
+          detail: _postDisplayView[index],
+          photoUrl1: _postDisplayView[index].imgURL.toString(),
+        ));
   }
 
-  _searchBar(){
+  _searchBar() {
     return Padding(
       padding: EdgeInsets.all(8),
       child: CupertinoSearchTextField(
         placeholder: "Search",
-        onChanged: (text){
-          text =text.toLowerCase();
+        onChanged: (text) {
+          text = text.toLowerCase();
           setState(() {
-            _postDisplay = _post.where((element){
+            _postDisplay = _post.where((element) {
               var postTi = element.title.toLowerCase();
               return postTi.contains(text);
             }).toList();
@@ -104,16 +107,15 @@ class _ProductListState extends State<ProductList> {
     );
   }
 
-
-  _searchBarView(){
+  _searchBarView() {
     return Padding(
       padding: EdgeInsets.all(8),
       child: CupertinoSearchTextField(
         placeholder: "Search",
-        onChanged: (text){
-          text =text.toLowerCase();
+        onChanged: (text) {
+          text = text.toLowerCase();
           setState(() {
-            _postDisplayView = _postView.where((element){
+            _postDisplayView = _postView.where((element) {
               var postTi = element.title.toLowerCase();
               return postTi.contains(text);
             }).toList();
@@ -133,11 +135,11 @@ class _ProductListState extends State<ProductList> {
     //    _postDisplay = _post;
     //  });
     // });
-    fetchPostView().then((value){
+    fetchPostView().then((value) {
       setState(() {
-        _isLoading=false;
+        _isLoading = false;
         _postView.addAll(value);
-        _postDisplayView=_postView;
+        _postDisplayView = _postView;
       });
     });
     super.initState();
@@ -154,18 +156,19 @@ class _ProductListState extends State<ProductList> {
       ),
       body: ListView.builder(
         itemBuilder: (context, index) {
-            if(!_isLoading){
-              return index == 0 ? _searchBarView() : _listItemViewProductCards(index-1);
-              // return _listItem(index);
-            }else{
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
+          if (!_isLoading) {
+            return index == 0
+                ? _searchBarView()
+                : _listItemViewProductCards(index - 1);
+            // return _listItem(index);
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
         },
         itemCount: _postDisplayView.length + 1,
       ),
     );
-
   }
 }
