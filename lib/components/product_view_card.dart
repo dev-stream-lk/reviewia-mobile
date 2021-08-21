@@ -6,7 +6,8 @@ class ProductViewCard extends StatelessWidget {
   late String title;
   late String description;
   late double rating;
-  ProductViewCard({required this.title, required this.description, required this.rating});
+  late String photoUrl1;
+  ProductViewCard({required this.title, required this.description, required this.rating,required this.photoUrl1});
   // const ProductViewCard({
   //   Key? key,
   // }) : super(key: key);
@@ -81,11 +82,35 @@ class ProductViewCard extends StatelessWidget {
             flex: 5,
             child: Container(
               // color: Color(0xFFCCDCF3),
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                image: AssetImage('images/product_one.jpg'),
-                fit: BoxFit.fill,
-              )),
+              // decoration: BoxDecoration(
+              //     image: DecorationImage(
+              //   image: AssetImage('images/product_one.jpg'),
+              //   fit: BoxFit.fill,
+              // )),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Image.network(
+                  photoUrl1,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
           Expanded(
