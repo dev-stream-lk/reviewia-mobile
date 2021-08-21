@@ -52,7 +52,7 @@ class _ProductListState extends State<ProductList> {
   }
 
   _listItemView(index){
-    print(_postDisplayView[index].title);
+    print(_postDisplayView[index].reviews);
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: Card(
