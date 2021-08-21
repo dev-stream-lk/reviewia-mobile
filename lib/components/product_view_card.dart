@@ -5,7 +5,8 @@ import 'package:reviewia/constrains/constrains.dart';
 class ProductViewCard extends StatelessWidget {
   late String title;
   late String description;
-  ProductViewCard({required this.title, required this.description});
+  late double rating;
+  ProductViewCard({required this.title, required this.description, required this.rating});
   // const ProductViewCard({
   //   Key? key,
   // }) : super(key: key);
@@ -118,12 +119,12 @@ class ProductViewCard extends StatelessWidget {
                     child: Container(
                       child: Row(
                         children: [
-                          Text("4.5"),
+                          Text(rating.toString()),
                           SizedBox(
                             width: 10,
                           ),
                           RatingBar.builder(
-                            initialRating: 2.5,
+                            initialRating: rating,
                             minRating: 1,
                             direction: Axis.horizontal,
                             allowHalfRating: true,

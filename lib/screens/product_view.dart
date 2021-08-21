@@ -58,7 +58,7 @@ class _ProductViewState extends State<ProductView> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ProductViewCard(title: widget.todos.title.toString(),description:widget.todos.description),
+              ProductViewCard(title: widget.todos.title.toString(),description:widget.todos.description,rating:widget.todos.rate),
               ReviewCards(),
               ReviewCards(),
               ReviewCards(),

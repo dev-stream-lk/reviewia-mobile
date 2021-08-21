@@ -22,7 +22,7 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  double rate = 3.0;
+  // double rate = widget.detail.rate;
 
   @override
   Widget build(BuildContext context) {
@@ -143,12 +143,12 @@ class _ProductCardState extends State<ProductCard> {
                         child: Container(
                           child: Row(
                             children: [
-                              Text(rate.toString()),
+                              Text(widget.detail.rate.toString()),
                               SizedBox(
                                 width: 10,
                               ),
                               RatingBar.builder(
-                                initialRating: rate,
+                                initialRating: widget.detail.rate,
                                 minRating: 1,
                                 direction: Axis.horizontal,
                                 allowHalfRating: true,
@@ -161,11 +161,10 @@ class _ProductCardState extends State<ProductCard> {
                                   color: Kcolor,
                                 ),
                                 onRatingUpdate: (rating) {
-                                  setState(() {
-                                    rate = rating;
-                                  });
+
                                 },
                               ),
+
                             ],
                           ),
                         ),
