@@ -2,12 +2,13 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:reviewia/constrains/constrains.dart';
-import 'package:reviewia/screens/add_post_page2.dart';
-import 'package:im_stepper/main.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:conditioned/conditioned.dart';
 import 'package:find_dropdown/find_dropdown.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
+import 'package:reviewia/constrains/urlConstrain.dart';
+import 'package:reviewia/services/addPost.dart';
+import 'package:flutter/scheduler.dart';
 
 class TestAddPost extends StatefulWidget {
   const TestAddPost({Key? key}) : super(key: key);
@@ -17,6 +18,11 @@ class TestAddPost extends StatefulWidget {
 }
 
 class _TestAddPostState extends State<TestAddPost> {
+
+  String url =  KBaseUrl+ "api/public/category/all";
+
+
+
 //******************for basic info******************************
   //Date time format..
   DateTime date = DateTime.now();
@@ -58,6 +64,13 @@ class _TestAddPostState extends State<TestAddPost> {
   @override
   void initState() {
     super.initState();
+    print("Add post page******");
+    SchedulerBinding.instance!.addPostFrameCallback((_) => getCategory());
+  }
+
+  void getCategory () async {
+    String data = await getUserDetails(url);
+    print(data);
   }
 
   Widget buildGridView() {
