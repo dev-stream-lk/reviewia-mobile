@@ -1,7 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/components/image_box.dart';
+import 'package:reviewia/components/loading.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/screens/login_system_page.dart';
@@ -13,8 +17,8 @@ class ProductCard extends StatefulWidget {
 
   final String title;
   late PostsView detail;
-  ProductCard({required this.title, required this.detail});
-
+  late String photoUrl1;
+  ProductCard({required this.title, required this.detail,required this.photoUrl1});
 
 
   @override
@@ -22,7 +26,31 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  double rate = 3.0;
+  // double rate = widget.detail.rate;
+  var t;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
+  Future<Uint8List> LoadImage()async{
+    final ByteData imageData = await NetworkAssetBundle(Uri.parse("https://www.humtechke.com/wp-content/uploads/2021/05/Samsung-Galaxy-F52-5G-600x521.jpg")).load("");
+    final Uint8List bytes = imageData.buffer.asUint8List();
+    return bytes;
+  }
+
+  loading(BuildContext context, Widget child,ImageChunkEvent loadingProgress){
+
+    var one = int.parse(loadingProgress.expectedTotalBytes.toString());
+    if (loadingProgress == null) return child;
+    return Center(
+      child: CircularProgressIndicator(
+        value: loadingProgress.expectedTotalBytes != null ?
+        loadingProgress.cumulativeBytesLoaded / one : null,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,14 +131,39 @@ class _ProductCardState extends State<ProductCard> {
               ),
               Expanded(
                 flex: 5,
-                child: Container(
                   // color: Color(0xFFCCDCF3),
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                    image: AssetImage('images/product_one.jpg'),
-                    fit: BoxFit.fill,
-                  )),
-                ),
+                  // decoration: BoxDecoration(
+                  //     image: DecorationImage(
+                  //       // image:Image.memory(),
+                  //   image: AssetImage('images/image_one.jpg'),
+                  //   //     image: Image.network("https://www.humtechke.com/wp-content/uploads/2021/05/Samsung-Galaxy-F52-5G-600x521.jpg"),
+                  //   fit: BoxFit.fill,
+                  // )),
+                  child:DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Image.network(
+                        widget.photoUrl1,
+                       fit: BoxFit.cover,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        }
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
               ),
               Expanded(
                 flex: 2,
@@ -143,12 +196,12 @@ class _ProductCardState extends State<ProductCard> {
                         child: Container(
                           child: Row(
                             children: [
-                              Text(rate.toString()),
+                              Text(widget.detail.rate.toString()),
                               SizedBox(
                                 width: 10,
                               ),
                               RatingBar.builder(
-                                initialRating: rate,
+                                initialRating: widget.detail.rate,
                                 minRating: 1,
                                 direction: Axis.horizontal,
                                 allowHalfRating: true,
@@ -161,11 +214,10 @@ class _ProductCardState extends State<ProductCard> {
                                   color: Kcolor,
                                 ),
                                 onRatingUpdate: (rating) {
-                                  setState(() {
-                                    rate = rating;
-                                  });
+
                                 },
                               ),
+
                             ],
                           ),
                         ),

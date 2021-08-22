@@ -58,7 +58,13 @@ class _ProductViewState extends State<ProductView> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ProductViewCard(title: widget.todos.title.toString(),description:widget.todos.description),
+              ProductViewCard(
+                title: widget.todos.title.toString(),
+                description: widget.todos.description,
+                rating: widget.todos.rate,
+                photoUrl1:
+                   widget.todos.imgURL,
+              ),
               ReviewCards(),
               ReviewCards(),
               ReviewCards(),
@@ -75,7 +81,8 @@ void _bootomPage(BuildContext context) {
   showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(MediaQuery.of(context).size.width*25/360)),
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(MediaQuery.of(context).size.width * 25 / 360)),
       ),
       builder: (BuildContext bc) {
         return Container(
@@ -90,10 +97,17 @@ void _bootomPage(BuildContext context) {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Write a Review",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
-                      IconButton(onPressed: (){
-                        Navigator.pop(context);
-                      }, icon: Icon(Icons.close),)
+                      Text(
+                        "Write a Review",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w700),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.close),
+                      )
                     ],
                   ),
                 ),
@@ -106,15 +120,13 @@ void _bootomPage(BuildContext context) {
                       border: Border.all(
                         color: Colors.black,
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(20))
-                  ),
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: TextField(
                       decoration: InputDecoration(
-                          border:InputBorder.none,
-                          hintText: 'Enter a Your Review'
-                      ),
+                          border: InputBorder.none,
+                          hintText: 'Enter a Your Review'),
                     ),
                   ),
                 ),
@@ -129,11 +141,9 @@ void _bootomPage(BuildContext context) {
                   child: FlatButton(
                     padding: EdgeInsets.symmetric(
                         vertical:
-                        MediaQuery.of(context).size.height *
-                            (12.5 / 692),
+                            MediaQuery.of(context).size.height * (12.5 / 692),
                         horizontal:
-                        MediaQuery.of(context).size.width *
-                            (40 / 360)),
+                            MediaQuery.of(context).size.width * (40 / 360)),
                     color: Kcolor,
                     onPressed: () {
                       Navigator.pushNamed(context, ProductView.id);
@@ -151,9 +161,7 @@ void _bootomPage(BuildContext context) {
                   ),
                 ),
               ),
-
             ],
-            
           ),
         );
       });
