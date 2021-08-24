@@ -9,7 +9,7 @@ import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/services/addPost.dart';
 import 'package:reviewia/services/network.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
 
 class TestAddPost extends StatefulWidget {
   const TestAddPost({Key? key}) : super(key: key);
@@ -47,7 +47,6 @@ class _TestAddPostState extends State<TestAddPost> {
 
   List<String> type = ["Service","Product"];
   List<String> brands = [];
-  List<String> category = [];
 
   //****************** for picture area ******************************
   List<Asset> images = [];
@@ -57,12 +56,16 @@ class _TestAddPostState extends State<TestAddPost> {
   void initState() {
     super.initState();
   }
-
+  var selected;
+  List<AddPost_category> _categories=[];
   void getCategory () async {
-    List<AddPost_category> _categories = await fetchCategory();
+    _categories = await fetchCategory();
     print("List of categories...");
-    for(int x = 0; x< _categories.length; x++){
-      category.add(_categories[x].categoryName);
+    // for(int x = 0; x< _categories.length; x++){
+    //   category.add(_categories[x].categoryName);
+    // }
+    for (var item in _categories) {
+      print('${item.categoryName} - ${item.categoryId}');
     }
   }
 
@@ -229,35 +232,36 @@ class _TestAddPostState extends State<TestAddPost> {
                               ),
 
                               //Type selection dropdown..
-                              child: FindDropdown(
-                                items: type,
-                                onChanged: (item) {
-                                  print(item);
-                                },
-                                selectedItem: "Select type",
-                                showSearchBox: false,
-                                searchBoxDecoration: InputDecoration(hintText: "Search", border: OutlineInputBorder()),
-                                backgroundColor: Colors.white,
-                                titleStyle: TextStyle(color: Colors.blue),
-                                validate: (String? item) {
-                                  if (item == null)
-                                    return "Required field";
-                                  else if (item == "Brasil")
-                                    return "Invalid item";
-                                  else
-                                    return null;
-                                },
-                              )
-                          ),
+                              // child: FindDropdown(
+                              //   items: type,
+                              //   onChanged: (item) {
+                              //     print(item);
+                              //   },
+                              //   selectedItem: "Select type",
+                              //   showSearchBox: false,
+                              //   searchBoxDecoration: InputDecoration(hintText: "Search", border: OutlineInputBorder()),
+                              //   backgroundColor: Colors.white,
+                              //   titleStyle: TextStyle(color: Colors.blue),
+                              //   validate: (String? item) {
+                              //     if (item == null)
+                              //       return "Required field";
+                              //     else if (item == "Brasil")
+                              //       return "Invalid item";
+                              //     else
+                              //       return null;
+                              //   },
+                              // )
+                            child: Container(
+                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
+                              height: MediaQuery.of(context).size.height * 0.06,
+                              padding: EdgeInsets.all(0.0),
 
-                          // for Category selection dropdown field..
-                          InkWell(
-                              child: Container(
-                                margin: EdgeInsets.only( left: 2, right: 2) ,
-                                height: MediaQuery.of(context).size.height * 0.12,
-                                padding: EdgeInsets.all(0.0),
+                              child: CustomSearchableDropDown(
+                                items: _categories,
+                                label: 'Select Name',
+                                labelStyle:  TextStyle(fontSize: 17),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Colors.blue[50],
                                   borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(10),
                                       topRight: Radius.circular(10),
@@ -266,30 +270,24 @@ class _TestAddPostState extends State<TestAddPost> {
                                   ),
                                 ),
 
-                                //Type selection dropdown..
-                                child: FindDropdown(
-                                  items: category,
-                                  onChanged: (item) {
-                                    print("Im category feild...");
-                                    print(item);
-                                  },
-                                  selectedItem: "Select Category",
-                                  showSearchBox: true,
-                                  searchBoxDecoration: InputDecoration(hintText: "Search", border: OutlineInputBorder()),
-                                  backgroundColor: Colors.white,
-                                  titleStyle: TextStyle(color: Colors.blue),
-                                  validate: (String? item) {
-                                    if (item == null)
-                                      return "Required field";
-                                    else if (item == "Brasil")
-                                      return "Invalid item";
-                                    else
-                                      return null;
-                                  },
-                                )
+                                dropDownMenuItems: _categories?.map((item) {
+                                  return item.categoryName;
+                                })?.toList() ??
+                                    [],
+                                onChanged: (value){
+                                  if(value!=null)
+                                  {
+                                    selected = value.toString();
+                                    
+                                  }
+                                  else{
+                                    selected=null;
+                                  }
+                                },
+                              ),
                             ),
-                              onTap: (){print("Im category feild...");},
                           ),
+
 
                           // for date picker..
                           Container(
