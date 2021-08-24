@@ -44,7 +44,7 @@ class _ProductListState extends State<ProductList> {
               ),
               Text(
                 _postDisplay[index].body,
-              )
+              ),
             ],
           ),
         ),
@@ -116,7 +116,7 @@ class _ProductListState extends State<ProductList> {
         onChanged: (text) {
           text = text.toLowerCase();
           setState(() {
-            _postDisplayView = _postView.where((element) {
+            _postDisplayView = _postDisplayView.where((element) {
               var postTi = element.title.toLowerCase();
               return postTi.contains(text);
             }).toList();
@@ -140,7 +140,10 @@ class _ProductListState extends State<ProductList> {
       setState(() {
         _isLoading = false;
         _postView.addAll(value);
-        _postDisplayView = _postView;
+        _postDisplayView = _postView.where((element) {
+          var postTi = element.type.toLowerCase();
+          return postTi.contains("p");
+        }).toList();
       });
     });
     super.initState();
