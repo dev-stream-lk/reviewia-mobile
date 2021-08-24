@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,6 +8,7 @@ import 'package:reviewia/components/review_cards.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/search_page.dart';
+import 'package:reviewia/services/network.dart';
 import 'package:reviewia/services/postView.dart';
 
 import 'add_post_page.dart';
@@ -29,7 +31,7 @@ class _ProductViewState extends State<ProductView> {
     AddPost(),
     ProfilePage(),
   ];
-
+  List<ImgURL> _image = <ImgURL>[];
   void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
@@ -37,7 +39,15 @@ class _ProductViewState extends State<ProductView> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    // _image=;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print("Image url is");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Kcolor,
@@ -62,8 +72,9 @@ class _ProductViewState extends State<ProductView> {
                 title: widget.todos.title.toString(),
                 description: widget.todos.description,
                 rating: widget.todos.rate,
-                photoUrl1:
-                   widget.todos.imgURL,
+                photoUrl1:widget.todos.imgURL.isNotEmpty?widget.todos.imgURL[0].url.toString():"https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
+                // photoUrl1:widget.todos.imgURL,
+                // widget.todos.imgURL[0],
               ),
               ReviewCards(),
               ReviewCards(),
