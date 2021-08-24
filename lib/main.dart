@@ -15,6 +15,7 @@ import 'package:reviewia/screens/login_page.dart';
 import 'package:reviewia/screens/login_system_page.dart';
 import 'package:reviewia/screens/register_page.dart';
 import 'package:reviewia/screens/screen_selector.dart';
+import 'package:reviewia/screens/servicesList.dart';
 
 
 
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
         ChatList.id :(context)=> ChatList(),
         GroupChat.id :(context)=> GroupChat(),
         ProductList.id:(context)=> ProductList(),
-
+        ServicesList.id:(context)=> ServicesList(),
       },
 
     );

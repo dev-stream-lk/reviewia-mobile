@@ -24,6 +24,7 @@ class _ProductListState extends State<ProductList> {
   List<PostsView> _postView = <PostsView>[];
   List<PostsView> _postDisplayView = <PostsView>[];
 
+
   bool _isLoading = true;
 
   _listItem(index) {
@@ -65,7 +66,7 @@ class _ProductListState extends State<ProductList> {
                 index.toString(),
               ),
               Text(
-                _postDisplayView[index].title,
+                _postDisplayView[index].imgURL[0].url.toString(),
               ),
               Text(
                 _postDisplayView[index].description,
@@ -85,7 +86,7 @@ class _ProductListState extends State<ProductList> {
         child: ProductCard(
           title: _postDisplayView[index].title,
           detail: _postDisplayView[index],
-          photoUrl1: _postDisplayView[index].imgURL.toString(),
+          photoUrl1:_postDisplayView[index].imgURL.isNotEmpty?_postDisplayView[index].imgURL[0].url.toString():"https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
         ));
   }
 
