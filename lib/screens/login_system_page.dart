@@ -121,7 +121,7 @@ class _LoginSystemState extends State<LoginSystem> {
     String un = await userState.getUserName();
     String to = await userState.getToken();
     print("Login State UserName is = "+ un + "and Token is "+ to);
-    if(un.isNotEmpty){
+    if(un.isNotEmpty && un.toString()!="null"){
       Navigator.pushNamed(context, HomePage.id,arguments:HomeData(un));
     }
   }

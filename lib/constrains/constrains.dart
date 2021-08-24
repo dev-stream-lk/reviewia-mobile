@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:reviewia/screens/home_Page.dart';
+import 'package:reviewia/screens/profile_page.dart';
+import 'package:reviewia/screens/testPage.dart';
 
 const Kcolor = Color(0xFF15317E);
 const KBoxColor =Colors.grey;
@@ -72,4 +75,10 @@ const KBoxShadow = BoxShadow(
   blurRadius: 7,
   offset: Offset(0, 3), // changes position of shadow
 );
+
+List<Widget> KscreenContainer = [
+  HomePage(),
+  TestAddPost(),
+  ProfilePage(),
+];
 
