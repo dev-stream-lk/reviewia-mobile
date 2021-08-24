@@ -58,16 +58,17 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
   }
 
   _listItemViewProductCards(index) {
-    index = _postDisplayView.length-index-1;
+    index = _postDisplayView.length - index - 1;
     print("created by " + _postDisplayView[index].createdBy);
     return Container(
         child: ProductCard(
-          title: _postDisplayView[index].title,
-          detail: _postDisplayView[index],
-          photoUrl1:_postDisplayView[index].imgURL.isNotEmpty?_postDisplayView[index].imgURL[0].url.toString():"https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
-        ));
+      title: _postDisplayView[index].title,
+      detail: _postDisplayView[index],
+      photoUrl1: _postDisplayView[index].imgURL.isNotEmpty
+          ? _postDisplayView[index].imgURL[0].url.toString()
+          : "https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
+    ));
   }
-
 
   _searchBar() {
     return Padding(
@@ -76,7 +77,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
         placeholder: "Search",
         onChanged: (text) {
           text = text.toLowerCase();
-          if(text.isNotEmpty){
+          if (text.isNotEmpty) {
             setState(() {
               _postDisplayView = _postView.where((element) {
                 var postTi = element.title.toLowerCase();
@@ -84,15 +85,27 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
               }).toList();
             });
           }
-          if(text.isEmpty){
+          if (text.isEmpty) {
             setState(() {
               _postDisplayView = _postView;
             });
           }
-
         },
       ),
     );
+  }
+
+  Future getData() async {
+
+    fetchPostView().then((val) {
+      setState(() {
+        _postView = <PostsView>[];
+        _postDisplayView = <PostsView>[];
+        _isLoading = false;
+        _postView.addAll(val);
+        _postDisplayView = _postView;
+      });
+    });
   }
 
   @override
@@ -105,13 +118,8 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
     //     _postDisplay = _post;
     //   });
     // });
-    fetchPostView().then((val) {
-      setState(() {
-        _isLoading = false;
-        _postView.addAll(val);
-        _postDisplayView =_postView;
-      });
-    });
+    getData();
+
     super.initState();
   }
 
@@ -119,95 +127,100 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      child: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.fromLTRB(15, 10, 15, 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Container(
-              //     margin: EdgeInsets.symmetric(
-              //         vertical: MediaQuery.of(context).size.height * 0.015),
-              //     child: CupertinoSearchTextField(
-              //       padding: EdgeInsets.all(20),
-              //       placeholder: "Search Here",
-              //     )),
-              Container(
-                // margin: EdgeInsets.symmetric(horizontal:MediaQuery.of(context).size.height * 0.020),
-                height: MediaQuery.of(context).size.height * 0.1485,
-                child: ListView(
-                  padding: EdgeInsets.all(15),
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    GestureDetector(
-                      child: SelectionCard(title: "Products"),
-                      onTap: () =>
-                          {Navigator.pushNamed(context, ProductList.id)},
-                    ),
-                    Divider(
-                      indent: 12,
-                      thickness: 25,
-                    ),
-                    GestureDetector(
-                      child: SelectionCard(title: "Services"),
-                      onTap: () =>
-                          {Navigator.pushNamed(context, ServicesList.id)},
-                    ),
-                    Divider(
-                      indent: 12,
-                      thickness: 25,
-                    ),
-                    SelectionCard(title: "Most Viewed"),
-                    Divider(
-                      indent: 12,
-                      thickness: 25,
-                    ),
-                    SelectionCard(title: "My posts"),
-                    Divider(
-                      indent: 12,
-                      thickness: 25,
-                    ),
-                  ],
+        body: RefreshIndicator(
+      onRefresh: getData,
+      child: Container(
+        child: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.fromLTRB(15, 10, 15, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Container(
+                //     margin: EdgeInsets.symmetric(
+                //         vertical: MediaQuery.of(context).size.height * 0.015),
+                //     child: CupertinoSearchTextField(
+                //       padding: EdgeInsets.all(20),
+                //       placeholder: "Search Here",
+                //     )),
+                Container(
+                  // margin: EdgeInsets.symmetric(horizontal:MediaQuery.of(context).size.height * 0.020),
+                  height: MediaQuery.of(context).size.height * 0.1485,
+                  child: ListView(
+                    padding: EdgeInsets.all(15),
+                    scrollDirection: Axis.horizontal,
+                    children: <Widget>[
+                      GestureDetector(
+                        child: SelectionCard(title: "Products"),
+                        onTap: () =>
+                            {Navigator.pushNamed(context, ProductList.id)},
+                      ),
+                      Divider(
+                        indent: 12,
+                        thickness: 25,
+                      ),
+                      GestureDetector(
+                        child: SelectionCard(title: "Services"),
+                        onTap: () =>
+                            {Navigator.pushNamed(context, ServicesList.id)},
+                      ),
+                      Divider(
+                        indent: 12,
+                        thickness: 25,
+                      ),
+                      SelectionCard(title: "Most Viewed"),
+                      Divider(
+                        indent: 12,
+                        thickness: 25,
+                      ),
+                      SelectionCard(title: "My posts"),
+                      Divider(
+                        indent: 12,
+                        thickness: 25,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.height * 0.015),
-                child: Text(
-                  'Most Recent Posts',
-                  style: KReviewiaMostTitle,
-                  textAlign: TextAlign.left,
+                Container(
+                  margin: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height * 0.015),
+                  child: Text(
+                    'Most Recent Posts',
+                    style: KReviewiaMostTitle,
+                    textAlign: TextAlign.left,
+                  ),
                 ),
-              ),
-              Scrollbar(
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    if (!_isLoading) {
-                      return index == 0 ? _searchBar() : _listItemViewProductCards(index - 1);
-                      // return _listItem(index);
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  },
-                  itemCount: _postDisplayView.length + 1,
+                Scrollbar(
+                  child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      if (!_isLoading) {
+                        return index == 0
+                            ? _searchBar()
+                            : _listItemViewProductCards(index - 1);
+                        // return _listItem(index);
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
+                    itemCount: _postDisplayView.length + 1,
+                  ),
                 ),
-              ),
 
-              // ProductCard(),
-              // ProductCard(),
-              // ProductCard(),
-              // ProductCard(),
-              // ProductCard(),
-              // ProductCard(),
-              // ProductCard(),
-              // ProductCard(),
-            ],
+                // ProductCard(),
+                // ProductCard(),
+                // ProductCard(),
+                // ProductCard(),
+                // ProductCard(),
+                // ProductCard(),
+                // ProductCard(),
+                // ProductCard(),
+              ],
+            ),
           ),
         ),
       ),
