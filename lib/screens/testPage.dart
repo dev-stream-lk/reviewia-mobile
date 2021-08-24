@@ -8,6 +8,7 @@ import 'package:find_dropdown/find_dropdown.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/services/addPost.dart';
+import 'package:reviewia/services/network.dart';
 import 'package:flutter/scheduler.dart';
 
 class TestAddPost extends StatefulWidget {
@@ -45,17 +46,8 @@ class _TestAddPostState extends State<TestAddPost> {
   String valueType = "";
 
   List<String> type = ["Service","Product"];
-  List<String> brands = [
-    "Home Lands",
-    "Arduino",
-    "Atlas",
-  ];
-  List<String> category = [
-    "Education",
-    "Electronic",
-    "Jobs",
-    "Properties",
-  ];
+  List<String> brands = [];
+  List<String> category = [];
 
   //****************** for picture area ******************************
   List<Asset> images = [];
@@ -64,13 +56,14 @@ class _TestAddPostState extends State<TestAddPost> {
   @override
   void initState() {
     super.initState();
-    print("Add post page******");
-    SchedulerBinding.instance!.addPostFrameCallback((_) => getCategory());
   }
 
   void getCategory () async {
-    String data = await getUserDetails(url);
-    print(data);
+    List<AddPost_category> _categories = await fetchCategory();
+    print("List of categories...");
+    for(int x = 0; x< _categories.length; x++){
+      category.add(_categories[x].categoryName);
+    }
   }
 
   Widget buildGridView() {
@@ -208,6 +201,7 @@ class _TestAddPostState extends State<TestAddPost> {
                                 ),
                               ),
                               child: TextField(
+                                  onTap: getCategory,
                                   cursorColor: Colors.black,
                                   //keyboardType: inputType,
                                   decoration: InputDecoration(
@@ -257,40 +251,44 @@ class _TestAddPostState extends State<TestAddPost> {
                           ),
 
                           // for Category selection dropdown field..
-                          Container(
-                              margin: EdgeInsets.only( left: 2, right: 2) ,
-                              height: MediaQuery.of(context).size.height * 0.12,
-                              padding: EdgeInsets.all(0.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10)
+                          InkWell(
+                              child: Container(
+                                margin: EdgeInsets.only( left: 2, right: 2) ,
+                                height: MediaQuery.of(context).size.height * 0.12,
+                                padding: EdgeInsets.all(0.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)
+                                  ),
                                 ),
-                              ),
 
-                              //Type selection dropdown..
-                              child: FindDropdown(
-                                items: category,
-                                onChanged: (item) {
-                                  print(item);
-                                },
-                                selectedItem: "Select Category",
-                                showSearchBox: true,
-                                searchBoxDecoration: InputDecoration(hintText: "Search", border: OutlineInputBorder()),
-                                backgroundColor: Colors.white,
-                                titleStyle: TextStyle(color: Colors.blue),
-                                validate: (String? item) {
-                                  if (item == null)
-                                    return "Required field";
-                                  else if (item == "Brasil")
-                                    return "Invalid item";
-                                  else
-                                    return null;
-                                },
-                              )
+                                //Type selection dropdown..
+                                child: FindDropdown(
+                                  items: category,
+                                  onChanged: (item) {
+                                    print("Im category feild...");
+                                    print(item);
+                                  },
+                                  selectedItem: "Select Category",
+                                  showSearchBox: true,
+                                  searchBoxDecoration: InputDecoration(hintText: "Search", border: OutlineInputBorder()),
+                                  backgroundColor: Colors.white,
+                                  titleStyle: TextStyle(color: Colors.blue),
+                                  validate: (String? item) {
+                                    if (item == null)
+                                      return "Required field";
+                                    else if (item == "Brasil")
+                                      return "Invalid item";
+                                    else
+                                      return null;
+                                  },
+                                )
+                            ),
+                              onTap: (){print("Im category feild...");},
                           ),
 
                           // for date picker..
@@ -334,6 +332,7 @@ class _TestAddPostState extends State<TestAddPost> {
 
 
                           // for Category selection dropdown field..
+
                           Container(
                               margin: EdgeInsets.only( top: 20,left: 2, right: 2) ,
                               height: MediaQuery.of(context).size.height * 0.12,

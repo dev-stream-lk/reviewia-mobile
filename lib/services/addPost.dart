@@ -1,19 +1,20 @@
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
-import 'package:reviewia/constrains/urlConstrain.dart';
-import 'package:reviewia/services/post.dart';
-import 'package:reviewia/services/postView.dart';
 
-Future getUserDetails(String url)async{
+class AddPost_category {
+  late int categoryId;
+  late String categoryName;
 
-  print("add post+++++");
-  http.Response response = await http.get(
-    Uri.parse(url),
-  );
+  AddPost_category({required this.categoryId, required this.categoryName});
 
-  String data = response.body;
-  var decodedUserData = jsonDecode(data);
-  return data;
+  AddPost_category.fromJson(Map<String, dynamic> json) {
+    categoryId = json['categoryId'];
+    categoryName = json['categoryName'];
+  }
 
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['categoryId'] = this.categoryId;
+    data['categoryName'] = this.categoryName;
+
+    return data;
+  }
 }
