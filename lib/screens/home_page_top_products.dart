@@ -7,6 +7,7 @@ import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/chatList.dart';
 import 'package:reviewia/screens/product_list.dart';
 import 'package:reviewia/screens/profile_page.dart';
+import 'package:reviewia/screens/servicesList.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/services/post.dart';
 import 'package:search_choices/search_choices.dart';
@@ -60,15 +61,14 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
         onChanged: (text) {
           text = text.toLowerCase();
           setState(() {
-            if(text.length==0){
-                _postDisplay = _post.sublist(0,10);
-            }else{
+            if (text.length == 0) {
+              _postDisplay = _post.sublist(0, 10);
+            } else {
               _postDisplay = _post.where((element) {
                 var postTi = element.title.toLowerCase();
                 return postTi.contains(text);
               }).toList();
             }
-
           });
         },
       ),
@@ -82,7 +82,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
       setState(() {
         _isLoading = false;
         _post.addAll(value);
-        _postDisplay=_post.sublist(0,10);
+        _postDisplay = _post.sublist(0, 10);
       });
     });
     super.initState();
@@ -122,7 +122,11 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                       indent: 12,
                       thickness: 25,
                     ),
-                    SelectionCard(title: "Services"),
+                    GestureDetector(
+                      child: SelectionCard(title: "Services"),
+                      onTap: () =>
+                          {Navigator.pushNamed(context, ServicesList.id)},
+                    ),
                     Divider(
                       indent: 12,
                       thickness: 25,
@@ -156,8 +160,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     if (!_isLoading) {
-
-                      return index == 0 ? _searchBar() : _listItem(index-1);
+                      return index == 0 ? _searchBar() : _listItem(index - 1);
                       // return _listItem(index);
                     } else {
                       return Center(
