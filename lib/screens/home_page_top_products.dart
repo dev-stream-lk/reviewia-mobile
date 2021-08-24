@@ -10,6 +10,7 @@ import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/servicesList.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/services/post.dart';
+import 'package:reviewia/services/postView.dart';
 import 'package:search_choices/search_choices.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
@@ -25,6 +26,9 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
 
   List<Post> _post = <Post>[];
   List<Post> _postDisplay = <Post>[];
+
+  List<PostsView> _postView = <PostsView>[];
+  List<PostsView> _postDisplayView = <PostsView>[];
 
   bool _isLoading = true;
 
@@ -53,6 +57,17 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
     );
   }
 
+  _listItemViewProductCards(index) {
+    print("created by " + _postDisplayView[index].createdBy);
+    return Container(
+        child: ProductCard(
+          title: _postDisplayView[index].title,
+          detail: _postDisplayView[index],
+          photoUrl1:_postDisplayView[index].imgURL.isNotEmpty?_postDisplayView[index].imgURL[0].url.toString():"https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
+        ));
+  }
+
+
   _searchBar() {
     return Padding(
       padding: EdgeInsets.all(8),
@@ -61,14 +76,10 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
         onChanged: (text) {
           text = text.toLowerCase();
           setState(() {
-            if (text.length == 0) {
-              _postDisplay = _post.sublist(0, 10);
-            } else {
-              _postDisplay = _post.where((element) {
+              _postDisplayView = _postView.where((element) {
                 var postTi = element.title.toLowerCase();
                 return postTi.contains(text);
               }).toList();
-            }
           });
         },
       ),
@@ -78,11 +89,18 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
   @override
   void initState() {
     // TODO: implement initState
-    fetchPost().then((value) {
+    // fetchPost().then((value) {
+    //   setState(() {
+    //     _isLoading = false;
+    //     _post.addAll(value);
+    //     _postDisplay = _post;
+    //   });
+    // });
+    fetchPostView().then((val) {
       setState(() {
         _isLoading = false;
-        _post.addAll(value);
-        _postDisplay = _post.sublist(0, 10);
+        _postView.addAll(val);
+        _postDisplayView =_postView;
       });
     });
     super.initState();
@@ -160,7 +178,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     if (!_isLoading) {
-                      return index == 0 ? _searchBar() : _listItem(index - 1);
+                      return index == 0 ? _searchBar() : _listItemViewProductCards(index - 1);
                       // return _listItem(index);
                     } else {
                       return Center(
@@ -168,7 +186,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                       );
                     }
                   },
-                  itemCount: _postDisplay.length + 1,
+                  itemCount: _postDisplayView.length + 1,
                 ),
               ),
 

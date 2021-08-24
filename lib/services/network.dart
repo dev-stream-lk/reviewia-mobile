@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/services/allCategory.dart';
+import 'package:reviewia/services/categoryView.dart';
 import 'package:reviewia/services/post.dart';
 import 'package:reviewia/services/postView.dart';
 
@@ -60,4 +61,21 @@ List <ImgURL>parseImageURL(String responseBody){
   var list = json.decode(responseBody) as List<dynamic>;
   var posts = list.map((e) => ImgURL.fromJson(e)).toList();
   return posts;
+}
+
+
+List <CategoryView>parseCategoryViewGet(String responseBody){
+  var list = json.decode(responseBody) as List<dynamic>;
+  var posts = list.map((e) => CategoryView.fromJson(e)).toList();
+  return posts;
+}
+
+Future <List<CategoryView>> fetchCategoryView() async{
+  String url = KBaseUrl+"api/public/category/names";
+  final response = await http.get( Uri.parse(url));
+  if(response.statusCode==200){
+    return compute(parseCategoryViewGet,response.body);
+  }else{
+    throw Exception("API Error");
+  }
 }

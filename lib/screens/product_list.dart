@@ -3,8 +3,11 @@ import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/components/product_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/services/categoryView.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/services/post.dart';
 import 'package:reviewia/services/postView.dart';
@@ -24,8 +27,13 @@ class _ProductListState extends State<ProductList> {
   List<PostsView> _postView = <PostsView>[];
   List<PostsView> _postDisplayView = <PostsView>[];
 
+  List<CategoryView> _catView = <CategoryView>[];
+  List<CategoryView> _catDisplayView = <CategoryView>[];
+
 
   bool _isLoading = true;
+
+  bool _isLoadingCat = true;
 
   _listItem(index) {
     return Container(
@@ -90,6 +98,9 @@ class _ProductListState extends State<ProductList> {
         ));
   }
 
+  _listCategoryView(index){
+    return topBarButon(t: _catDisplayView[index].categoryName,);
+  }
   _searchBar() {
     return Padding(
       padding: EdgeInsets.all(8),
@@ -136,6 +147,13 @@ class _ProductListState extends State<ProductList> {
     //    _postDisplay = _post;
     //  });
     // });
+    fetchCategoryView().then((val) {
+        setState(() {
+        _isLoadingCat = false;
+        _catView.addAll(val);
+        _catDisplayView =_catView;
+        });
+    });
     fetchPostView().then((value) {
       setState(() {
         _isLoading = false;
@@ -158,20 +176,101 @@ class _ProductListState extends State<ProductList> {
           "All Products",
         ),
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          if (!_isLoading) {
-            return index == 0
-                ? _searchBarView()
-                : _listItemViewProductCards(index - 1);
-            // return _listItem(index);
-          } else {
-            return Center(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            flex: 2,
+            child:(!_isLoadingCat)?ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: _catDisplayView.length,
+              itemBuilder: (BuildContext context, int index){
+                return _listCategoryView(index);
+              },
+            ):Center(
               child: CircularProgressIndicator(),
-            );
-          }
-        },
-        itemCount: _postDisplayView.length + 1,
+            ),
+          ),
+          Expanded(
+            flex: 12,
+            // height: MediaQuery.of(context).size.height*0.8,
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                if (!_isLoading) {
+                  return index == 0
+                      ? _searchBarView()
+                      : _listItemViewProductCards(index - 1);
+                  // return _listItem(index);
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+              itemCount: _postDisplayView.length + 1,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class topBarButon extends StatefulWidget {
+  String t;
+
+  topBarButon({required this.t});
+
+
+  @override
+  _topBarButonState createState() => _topBarButonState();
+}
+
+class _topBarButonState extends State<topBarButon> {
+  late IconData k;
+  setIcon(String l){
+    if(l.toLowerCase()=="clothes"){
+      k =FontAwesomeIcons.tshirt;
+    }else if(l.toLowerCase()=="electronics"){
+      k =FontAwesomeIcons.mobile;
+    }else if(l.toLowerCase()=="education"){
+      k= FontAwesomeIcons.book;
+    }else{
+      k = FontAwesomeIcons.circle;
+    }
+  }
+
+  @override
+  void initState() {
+    setIcon(widget.t);
+    // TODO: implement initState
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      onPressed: () {  },
+      child: Container(
+          // decoration: BoxDecoration(
+          //     borderRadius: BorderRadius.all(
+          //         Radius.circular(30),
+          //     )
+          // ),
+        child: Column(
+          children: [
+            Expanded(
+              flex: 3,
+                child: Container(child: Icon(k,color:Kcolor,))
+
+            ),
+            Expanded(
+              flex: 2,
+              child: Container(
+                  child: Text(widget.t)),
+            )
+          ],
+        )
       ),
     );
   }
