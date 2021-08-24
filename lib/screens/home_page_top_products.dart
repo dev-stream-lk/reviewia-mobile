@@ -58,6 +58,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
   }
 
   _listItemViewProductCards(index) {
+    index = _postDisplayView.length-index-1;
     print("created by " + _postDisplayView[index].createdBy);
     return Container(
         child: ProductCard(
@@ -75,12 +76,20 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
         placeholder: "Search",
         onChanged: (text) {
           text = text.toLowerCase();
-          setState(() {
+          if(text.isNotEmpty){
+            setState(() {
               _postDisplayView = _postView.where((element) {
                 var postTi = element.title.toLowerCase();
                 return postTi.contains(text);
               }).toList();
-          });
+            });
+          }
+          if(text.isEmpty){
+            setState(() {
+              _postDisplayView = _postView;
+            });
+          }
+
         },
       ),
     );

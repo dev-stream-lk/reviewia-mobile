@@ -127,7 +127,7 @@ class _ProductListState extends State<ProductList> {
         onChanged: (text) {
           text = text.toLowerCase();
           setState(() {
-            _postDisplayView = _postDisplayView.where((element) {
+            _postDisplayView = _postView.where((element) {
               var postTi = element.title.toLowerCase();
               return postTi.contains(text);
             }).toList();
