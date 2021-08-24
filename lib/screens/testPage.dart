@@ -8,7 +8,7 @@ import 'package:find_dropdown/find_dropdown.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/services/addPost.dart';
-import 'package:reviewia/services/network.dart';
+import 'package:reviewia/services/addPost_connection.dart';
 import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
 
 class TestAddPost extends StatefulWidget {

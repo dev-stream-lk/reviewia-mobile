@@ -7,9 +7,11 @@ class PostsView {
   late List<ImgURL> imgURL;
   late String description;
   late String createdAt;
+  late String type;
   late String createdBy;
   late bool blocked;
   late String subCategory;
+  late String brand;
   late List<dynamic> reviews;
 
   PostsView(
@@ -20,9 +22,11 @@ class PostsView {
         required this.imgURL,
         required this.description,
         required this.createdAt,
+        required this.type,
         required this.createdBy,
         required this.blocked,
         required this.subCategory,
+        required this.brand,
         required this.reviews});
 
   PostsView.fromJson(Map<String, dynamic> json) {
@@ -39,8 +43,10 @@ class PostsView {
     description = json['description'];
     createdAt = json['createdAt'];
     createdBy = json['createdBy'];
+    type = json['type'];
     blocked = json['blocked'];
     subCategory = json['subCategory'];
+    brand = json['brand'];
     // reviews = json['reviews'];
 
     // if (json['reviews'] != null) {
