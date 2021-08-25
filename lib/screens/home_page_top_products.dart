@@ -117,6 +117,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
         _cMax=0;
         _isLoading = false;
         _postView.addAll(val);
+        _nOfPost = _postView.length;
         _temppostDisplayView.addAll(_postView.reversed);
         _postDisplayView=_temppostDisplayView.sublist(0,3);
       });
