@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:reviewia/constrains/constrains.dart';
@@ -9,7 +10,10 @@ import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/services/addPost.dart';
 import 'package:reviewia/services/addPost_connection.dart';
+import 'package:reviewia/services/getSubCategory.dart';
 import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:http/http.dart' as http;
 
 class TestAddPost extends StatefulWidget {
   const TestAddPost({Key? key}) : super(key: key);
@@ -56,16 +60,28 @@ class _TestAddPostState extends State<TestAddPost> {
   void initState() {
     super.initState();
   }
-  var selected;
-  List<AddPost_category> _categories=[];
+  // **************data initializing
+  var selected_categoryId;
+  var selected_subCategory;
+  String selectedCategory="";
+
+   List<AddPost_category> _categories=[];
+  List<GetSubCategory> _sub_categories=[];
   void getCategory () async {
     _categories = await fetchCategory();
     print("List of categories...");
-    // for(int x = 0; x< _categories.length; x++){
-    //   category.add(_categories[x].categoryName);
-    // }
     for (var item in _categories) {
       print('${item.categoryName} - ${item.categoryId}');
+    }
+  }
+
+
+  void getSubCategory ( var id ) async {
+    print("Sub categories....."+ id);
+    _sub_categories = await fetchSubCategory(id);
+    print("List of categories...");
+    for (var item in _sub_categories) {
+      print('${item.subCategoryName} - ${item.subCategoryId}');
     }
   }
 
@@ -116,6 +132,8 @@ class _TestAddPostState extends State<TestAddPost> {
       images = resultList;
     });
   }
+
+
   //******************for terms and conditions ******************************
   bool checkBox_1_Val = false;
   bool checkBox_2_Val = false;
@@ -191,8 +209,8 @@ class _TestAddPostState extends State<TestAddPost> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
-                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 10) ,
-                              height: MediaQuery.of(context).size.height * 0.06,
+                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 2) ,
+                              height: MediaQuery.of(context).size.height * 0.07,
                               padding: EdgeInsets.all(10.0),
                               decoration: BoxDecoration(
                                 color: Colors.blue[50],
@@ -204,11 +222,10 @@ class _TestAddPostState extends State<TestAddPost> {
                                 ),
                               ),
                               child: TextField(
-                                  onTap: getCategory,
                                   cursorColor: Colors.black,
                                   //keyboardType: inputType,
                                   decoration: InputDecoration(
-                                    hintStyle: TextStyle(fontSize: 17),
+                                    // hintStyle: TextStyle(fontSize: 17),
                                     hintText: 'Post Title',
                                     border: InputBorder.none,
                                     contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
@@ -216,49 +233,16 @@ class _TestAddPostState extends State<TestAddPost> {
                               )
                           ),
 
-                          // for type selection dropdown field..
+                          //Category...
                           Container(
-                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
-                              height: MediaQuery.of(context).size.height * 0.12,
-                              padding: EdgeInsets.all(0.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10)
-                                ),
-                              ),
-
-                              //Type selection dropdown..
-                              // child: FindDropdown(
-                              //   items: type,
-                              //   onChanged: (item) {
-                              //     print(item);
-                              //   },
-                              //   selectedItem: "Select type",
-                              //   showSearchBox: false,
-                              //   searchBoxDecoration: InputDecoration(hintText: "Search", border: OutlineInputBorder()),
-                              //   backgroundColor: Colors.white,
-                              //   titleStyle: TextStyle(color: Colors.blue),
-                              //   validate: (String? item) {
-                              //     if (item == null)
-                              //       return "Required field";
-                              //     else if (item == "Brasil")
-                              //       return "Invalid item";
-                              //     else
-                              //       return null;
-                              //   },
-                              // )
-                            child: Container(
-                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
-                              height: MediaQuery.of(context).size.height * 0.06,
-                              padding: EdgeInsets.all(0.0),
-
+                            margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
+                            height: MediaQuery.of(context).size.height * 0.09,
+                            padding: EdgeInsets.all(0.0),
+                            child: GestureDetector(
+                              onTap: (){print("Tapped____");},
                               child: CustomSearchableDropDown(
                                 items: _categories,
-                                label: 'Select Name',
+                                label: 'Select Category',
                                 labelStyle:  TextStyle(fontSize: 17),
                                 decoration: BoxDecoration(
                                   color: Colors.blue[50],
@@ -270,29 +254,109 @@ class _TestAddPostState extends State<TestAddPost> {
                                   ),
                                 ),
 
-                                dropDownMenuItems: _categories?.map((item) {
+                                dropDownMenuItems: _categories.map((item) {
                                   return item.categoryName;
                                 })?.toList() ??
                                     [],
                                 onChanged: (value){
                                   if(value!=null)
                                   {
-                                    selected = value.toString();
-                                    
+                                    selected_categoryId = '${value.categoryId}';
                                   }
                                   else{
-                                    selected=null;
+                                    selected_categoryId=null;
                                   }
                                 },
                               ),
                             ),
+
                           ),
+
+                          //Subcategory...
+                          Container(
+                            margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
+                            height: MediaQuery.of(context).size.height * 0.09,
+                            padding: EdgeInsets.all(0.0),
+                            child: GestureDetector(
+                              onTap: (){print("Tapped____");},
+                              child: CustomSearchableDropDown(
+                                items: _categories,
+                                label: 'Select Subcategory',
+                                labelStyle:  TextStyle(fontSize: 17),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue[50],
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)
+                                  ),
+                                ),
+
+                                dropDownMenuItems: _categories.map((item) {
+                                  return item.categoryName;
+                                })?.toList() ??
+                                    [],
+                                onChanged: (value){
+                                  if(value!=null)
+                                  {
+                                    selected_categoryId = '${value.categoryId}';
+                                  }
+                                  else{
+                                    selected_categoryId=null;
+                                  }
+                                },
+                              ),
+                            ),
+
+                          ),
+
+                          //Brand...
+                          Container(
+                            margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
+                            height: MediaQuery.of(context).size.height * 0.09,
+                            padding: EdgeInsets.all(0.0),
+                            child: GestureDetector(
+                              onTap: (){print("Tapped____");},
+                              child: CustomSearchableDropDown(
+                                items: _categories,
+                                label: 'Select Brand',
+                                labelStyle:  TextStyle(fontSize: 17),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue[50],
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)
+                                  ),
+                                ),
+
+                                dropDownMenuItems: _categories.map((item) {
+                                  return item.categoryName;
+                                })?.toList() ??
+                                    [],
+                                onChanged: (value){
+                                  if(value!=null)
+                                  {
+                                    selected_categoryId = '${value.categoryId}';
+                                  }
+                                  else{
+                                    selected_categoryId=null;
+                                  }
+                                },
+                              ),
+                            ),
+
+                          ),
+
+
 
 
                           // for date picker..
                           Container(
-                              margin: EdgeInsets.only(left: 2, right: 2, bottom: 10) ,
-                              height: MediaQuery.of(context).size.height * 0.06,
+                              margin: EdgeInsets.only(top:20, left: 2, right: 2, bottom: 10) ,
+                              height: MediaQuery.of(context).size.height * 0.07,
                               padding: EdgeInsets.only(top: 5.0, left: 10),
                               decoration: BoxDecoration(
                                 color: Colors.blue[50],
@@ -329,43 +393,6 @@ class _TestAddPostState extends State<TestAddPost> {
                           ),
 
 
-                          // for Category selection dropdown field..
-
-                          Container(
-                              margin: EdgeInsets.only( top: 20,left: 2, right: 2) ,
-                              height: MediaQuery.of(context).size.height * 0.12,
-                              padding: EdgeInsets.all(0.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10)
-                                ),
-                              ),
-
-                              //Type selection dropdown..
-                              child: FindDropdown(
-                                items: brands,
-                                onChanged: (item) {
-                                  print(item);
-                                },
-                                selectedItem: "Select Brand",
-                                showSearchBox: true,
-                                searchBoxDecoration: InputDecoration(hintText: "Search", border: OutlineInputBorder()),
-                                backgroundColor: Colors.white,
-                                titleStyle: TextStyle(color: Colors.blue),
-                                validate: (String? item) {
-                                  if (item == null)
-                                    return "Required field";
-                                  else if (item == "Brasil")
-                                    return "Invalid item";
-                                  else
-                                    return null;
-                                },
-                              )
-                          ),
 
                           Container(
                               margin: EdgeInsets.only(top: 10 ,left: 2, right: 2) ,
