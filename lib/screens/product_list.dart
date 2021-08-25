@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/components/product_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/screens/subCategoryList.dart';
 import 'package:reviewia/services/categoryView.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/services/post.dart';
@@ -99,7 +100,7 @@ class _ProductListState extends State<ProductList> {
   }
 
   _listCategoryView(index){
-    return topBarButon(t: _catDisplayView[index].categoryName,);
+    return topBarButon(t: _catDisplayView[index].categoryName,id:_catDisplayView[index].categoryId.toString());
   }
   _searchBar() {
     return Padding(
@@ -219,8 +220,8 @@ class _ProductListState extends State<ProductList> {
 
 class topBarButon extends StatefulWidget {
   String t;
-
-  topBarButon({required this.t});
+  String id;
+  topBarButon({required this.t,required this.id});
 
 
   @override
@@ -230,6 +231,7 @@ class topBarButon extends StatefulWidget {
 class _topBarButonState extends State<topBarButon> {
   late IconData k;
   setIcon(String l){
+    print(widget.id);
     if(l.toLowerCase()=="clothes"){
       k =FontAwesomeIcons.tshirt;
     }else if(l.toLowerCase()=="electronics"){
@@ -250,7 +252,14 @@ class _topBarButonState extends State<topBarButon> {
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-      onPressed: () {  },
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SubCatergoryList(catId: widget.id,catName:widget.t),
+          ),
+        );
+      },
       child: Container(
           // decoration: BoxDecoration(
           //     borderRadius: BorderRadius.all(
