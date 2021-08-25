@@ -29,9 +29,12 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
 
   List<PostsView> _postView = <PostsView>[];
   List<PostsView> _postDisplayView = <PostsView>[];
+  List<PostsView> _temppostDisplayView = <PostsView>[];
 
   bool _isLoading = true;
-
+  ScrollController _scrollController =ScrollController();
+  int _cMax = 0;
+  late int _nOfPost = _postView.length;
   _listItem(index) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
@@ -58,7 +61,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
   }
 
   _listItemViewProductCards(index) {
-    index = _postDisplayView.length - index - 1;
+    // index = _postDisplayView.length - index - 1;
     print("created by " + _postDisplayView[index].createdBy);
     return Container(
         child: ProductCard(
@@ -94,6 +97,15 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
       ),
     );
   }
+  Future getBuildingData() async{
+    fetchPostViewStep("5","1").then((value){
+      setState(() {
+        _postDisplayView.addAll(value);
+      });
+    });
+  }
+
+
 
   Future getData() async {
 
@@ -101,9 +113,12 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
       setState(() {
         _postView = <PostsView>[];
         _postDisplayView = <PostsView>[];
+        _temppostDisplayView=<PostsView>[];
+        _cMax=0;
         _isLoading = false;
         _postView.addAll(val);
-        _postDisplayView = _postView;
+        _temppostDisplayView.addAll(_postView.reversed);
+        _postDisplayView=_temppostDisplayView.sublist(0,3);
       });
     });
   }
@@ -118,9 +133,33 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
     //     _postDisplay = _post;
     //   });
     // });
-    getData();
-
     super.initState();
+    getData();
+    _scrollController.addListener(() {
+      if(_scrollController.position.pixels==_scrollController.position.maxScrollExtent){
+        print('Hello');
+        getMoreData();
+      }
+
+    });
+
+
+  }
+
+  getMoreData(){
+    // _postDisplayView.add(_temppostDisplayView.elementAt(3));
+    print("get more");
+    setState(() {
+      for(int i = _cMax+3 ; i<_cMax+6;i++){
+        print(_cMax.toString() +" no of post"+_nOfPost.toString()+"i is"+i.toString());
+        if(i>= _nOfPost){
+          _cMax=_nOfPost;
+          return;
+        }
+        _postDisplayView.add(_temppostDisplayView.elementAt(i));
+      }
+      _cMax=_cMax+3;
+    });
   }
 
   String? selectedValueSingleDialog;
@@ -190,24 +229,29 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                     textAlign: TextAlign.left,
                   ),
                 ),
-                Scrollbar(
-                  child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      if (!_isLoading) {
-                        return index == 0
-                            ? _searchBar()
-                            : _listItemViewProductCards(index - 1);
-                        // return _listItem(index);
-                      } else {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    },
-                    itemCount: _postDisplayView.length + 1,
+                // Container(
+                //   child: _searchBar(),
+                // ),
+                SingleChildScrollView(
+                  child: Container(
+                    height: MediaQuery.of(context).size.height*0.6,
+                    child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      controller: _scrollController,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        if (!_isLoading) {
+                          return index==0 ? _searchBar(): _listItemViewProductCards(index-1);
+                          // return _listItem(index);
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                      itemCount: _postDisplayView.length+1,
+                    ),
                   ),
                 ),
 
