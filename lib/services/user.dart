@@ -26,6 +26,8 @@ class UserServices {
           "password": password,
         })
     );
+    var b = response.body;
+    print("login body is "+b.toString());
 
     // print(response.headers);
     var S = response.headers.toString();
@@ -58,7 +60,7 @@ class UserServices {
     var ss = S.indexOf('authorization');
     print("It is a String "+ ss.toString());
     if(ss.toString()!='-1'){
-      var e = S.indexOf("access-control-max-age");
+      var e = S.indexOf("content-type");
       print(e.toString());
       var sString = S.substring(ss.toInt()+15,e.toInt()-1);
       print(sString);
@@ -92,14 +94,21 @@ class UserServices {
     }
     // if(response.)
   }
-  
+  // 'Authorization':
+  // "Bearer eyJhbGciOiJIUzI1NiJ9.
+  // eyJzdWIiOiJkQGdtYWlsLmNvbSIsImF
+  // 1dGhvcml0aWVzIjoiVVNFUiIsImlhdC
+  // I6MTYyOTkxMzIyNSwiZXhwIjoxNjMxMDM5NDAwfQ
+  // .W6cejMYmQ2NPYvtgvXOG3ME3BaEcvYRP
+  // UTbhvIKH97E",
+
   Future getUserDetails()async{
     String t = await userState.getToken();
     print("print token is "+ t);
     http.Response response = await http.get(
       Uri.parse(url),
       headers: {
-       'Authorization': t,
+        'Authorization' : t
       },
     );
     String data = response.body;

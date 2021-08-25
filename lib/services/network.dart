@@ -102,8 +102,8 @@ List<SelectedCatergory> parseSelectedCatergoryGet(String responseBody) {
   return posts;
 }
 
-Future<SelectedCatergory> fetchSelectedCatergory() async {
-  String url = KBaseUrl + "api/public/category/1/subcategory/";
+Future<SelectedCatergory> fetchSelectedCatergory(String catId) async {
+  String url = KBaseUrl + "api/public/category/"+catId+"/subcategory/";
   // String url = KBaseUrl+"api/public/category/all";
   // final response = await http.get( Uri.parse(url));
   final response = await http.get(
@@ -124,6 +124,36 @@ Future<SelectedCatergory> fetchSelectedCatergory() async {
           subCategoryList: decodedUserData['subCategoryList']);
 
     return selectedCatergory;
+  } else {
+    throw Exception("API Error");
+  }
+}
+
+Future getAllCategoryPosts(String catId)async{
+  String url = KBaseUrl + "api/public/post/category?id="+catId;
+  final response = await http.get(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+  if (response.statusCode == 200) {
+    return compute(parsePostView, response.body);
+  } else {
+    throw Exception("API Error");
+  }
+}
+
+Future getAllSubCategoryPosts(String subCategoryId)async{
+  String url = KBaseUrl + "api/public/post/category/sub?id="+subCategoryId;
+  final response = await http.get(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+  if (response.statusCode == 200) {
+    return compute(parsePostView, response.body);
   } else {
     throw Exception("API Error");
   }
