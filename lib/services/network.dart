@@ -6,6 +6,7 @@ import 'package:reviewia/services/allCategory.dart';
 import 'package:reviewia/services/categoryView.dart';
 import 'package:reviewia/services/post.dart';
 import 'package:reviewia/services/postView.dart';
+import 'package:reviewia/services/selectedCatergory.dart';
 
 
 List <Post> parsePost(String responseBody){
@@ -41,6 +42,24 @@ Future <List<PostsView>> fetchPostView() async{
   }
 }
 
+
+List <PostsView>parsePostViewStep(String responseBody){
+  var list = json.decode(responseBody);
+  var posts = list.map((e) => PostsView.fromJson(e)).toList();
+  return posts;
+}
+
+Future <List<PostsView>> fetchPostViewStep(String page,String size) async{
+  String url = KBaseUrl+"api/public/posts?page="+page+"&size="+size;
+  final response = await http.get( Uri.parse(url));
+  if(response.statusCode==200){
+    return compute(parsePostViewStep,response.body);
+  }else{
+    throw Exception("API Error");
+  }
+}
+
+
 List <AllCatergory>parseCategoryView(String responseBody){
   var list = json.decode(responseBody) as List<dynamic>;
   var posts = list.map((e) => AllCatergory.fromJson(e)).toList();
@@ -75,6 +94,29 @@ Future <List<CategoryView>> fetchCategoryView() async{
   final response = await http.get( Uri.parse(url));
   if(response.statusCode==200){
     return compute(parseCategoryViewGet,response.body);
+  }else{
+    throw Exception("API Error");
+  }
+}
+
+
+List <SelectedCatergory>parseSelectedCatergoryGet(String responseBody){
+  var list = json.decode(responseBody) as List<dynamic>;
+  print(list.toString());
+  // var posts = SelectedCatergory.fromJson(list);
+  var posts = list.map((e) => SelectedCatergory.fromJson(e)).toList();
+  return posts;
+}
+
+
+Future <List<SelectedCatergory>> fetchSelectedCatergory() async{
+  String url = KBaseUrl+"api/public/category?id=1";
+  // String url = KBaseUrl+"api/public/category/all";
+  // final response = await http.get( Uri.parse(url));
+  final response = await http.get( Uri.parse(url));
+  if(response.statusCode==200){
+    print(response.body.toString());
+    return compute(parseSelectedCatergoryGet,response.body);
   }else{
     throw Exception("API Error");
   }

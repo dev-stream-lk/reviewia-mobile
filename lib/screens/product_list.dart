@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/components/product_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/screens/test.dart';
 import 'package:reviewia/services/categoryView.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/services/post.dart';
@@ -250,7 +251,14 @@ class _topBarButonState extends State<topBarButon> {
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-      onPressed: () {  },
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Test(),
+          ),
+        );
+      },
       child: Container(
           // decoration: BoxDecoration(
           //     borderRadius: BorderRadius.all(
