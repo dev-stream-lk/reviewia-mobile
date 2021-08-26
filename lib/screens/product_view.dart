@@ -9,7 +9,7 @@ import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/search_page.dart';
 import 'package:reviewia/services/network.dart';
-import 'package:reviewia/services/postView.dart';
+import 'package:reviewia/structures/postView.dart';
 
 import 'add_post_page.dart';
 import 'home_Page.dart';
@@ -86,97 +86,98 @@ class _ProductViewState extends State<ProductView> {
       ),
     );
   }
+  void _bootomPage(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+              top: Radius.circular(MediaQuery.of(context).size.width * 25 / 360)),
+        ),
+        builder: (BuildContext bc) {
+          return Container(
+            padding: EdgeInsets.all(15),
+            color: Colors.transparent,
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    // color:Colors.red,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Write a Review",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w700),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(Icons.close),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 15,
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.black,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Enter a Your Review'),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    child: FlatButton(
+                      padding: EdgeInsets.symmetric(
+                          vertical:
+                          MediaQuery.of(context).size.height * (12.5 / 692),
+                          horizontal:
+                          MediaQuery.of(context).size.width * (40 / 360)),
+                      color: Kcolor,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Add a review',
+                        style: KbuttonSignin,
+                      ),
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: Colors.blue,
+                              width: 1,
+                              style: BorderStyle.solid),
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
 }
 
-void _bootomPage(BuildContext context) {
-  showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-            top: Radius.circular(MediaQuery.of(context).size.width * 25 / 360)),
-      ),
-      builder: (BuildContext bc) {
-        return Container(
-          padding: EdgeInsets.all(15),
-          color: Colors.transparent,
-          child: Column(
-            children: [
-              Expanded(
-                flex: 3,
-                child: Container(
-                  // color:Colors.red,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Write a Review",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w700),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(Icons.close),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 15,
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Enter a Your Review'),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                flex: 3,
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  child: FlatButton(
-                    padding: EdgeInsets.symmetric(
-                        vertical:
-                            MediaQuery.of(context).size.height * (12.5 / 692),
-                        horizontal:
-                            MediaQuery.of(context).size.width * (40 / 360)),
-                    color: Kcolor,
-                    onPressed: () {
-                      Navigator.pushNamed(context, ProductView.id);
-                    },
-                    child: Text(
-                      'Add a review',
-                      style: KbuttonSignin,
-                    ),
-                    shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                            color: Colors.blue,
-                            width: 1,
-                            style: BorderStyle.solid),
-                        borderRadius: BorderRadius.circular(8)),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      });
-}
+
 
 // class ReviewCards extends StatelessWidget {
 //   const ReviewCards({

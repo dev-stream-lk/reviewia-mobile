@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:reviewia/constrains/urlConstrain.dart';
-import 'package:reviewia/services/allCategory.dart';
-import 'package:reviewia/services/categoryView.dart';
-import 'package:reviewia/services/post.dart';
-import 'package:reviewia/services/postView.dart';
-import 'package:reviewia/services/selectedCatergory.dart';
+import 'package:reviewia/structures/allCategory.dart';
+import 'package:reviewia/structures/categoryView.dart';
+import 'package:reviewia/structures/post.dart';
+import 'package:reviewia/structures/postView.dart';
+import 'package:reviewia/structures/selectedCatergory.dart';
 
 List<Post> parsePost(String responseBody) {
   var list = json.decode(responseBody) as List<dynamic>;

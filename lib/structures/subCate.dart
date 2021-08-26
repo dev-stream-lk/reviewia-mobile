@@ -1,4 +1,4 @@
-import 'package:reviewia/services/postView.dart';
+import 'package:reviewia/structures/postView.dart';
 
 class subCate {
   late int subCategoryId;

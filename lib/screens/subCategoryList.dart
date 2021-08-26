@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/components/product_card.dart';
-import 'package:reviewia/services/allCategory.dart';
+import 'package:reviewia/structures/allCategory.dart';
 import 'package:reviewia/services/network.dart';
-import 'package:reviewia/services/postView.dart';
-import 'package:reviewia/services/selectedCatergory.dart';
-import 'package:reviewia/services/subCate.dart';
+import 'package:reviewia/structures/postView.dart';
+import 'package:reviewia/structures/selectedCatergory.dart';
+import 'package:reviewia/structures/subCate.dart';
 
 
 

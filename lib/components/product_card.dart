@@ -11,7 +11,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/screens/login_system_page.dart';
 import 'package:reviewia/screens/product_view.dart';
 import 'package:reviewia/screens/profile_page.dart';
-import 'package:reviewia/services/postView.dart';
+import 'package:reviewia/structures/postView.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class ProductCard extends StatefulWidget {
