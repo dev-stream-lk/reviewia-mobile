@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -16,6 +17,7 @@ import 'home_Page.dart';
 
 class ProductView extends StatefulWidget {
   late PostsView todos;
+
   ProductView({required this.todos});
   // const ProductView({Key? key,required this.todos}) : super(key: key);
   static String id = "ProductView";
@@ -26,6 +28,8 @@ class ProductView extends StatefulWidget {
 
 class _ProductViewState extends State<ProductView> {
   int _currentIndex = 0;
+  List <String> test = ["1","2","3","4","5","6","7","8","9","10"];
+  bool _isLoading = false;
   List<Widget> _screenContainer = [
     HomePage(),
     AddPost(),
@@ -38,12 +42,39 @@ class _ProductViewState extends State<ProductView> {
     });
   }
 
+
   @override
   void initState() {
     // TODO: implement initState
     // _image=;
     super.initState();
   }
+
+  _listItemViewProductCards(index) {
+    print("created by " + test[index]);
+    return Container(
+        margin: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.040),
+        child: ReviewCards());
+  }
+  _searchBar() {
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: CupertinoSearchTextField(
+        placeholder: "Search",
+        onChanged: (text) {
+          text = text.toLowerCase();
+          // setState(() {
+            // _postDisplay = _post.where((element) {
+            //   var postTi = element.title.toLowerCase();
+            //   return postTi.contains(text);
+            // }).toList();
+          // });
+        },
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -65,22 +96,44 @@ class _ProductViewState extends State<ProductView> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              ProductViewCard(
-                title: widget.todos.title.toString(),
-                description: widget.todos.description,
-                rating: widget.todos.rate,
-                photoUrl1:widget.todos.imgURL.isNotEmpty?widget.todos.imgURL[0].url.toString():"https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
-                // photoUrl1:widget.todos.imgURL,
-                // widget.todos.imgURL[0],
-              ),
-              ReviewCards(),
-              ReviewCards(),
-              ReviewCards(),
-              // ReviewCards(),
-            ],
+        child: Scrollbar(
+
+          isAlwaysShown: true,
+          thickness: 10,
+          child: SingleChildScrollView(
+            physics: ScrollPhysics(),
+            child: Column(
+              children: [
+                Container(
+                  child: ProductViewCard(
+                    title: widget.todos.title.toString(),
+                    description: widget.todos.description,
+                    rating: widget.todos.rate,
+                    photoUrl1:widget.todos.imgURL.isNotEmpty?widget.todos.imgURL[0].url.toString():"https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
+                    // photoUrl1:widget.todos.imgURL,
+                    // widget.todos.imgURL[0],
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 10,right: 10),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, index) {
+                          return _listItemViewProductCards(index);
+                          // return _listItem(index);
+                      },
+                      itemCount: test.length,
+                    ),
+                  ),
+                ),
+                // ReviewCards(),
+                // ReviewCards(),
+                // ReviewCards(),
+                // ReviewCards(),
+              ],
+            ),
           ),
         ),
       ),
