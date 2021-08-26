@@ -15,6 +15,14 @@ class UserState{
     }
     return 'set-it';
   }
+
+  Future<String>setStateDisplayName(String displayName) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(prefs.getString('displayName').toString()!=displayName){
+      await prefs.setString('displayName', displayName);
+    }
+    return 'set-Display Name';
+  }
   Future<String> getUserName() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     print("userName is::"+prefs.getString('userName').toString());
@@ -25,6 +33,11 @@ class UserState{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     print("Token is::"+prefs.getString('token').toString());
     return (prefs.getString('token').toString());
+  }
+  Future<String> getDisplayName()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("Display Name is::"+prefs.getString('displayName').toString());
+    return (prefs.getString('displayName').toString());
   }
 
 

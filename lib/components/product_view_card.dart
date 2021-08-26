@@ -3,11 +3,12 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/constrains/constrains.dart';
 
 class ProductViewCard extends StatefulWidget {
+  late String createdBy;
   late String title;
   late String description;
   late double rating;
   late String photoUrl1;
-  ProductViewCard({required this.title, required this.description, required this.rating,required this.photoUrl1});
+  ProductViewCard({required this.createdBy,required this.title, required this.description, required this.rating,required this.photoUrl1});
 
   @override
   _ProductViewCardState createState() => _ProductViewCardState();
@@ -60,7 +61,7 @@ class _ProductViewCardState extends State<ProductViewCard> {
                   ),
                   Expanded(
                       flex: 4,
-                      child: Text("Chamari Wikrmawardna", style: KPostCard)),
+                      child: Text(widget.createdBy, style: KPostCard)),
                   Expanded(
                       flex: 1,
                       child: PopupMenuButton(
