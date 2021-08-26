@@ -179,3 +179,25 @@ Future<List<ReviewStruct>> fetchReviewStruct(String postId) async {
     throw Exception("API Error");
   }
 }
+
+Future postReview(String userName,String t,String createdUser,int postId,double rate,String des) async {
+  String url = KBaseUrl + "api/user/review?email="+userName;
+  http.Response response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization' : t,
+      },
+      body: jsonEncode(<String,dynamic>{
+        "reviewedBy": createdUser,
+        "postId": postId,
+        "description": des,
+        "userRate": rate
+      })
+  );
+  print(response.statusCode);
+  if (response.statusCode==200){
+    return "Review is set";
+  }
+  // if(response.)
+}

@@ -63,7 +63,7 @@ class _ProductViewState extends State<ProductView> {
   @override
   void initState() {
     setState(() {
-      _isLoading=true;
+      _isLoading = true;
     });
     getReviews();
     super.initState();
@@ -81,27 +81,31 @@ class _ProductViewState extends State<ProductView> {
           detail: _reviewCards[index].description,
         ));
   }
-  Future getDisplayName ()async{
-      var dp= await UserState().getDisplayName();
-      var tk = await UserState().getToken();
-      var uN = await UserState().getUserName();
-      setState(() {
-        print(dp.toString());
-      displayName =dp.toString();
-      token=tk.toString();
-      userName=uN.toString();
-      });
-      // print(displayName);
+
+  Future getDisplayName() async {
+    var dp = await UserState().getDisplayName();
+    var tk = await UserState().getToken();
+    var uN = await UserState().getUserName();
+    setState(() {
+      print(dp.toString());
+      displayName = dp.toString();
+      token = tk.toString();
+      userName = uN.toString();
+    });
+    // print(displayName);
   }
 
-  createAReview()async{
+  createAReview() async {
     setState(() {
-      _isLoading=true;
+      _isLoading = true;
     });
     await getDisplayName();
-    print("Name is " + displayName.toString());
-    print("token is " + token.toString());
-    print("userName is " + userName.toString());
+    // print("Name is " + displayName.toString());
+    // print("token is " + token.toString());
+    // print("userName is " + userName.toString());
+    var n = await postReview(userName.toString(), token.toString(),
+        displayName.toString(), widget.todos.postId, rate, reviewDetail);
+    print(n.toString());
     Navigator.pop(context);
     getReviews();
   }
@@ -126,7 +130,6 @@ class _ProductViewState extends State<ProductView> {
 
   @override
   Widget build(BuildContext context) {
-
     print("Image url is");
     return Scaffold(
       appBar: AppBar(
@@ -168,15 +171,17 @@ class _ProductViewState extends State<ProductView> {
                 SingleChildScrollView(
                   child: Container(
                     margin: EdgeInsets.only(bottom: 10, right: 10),
-                    child:(!_isLoading)?ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, index) {
-                        return _listItemViewProductCards(index);
-                        // return _listItem(index);
-                      },
-                      itemCount: _reviewCards.length,
-                    ): CircularProgressIndicator(),
+                    child: (!_isLoading)
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemBuilder: (context, index) {
+                              return _listItemViewProductCards(index);
+                              // return _listItem(index);
+                            },
+                            itemCount: _reviewCards.length,
+                          )
+                        : CircularProgressIndicator(),
                   ),
                 ),
                 // ReviewCards(),
@@ -203,11 +208,11 @@ class _ProductViewState extends State<ProductView> {
           return Scrollbar(
             isAlwaysShown: false,
             thickness: 5,
-            radius:Radius.circular(15) ,
+            radius: Radius.circular(15),
             child: SingleChildScrollView(
               child: Container(
-                height: MediaQuery.of(context).size.height*0.72,
-                padding: EdgeInsets.only(left: 15,right: 15),
+                height: MediaQuery.of(context).size.height * 0.72,
+                padding: EdgeInsets.only(left: 15, right: 15),
                 color: Colors.transparent,
                 child: Column(
                   children: [
@@ -245,20 +250,20 @@ class _ProductViewState extends State<ProductView> {
                                 border: Border.all(
                                   color: Colors.black,
                                 ),
-                                borderRadius: BorderRadius.all(Radius.circular(20))),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
                             child: Padding(
                               padding: const EdgeInsets.all(12.0),
                               child: TextFormField(
                                 maxLines: 4,
                                 onChanged: (val) {
                                   setState(() {
-                                    reviewDetail=val.toString();
+                                    reviewDetail = val.toString();
                                   });
                                 },
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: 'Enter a Your Review')
-                                ,
+                                    hintText: 'Enter a Your Review'),
                               ),
                             ),
                           ),
@@ -269,24 +274,27 @@ class _ProductViewState extends State<ProductView> {
                             alignment: Alignment.centerLeft,
                             child: Row(
                               children: [
-                                Text("Rate it: ",style: KPostReviewCard,),
+                                Text(
+                                  "Rate it: ",
+                                  style: KPostReviewCard,
+                                ),
                                 RatingBar.builder(
-                                  wrapAlignment: WrapAlignment.spaceBetween ,
-                                  initialRating:3.0,
+                                  wrapAlignment: WrapAlignment.spaceBetween,
+                                  initialRating: 3.0,
                                   minRating: 1,
                                   direction: Axis.horizontal,
                                   allowHalfRating: true,
                                   itemCount: 5,
                                   itemSize: 35,
                                   itemPadding:
-                                  EdgeInsets.symmetric(horizontal: 4.0),
+                                      EdgeInsets.symmetric(horizontal: 4.0),
                                   itemBuilder: (context, _) => Icon(
                                     Icons.star,
                                     color: Kcolor,
                                   ),
                                   onRatingUpdate: (rating) {
                                     setState(() {
-                                      rate =rating;
+                                      rate = rating;
                                       print(rate);
                                     });
                                   },
@@ -301,10 +309,11 @@ class _ProductViewState extends State<ProductView> {
                             alignment: Alignment.centerRight,
                             child: FlatButton(
                               padding: EdgeInsets.symmetric(
-                                  vertical:
-                                  MediaQuery.of(context).size.height * (12.5 / 692),
+                                  vertical: MediaQuery.of(context).size.height *
+                                      (12.5 / 692),
                                   horizontal:
-                                  MediaQuery.of(context).size.width * (40 / 360)),
+                                      MediaQuery.of(context).size.width *
+                                          (40 / 360)),
                               color: Kcolor,
                               onPressed: () {
                                 createAReview();
