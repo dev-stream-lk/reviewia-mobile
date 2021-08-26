@@ -14,11 +14,11 @@ import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/services/addPost.dart';
 import 'package:reviewia/services/addPost_connection.dart';
 import 'package:reviewia/services/getSubCategory.dart';
+import 'package:reviewia/structures/selectedCatergory.dart';
 import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
-import 'package:reviewia/services/selectedCatergory.dart';
 
 class TestAddPost extends StatefulWidget {
   const TestAddPost({Key? key}) : super(key: key);

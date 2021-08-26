@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/constrains/constrains.dart';
 
-class ProductViewCard extends StatelessWidget {
+class ProductViewCard extends StatefulWidget {
+  late String createdBy;
   late String title;
   late String description;
   late double rating;
   late String photoUrl1;
-  ProductViewCard({required this.title, required this.description, required this.rating,required this.photoUrl1});
-  // const ProductViewCard({
-  //   Key? key,
-  // }) : super(key: key);
+  ProductViewCard({required this.createdBy,required this.title, required this.description, required this.rating,required this.photoUrl1});
 
+  @override
+  _ProductViewCardState createState() => _ProductViewCardState();
+}
+
+class _ProductViewCardState extends State<ProductViewCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,7 +61,7 @@ class ProductViewCard extends StatelessWidget {
                   ),
                   Expanded(
                       flex: 4,
-                      child: Text("Chamari Wikrmawardna", style: KPostCard)),
+                      child: Text(widget.createdBy, style: KPostCard)),
                   Expanded(
                       flex: 1,
                       child: PopupMenuButton(
@@ -93,7 +96,7 @@ class ProductViewCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Image.network(
-                  photoUrl1,
+                  widget.photoUrl1,
                   fit: BoxFit.cover,
                   loadingBuilder: (BuildContext context, Widget child,
                       ImageChunkEvent? loadingProgress) {
@@ -130,7 +133,7 @@ class ProductViewCard extends StatelessWidget {
                   Expanded(
                       flex: 2,
                       child: Text(
-                        title,
+                        widget.title,
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontSize: 18,
@@ -144,12 +147,12 @@ class ProductViewCard extends StatelessWidget {
                     child: Container(
                       child: Row(
                         children: [
-                          Text(rating.toString()),
+                          Text(widget.rating.toString()),
                           SizedBox(
                             width: 10,
                           ),
                           RatingBar.builder(
-                            initialRating: rating,
+                            initialRating: widget.rating,
                             minRating: 1,
                             direction: Axis.horizontal,
                             allowHalfRating: true,
@@ -182,13 +185,13 @@ class ProductViewCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Sub Category: " + title,
+                      "Sub Category: " + widget.title,
                     ),
                     Text(
                       "Year",
                     ),
                     Text(
-                      "Description: " + description,
+                      "Description: " + widget.description,
                     ),
                     Text(
                       "Year",

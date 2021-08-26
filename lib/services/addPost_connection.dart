@@ -3,10 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:reviewia/constrains/urlConstrain.dart';
-import 'package:reviewia/services/allCategory.dart';
-import 'package:reviewia/services/categoryView.dart';
-import 'package:reviewia/services/post.dart';
-import 'package:reviewia/services/postView.dart';
 import 'package:reviewia/services/addPost.dart';
 import 'package:reviewia/services/getSubCategory.dart';
 

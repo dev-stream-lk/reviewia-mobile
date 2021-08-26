@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/components/product_card.dart';
-import 'package:reviewia/services/allCategory.dart';
+import 'package:reviewia/structures/allCategory.dart';
 import 'package:reviewia/services/network.dart';
-import 'package:reviewia/services/postView.dart';
-import 'package:reviewia/services/selectedCatergory.dart';
-import 'package:reviewia/services/subCate.dart';
+import 'package:reviewia/structures/postView.dart';
+import 'package:reviewia/structures/selectedCatergory.dart';
+import 'package:reviewia/structures/subCate.dart';
 
 
 
@@ -119,7 +119,9 @@ class _SubCatergoryListtState extends State<SubCatergoryList> {
     });
   }
   chengeTheValues(String data){
-    _isLoading = true;
+    setState(() {
+      _isLoading=true;
+    });
     for(int i=0;i<_subCate.length;i++){
       if(_subCate[i].subCategoryName==data){
         setState(() {
@@ -173,7 +175,9 @@ class _SubCatergoryListtState extends State<SubCatergoryList> {
     //     _postDisplay =_post;
     //   });
     // });
-    _isLoading =true;
+    setState(() {
+      _isLoading=true;
+    });
     getValue();
     getPosts();
     super.initState();

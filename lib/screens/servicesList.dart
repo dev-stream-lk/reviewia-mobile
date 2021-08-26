@@ -4,9 +4,9 @@ import 'package:find_dropdown/rxdart/subject.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:reviewia/constrains/constrains.dart';
-import 'package:reviewia/services/allCategory.dart';
+import 'package:reviewia/structures/allCategory.dart';
 import 'package:reviewia/services/network.dart';
-import 'package:reviewia/services/subCate.dart';
+import 'package:reviewia/structures/subCate.dart';
 class ServicesList extends StatefulWidget {
   static String id = 'services_list';
 

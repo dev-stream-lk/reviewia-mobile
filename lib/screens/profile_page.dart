@@ -69,10 +69,12 @@ class _ProfilePageState extends State<ProfilePage> {
     urlReal = realDevice+emailit;
     urlEmu =mobileEmu+emailit;
     url = url+emailit;
-    print("thus");
+
     var userDetails =await UserServices(url, "email"," password", "firstName", "lastName").getUserDetails();
     String  _firstName = userDetails['firstName'];
     String  _lastName = userDetails['lastName'];
+    String displayName = await UserState().setStateDisplayName(_firstName+" "+_lastName);
+    print(displayName);
     // print("userDetails:  "+ n);
     setState(() {
       email = emailit;

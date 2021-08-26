@@ -9,8 +9,8 @@ import 'package:reviewia/screens/product_list.dart';
 import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/servicesList.dart';
 import 'package:reviewia/services/network.dart';
-import 'package:reviewia/services/post.dart';
-import 'package:reviewia/services/postView.dart';
+import 'package:reviewia/structures/post.dart';
+import 'package:reviewia/structures/postView.dart';
 import 'package:search_choices/search_choices.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 

@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:reviewia/components/review_cards.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
-import 'package:reviewia/services/allCategory.dart';
-import 'package:reviewia/services/categoryView.dart';
-import 'package:reviewia/services/post.dart';
-import 'package:reviewia/services/postView.dart';
-import 'package:reviewia/services/selectedCatergory.dart';
+import 'package:reviewia/structures/allCategory.dart';
+import 'package:reviewia/structures/categoryView.dart';
+import 'package:reviewia/structures/post.dart';
+import 'package:reviewia/structures/postView.dart';
+import 'package:reviewia/structures/reviewStruct.dart';
+import 'package:reviewia/structures/selectedCatergory.dart';
 
 List<Post> parsePost(String responseBody) {
   var list = json.decode(responseBody) as List<dynamic>;
@@ -157,4 +159,45 @@ Future getAllSubCategoryPosts(String subCategoryId)async{
   } else {
     throw Exception("API Error");
   }
+}
+
+//get Reviews
+
+List<ReviewStruct> parseReviewStructGet(String responseBody) {
+  var list = json.decode(responseBody) as List<dynamic>;
+  var posts = list.map((e) => ReviewStruct.fromJson(e)).toList();
+  return posts;
+}
+
+Future<List<ReviewStruct>> fetchReviewStruct(String postId) async {
+  print(postId);
+  String url = KBaseUrl + "api/public/review/all?id="+postId;
+  final response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    return compute(parseReviewStructGet, response.body);
+  } else {
+    throw Exception("API Error");
+  }
+}
+
+Future postReview(String userName,String t,String createdUser,int postId,double rate,String des) async {
+  String url = KBaseUrl + "api/user/review?email="+userName;
+  http.Response response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization' : t,
+      },
+      body: jsonEncode(<String,dynamic>{
+        "reviewedBy": createdUser,
+        "postId": postId,
+        "description": des,
+        "userRate": rate
+      })
+  );
+  print(response.statusCode);
+  if (response.statusCode==200){
+    return "Review is set";
+  }
+  // if(response.)
 }

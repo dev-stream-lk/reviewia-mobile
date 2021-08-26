@@ -1,4 +1,4 @@
-import 'package:reviewia/services/subCate.dart';
+import 'package:reviewia/structures/subCate.dart';
 
 class AllCatergory {
   late int categoryId;
