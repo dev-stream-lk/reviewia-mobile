@@ -11,7 +11,7 @@ class ReviewCards extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.275,
       margin:
-      EdgeInsets.only(bottom: 10, top: 10, left: 10, right: 10),
+      EdgeInsets.only(bottom: 10, top: 10),
       // padding:EdgeInsets.only(bottom: 10, top: 10, left: 10, right: 10),
       decoration: KBoxDeco,
       child: Column(
@@ -92,7 +92,7 @@ class ReviewCards extends StatelessWidget {
                         },
                       ),
                       Container(
-                        width: 100,
+                        width: 60,
                         margin: EdgeInsets.only(left: MediaQuery.of(context).size.width*20/360),
                         child: Row(
                           children: [

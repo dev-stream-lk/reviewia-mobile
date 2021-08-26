@@ -8,10 +8,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/components/product_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/subCategoryList.dart';
-import 'package:reviewia/services/categoryView.dart';
+import 'package:reviewia/structures/categoryView.dart';
 import 'package:reviewia/services/network.dart';
-import 'package:reviewia/services/post.dart';
-import 'package:reviewia/services/postView.dart';
+import 'package:reviewia/structures/post.dart';
+import 'package:reviewia/structures/postView.dart';
 
 class ProductList extends StatefulWidget {
   static String id = 'product_list';
