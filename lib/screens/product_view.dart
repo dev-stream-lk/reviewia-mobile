@@ -29,8 +29,8 @@ class ProductView extends StatefulWidget {
 
 class _ProductViewState extends State<ProductView> {
   int _currentIndex = 0;
-  List <String> test = ["1","2","3","4","5","6","7","8","9","10"];
-  List <ReviewStruct> _reviewCards = <ReviewStruct>[];
+  List<String> test = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+  List<ReviewStruct> _reviewCards = <ReviewStruct>[];
   bool _isLoading = false;
   List<Widget> _screenContainer = [
     HomePage(),
@@ -43,8 +43,8 @@ class _ProductViewState extends State<ProductView> {
       _currentIndex = index;
     });
   }
-  getReviews(){
 
+  getReviews() {
     fetchReviewStruct(widget.todos.postId.toString()).then((value) {
       setState(() {
         _isLoading = false;
@@ -64,8 +64,13 @@ class _ProductViewState extends State<ProductView> {
     return Container(
         margin: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.040),
-        child: ReviewCards());
+        child: ReviewCards(
+          reviewedBy: _reviewCards[index].reviewedBy,
+          rate: _reviewCards[index].finalRate,
+          detail: _reviewCards[index].description,
+        ));
   }
+
   _searchBar() {
     return Padding(
       padding: EdgeInsets.all(8),
@@ -74,16 +79,15 @@ class _ProductViewState extends State<ProductView> {
         onChanged: (text) {
           text = text.toLowerCase();
           // setState(() {
-            // _postDisplay = _post.where((element) {
-            //   var postTi = element.title.toLowerCase();
-            //   return postTi.contains(text);
-            // }).toList();
+          // _postDisplay = _post.where((element) {
+          //   var postTi = element.title.toLowerCase();
+          //   return postTi.contains(text);
+          // }).toList();
           // });
         },
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +110,6 @@ class _ProductViewState extends State<ProductView> {
       ),
       body: SafeArea(
         child: Scrollbar(
-
           isAlwaysShown: true,
           thickness: 10,
           child: SingleChildScrollView(
@@ -118,20 +121,23 @@ class _ProductViewState extends State<ProductView> {
                     title: widget.todos.title.toString(),
                     description: widget.todos.description,
                     rating: widget.todos.rate,
-                    photoUrl1:widget.todos.imgURL.isNotEmpty?widget.todos.imgURL[0].url.toString():"https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
+                    photoUrl1: widget.todos.imgURL.isNotEmpty
+                        ? widget.todos.imgURL[0].url.toString()
+                        : "https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
+                    createdBy: widget.todos.createdBy,
                     // photoUrl1:widget.todos.imgURL,
                     // widget.todos.imgURL[0],
                   ),
                 ),
                 SingleChildScrollView(
                   child: Container(
-                    margin: EdgeInsets.only(bottom: 10,right: 10),
+                    margin: EdgeInsets.only(bottom: 10, right: 10),
                     child: ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
-                          return _listItemViewProductCards(index);
-                          // return _listItem(index);
+                        return _listItemViewProductCards(index);
+                        // return _listItem(index);
                       },
                       itemCount: _reviewCards.length,
                     ),
@@ -148,12 +154,14 @@ class _ProductViewState extends State<ProductView> {
       ),
     );
   }
+
   void _bootomPage(BuildContext context) {
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-              top: Radius.circular(MediaQuery.of(context).size.width * 25 / 360)),
+              top: Radius.circular(
+                  MediaQuery.of(context).size.width * 25 / 360)),
         ),
         builder: (BuildContext bc) {
           return Container(
@@ -212,9 +220,9 @@ class _ProductViewState extends State<ProductView> {
                     child: FlatButton(
                       padding: EdgeInsets.symmetric(
                           vertical:
-                          MediaQuery.of(context).size.height * (12.5 / 692),
+                              MediaQuery.of(context).size.height * (12.5 / 692),
                           horizontal:
-                          MediaQuery.of(context).size.width * (40 / 360)),
+                              MediaQuery.of(context).size.width * (40 / 360)),
                       color: Kcolor,
                       onPressed: () {
                         Navigator.pop(context);
@@ -238,8 +246,6 @@ class _ProductViewState extends State<ProductView> {
         });
   }
 }
-
-
 
 // class ReviewCards extends StatelessWidget {
 //   const ReviewCards({
