@@ -47,6 +47,7 @@ class _ProductViewState extends State<ProductView> {
   getReviews() {
     fetchReviewStruct(widget.todos.postId.toString()).then((value) {
       setState(() {
+        _reviewCards = <ReviewStruct>[];
         _isLoading = false;
         _reviewCards.addAll(value);
       });
@@ -72,6 +73,14 @@ class _ProductViewState extends State<ProductView> {
           rate: _reviewCards[index].finalRate,
           detail: _reviewCards[index].description,
         ));
+  }
+
+  createAReview(){
+    setState(() {
+      _isLoading=true;
+    });
+    Navigator.pop(context);
+    getReviews();
   }
 
   _searchBar() {
@@ -228,7 +237,7 @@ class _ProductViewState extends State<ProductView> {
                               MediaQuery.of(context).size.width * (40 / 360)),
                       color: Kcolor,
                       onPressed: () {
-                        Navigator.pop(context);
+                        createAReview();
                       },
                       child: Text(
                         'Add a review',
