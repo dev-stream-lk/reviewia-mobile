@@ -11,6 +11,7 @@ import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/search_page.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/structures/postView.dart';
+import 'package:reviewia/structures/reviewStruct.dart';
 
 import 'add_post_page.dart';
 import 'home_Page.dart';
@@ -29,6 +30,7 @@ class ProductView extends StatefulWidget {
 class _ProductViewState extends State<ProductView> {
   int _currentIndex = 0;
   List <String> test = ["1","2","3","4","5","6","7","8","9","10"];
+  List <ReviewStruct> _reviewCards = <ReviewStruct>[];
   bool _isLoading = false;
   List<Widget> _screenContainer = [
     HomePage(),
@@ -41,12 +43,19 @@ class _ProductViewState extends State<ProductView> {
       _currentIndex = index;
     });
   }
+  getReviews(){
 
+    fetchReviewStruct().then((value) {
+      setState(() {
+        _isLoading = false;
+        _reviewCards.addAll(value);
+      });
+    });
+  }
 
   @override
   void initState() {
-    // TODO: implement initState
-    // _image=;
+    getReviews();
     super.initState();
   }
 
@@ -124,7 +133,7 @@ class _ProductViewState extends State<ProductView> {
                           return _listItemViewProductCards(index);
                           // return _listItem(index);
                       },
-                      itemCount: test.length,
+                      itemCount: _reviewCards.length,
                     ),
                   ),
                 ),
