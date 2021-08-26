@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:conditioned/conditioned.dart';
@@ -14,6 +17,8 @@ import 'package:reviewia/services/getSubCategory.dart';
 import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:reviewia/services/selectedCatergory.dart';
 
 class TestAddPost extends StatefulWidget {
   const TestAddPost({Key? key}) : super(key: key);
@@ -24,7 +29,7 @@ class TestAddPost extends StatefulWidget {
 
 class _TestAddPostState extends State<TestAddPost> {
 
-  String url =  KBaseUrl+ "api/public/category/all";
+
 
 
 
@@ -55,34 +60,91 @@ class _TestAddPostState extends State<TestAddPost> {
   //****************** for picture area ******************************
   List<Asset> images = [];
   String _error = 'No Error Dectected';
+  Dio dio = Dio();
 
   @override
   void initState() {
     super.initState();
   }
   // **************data initializing
+  String title= "";
+  String SelectedType= "";
+  String SelectedTypeName= "";
+  String SelectedCategoryName= "";
+  String SelectedSubCategoryName= "";
+  var selectedTypeIndex;
+  var selectedCategoryIndex;
+  var selectedSubCategoryIndex;
   var selected_categoryId;
   var selected_subCategory;
-  String selectedCategory="";
+  final titleText = TextEditingController();
 
    List<AddPost_category> _categories=[];
-  List<GetSubCategory> _sub_categories=[];
-  void getCategory () async {
-    _categories = await fetchCategory();
-    print("List of categories...");
-    for (var item in _categories) {
-      print('${item.categoryName} - ${item.categoryId}');
-    }
-  }
+   List _type = [
+     {
+     "typeName":"Products",
+     "value":"p"
+      },
+     {
+       "typeName":"Services",
+       "value":"s"
+     },
+   ];
 
 
-  void getSubCategory ( var id ) async {
-    print("Sub categories....."+ id);
-    _sub_categories = await fetchSubCategory(id);
-    print("List of categories...");
-    for (var item in _sub_categories) {
-      print('${item.subCategoryName} - ${item.subCategoryId}');
+  //********** to get all category for dropdown ***********
+  late List categoryList=[];
+  Future<dynamic> _getCategory( String selectedType)async{
+    String url = KBaseUrl+"api/public/category/all";
+    await http.get(Uri.parse(url)).then((response)
+      {
+        var data = json.decode(response.body);
+        var _categoryList = data.map((e) => AddPost_category.fromJson(e)).toList();
+        setState(() {
+          categoryList = _categoryList;
+          for (var item in categoryList) {
+                print('${item.categoryName} - ${item.categoryId} - ${item.type}');
+              }
+        });
+      }
+    );
+    return categoryList;
     }
+
+
+  //********** to get sub category for dropdown ***********
+  late List sub_categoryList=[];
+  Future<dynamic> _getSubCategory( String id)async{
+    print("category Id+++" +id);
+    String url = KBaseUrl + "api/public/category?id="+id;
+    await http.get(
+        Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      }).then((response) {
+      late SelectedCatergory selectedCatergory;
+      var data = json.decode(response.body);
+
+      selectedCatergory = new SelectedCatergory(
+          categoryId: data['categoryId'],
+          categoryName: data['categoryName'],
+          type: data['type'],
+          subCategoryList: data['subCategoryList']);
+      if (selectedCatergory.subCategoryList != null) {
+        var _subcategoryList = selectedCatergory.subCategoryList.map((e) =>
+            GetSubCategory.fromJson(e)).toList();
+        setState(() {
+          sub_categoryList = _subcategoryList;
+          // for (var item in sub_categoryList) {
+          //   print('${item.subCategoryName} - ${item.subCategoryId}');
+          // }
+        });
+      }
+      else {
+        print("Sub category empty....");
+      }
+    });
+    return sub_categoryList;
   }
 
   Widget buildGridView() {
@@ -133,6 +195,23 @@ class _TestAddPostState extends State<TestAddPost> {
     });
   }
 
+  _saveImage()async{
+    if(images != null){
+      for(var i = 0; i< images.length; i++){
+        ByteData byteData = await images[i].getByteData();
+        List<int> imageData = byteData.buffer.asUint8List();
+        MultipartFile multipartFile = MultipartFile.fromBytes(
+            imageData,
+            filename: images[i].name,
+        contentType: MediaType('image', 'jpg'));
+        FormData formData = FormData.fromMap({
+          "image": multipartFile
+        });
+        print(formData);
+        // use formData to pass images....
+      }
+    }
+  }
 
   //******************for terms and conditions ******************************
   bool checkBox_1_Val = false;
@@ -221,16 +300,63 @@ class _TestAddPostState extends State<TestAddPost> {
                                     bottomRight: Radius.circular(10)
                                 ),
                               ),
-                              child: TextField(
+                              child: TextFormField(
+                                  initialValue: title,
+                                    onChanged: (text) {
+                                    print('First text field: $text');
+                                      title = '$text';
+                                    },
                                   cursorColor: Colors.black,
                                   //keyboardType: inputType,
                                   decoration: InputDecoration(
                                     // hintStyle: TextStyle(fontSize: 17),
-                                    hintText: 'Post Title',
+                                    hintText: 'Add Title',
                                     border: InputBorder.none,
                                     contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
                                   )
                               )
+                          ),
+                          //type..
+                          Container(
+                            margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
+                            height: MediaQuery.of(context).size.height * 0.09,
+                            padding: EdgeInsets.all(0.0),
+                            child: CustomSearchableDropDown(
+                              initialIndex: selectedTypeIndex,
+                              hideSearch: true,
+                              items: _type,
+                              label: 'Select Type',
+                              labelStyle:  TextStyle(fontSize: 17),
+                              decoration: BoxDecoration(
+                                color: Colors.blue[50],
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10)
+                                ),
+                              ),
+
+                              dropDownMenuItems: _type?.map((item) {
+                                return item['typeName'];
+                              })?.toList() ??
+                                  [],
+                              onChanged: (value){
+                                if(value!=null)
+                                {
+                                  setState(() {
+                                    selectedTypeIndex = _type.indexOf(value);
+                                    SelectedTypeName = value["typeName"];
+                                    SelectedType = value["value"];
+                                    _getCategory(SelectedType);
+                                  });
+
+                                }
+                                else{
+                                  selected_categoryId=null;
+                                }
+                              },
+                            ),
                           ),
 
                           //Category...
@@ -238,10 +364,9 @@ class _TestAddPostState extends State<TestAddPost> {
                             margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
                             height: MediaQuery.of(context).size.height * 0.09,
                             padding: EdgeInsets.all(0.0),
-                            child: GestureDetector(
-                              onTap: (){print("Tapped____");},
-                              child: CustomSearchableDropDown(
-                                items: _categories,
+                            child: CustomSearchableDropDown(
+                                initialIndex: selectedCategoryIndex,
+                                items: categoryList,
                                 label: 'Select Category',
                                 labelStyle:  TextStyle(fontSize: 17),
                                 decoration: BoxDecoration(
@@ -254,14 +379,21 @@ class _TestAddPostState extends State<TestAddPost> {
                                   ),
                                 ),
 
-                                dropDownMenuItems: _categories.map((item) {
-                                  return item.categoryName;
+                                dropDownMenuItems: categoryList?.map((item) {
+                                  if(item.type == SelectedType){
+                                    return item.categoryName;
+                                  }
                                 })?.toList() ??
                                     [],
                                 onChanged: (value){
                                   if(value!=null)
                                   {
-                                    selected_categoryId = '${value.categoryId}';
+                                    setState(() {
+                                      selectedCategoryIndex = categoryList.indexOf(value);
+                                      selected_categoryId = '${value.categoryId}';
+                                      _getSubCategory(selected_categoryId.toString());
+                                    });
+
                                   }
                                   else{
                                     selected_categoryId=null;
@@ -270,17 +402,15 @@ class _TestAddPostState extends State<TestAddPost> {
                               ),
                             ),
 
-                          ),
 
                           //Subcategory...
                           Container(
                             margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
                             height: MediaQuery.of(context).size.height * 0.09,
                             padding: EdgeInsets.all(0.0),
-                            child: GestureDetector(
-                              onTap: (){print("Tapped____");},
                               child: CustomSearchableDropDown(
-                                items: _categories,
+                                initialIndex: selectedSubCategoryIndex,
+                                items: sub_categoryList,
                                 label: 'Select Subcategory',
                                 labelStyle:  TextStyle(fontSize: 17),
                                 decoration: BoxDecoration(
@@ -293,23 +423,23 @@ class _TestAddPostState extends State<TestAddPost> {
                                   ),
                                 ),
 
-                                dropDownMenuItems: _categories.map((item) {
-                                  return item.categoryName;
+                                dropDownMenuItems: sub_categoryList?.map((item) {
+                                  return item.subCategoryName;
                                 })?.toList() ??
                                     [],
                                 onChanged: (value){
                                   if(value!=null)
                                   {
-                                    selected_categoryId = '${value.categoryId}';
+                                    selectedSubCategoryIndex = sub_categoryList.indexOf(value);
+                                    //selected_categoryId = '${value.categoryId}';
                                   }
                                   else{
-                                    selected_categoryId=null;
+                                    //selected_categoryId=null;
                                   }
                                 },
                               ),
                             ),
 
-                          ),
 
                           //Brand...
                           Container(
@@ -559,7 +689,7 @@ class _TestAddPostState extends State<TestAddPost> {
                               margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 10),
 
                               child: RaisedButton(
-                                onPressed: (){},
+                                onPressed: _saveImage,
                                 color: Kcolor,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
