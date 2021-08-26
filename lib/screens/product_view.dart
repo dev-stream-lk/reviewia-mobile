@@ -55,12 +55,15 @@ class _ProductViewState extends State<ProductView> {
 
   @override
   void initState() {
+    setState(() {
+      _isLoading=true;
+    });
     getReviews();
     super.initState();
   }
 
   _listItemViewProductCards(index) {
-    print("created by " + test[index]);
+    // print("created by " + test[index]);
     return Container(
         margin: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.040),
@@ -132,7 +135,7 @@ class _ProductViewState extends State<ProductView> {
                 SingleChildScrollView(
                   child: Container(
                     margin: EdgeInsets.only(bottom: 10, right: 10),
-                    child: ListView.builder(
+                    child:(!_isLoading)?ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
@@ -140,7 +143,7 @@ class _ProductViewState extends State<ProductView> {
                         // return _listItem(index);
                       },
                       itemCount: _reviewCards.length,
-                    ),
+                    ): CircularProgressIndicator(),
                   ),
                 ),
                 // ReviewCards(),

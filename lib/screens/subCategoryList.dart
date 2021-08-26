@@ -119,7 +119,9 @@ class _SubCatergoryListtState extends State<SubCatergoryList> {
     });
   }
   chengeTheValues(String data){
-    _isLoading = true;
+    setState(() {
+      _isLoading=true;
+    });
     for(int i=0;i<_subCate.length;i++){
       if(_subCate[i].subCategoryName==data){
         setState(() {
@@ -173,7 +175,9 @@ class _SubCatergoryListtState extends State<SubCatergoryList> {
     //     _postDisplay =_post;
     //   });
     // });
-    _isLoading =true;
+    setState(() {
+      _isLoading=true;
+    });
     getValue();
     getPosts();
     super.initState();
