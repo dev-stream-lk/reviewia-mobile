@@ -1,13 +1,24 @@
 import 'dart:io';
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:reviewia/constrains/constrains.dart';
-import 'package:reviewia/screens/add_post_page2.dart';
-import 'package:im_stepper/main.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:conditioned/conditioned.dart';
 import 'package:find_dropdown/find_dropdown.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
+import 'package:reviewia/constrains/urlConstrain.dart';
+import 'package:reviewia/services/addPost.dart';
+import 'package:reviewia/services/addPost_connection.dart';
+import 'package:reviewia/services/getSubCategory.dart';
+import 'package:reviewia/structures/selectedCatergory.dart';
+import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class TestAddPost extends StatefulWidget {
   const TestAddPost({Key? key}) : super(key: key);
@@ -17,6 +28,11 @@ class TestAddPost extends StatefulWidget {
 }
 
 class _TestAddPostState extends State<TestAddPost> {
+
+
+
+
+
 //******************for basic info******************************
   //Date time format..
   DateTime date = DateTime.now();
@@ -39,25 +55,96 @@ class _TestAddPostState extends State<TestAddPost> {
   String valueType = "";
 
   List<String> type = ["Service","Product"];
-  List<String> brands = [
-    "Home Lands",
-    "Arduino",
-    "Atlas",
-  ];
-  List<String> category = [
-    "Education",
-    "Electronic",
-    "Jobs",
-    "Properties",
-  ];
+  List<String> brands = [];
 
   //****************** for picture area ******************************
   List<Asset> images = [];
   String _error = 'No Error Dectected';
+  Dio dio = Dio();
 
   @override
   void initState() {
     super.initState();
+  }
+  // **************data initializing
+  String title= "";
+  String SelectedType= "";
+  String SelectedTypeName= "";
+  String SelectedCategoryName= "";
+  String SelectedSubCategoryName= "";
+  var selectedTypeIndex;
+  var selectedCategoryIndex;
+  var selectedSubCategoryIndex;
+  var selected_categoryId;
+  var selected_subCategory;
+  final titleText = TextEditingController();
+
+   List<AddPost_category> _categories=[];
+   List _type = [
+     {
+     "typeName":"Products",
+     "value":"p"
+      },
+     {
+       "typeName":"Services",
+       "value":"s"
+     },
+   ];
+
+
+  //********** to get all category for dropdown ***********
+  late List categoryList=[];
+  Future<dynamic> _getCategory( String selectedType)async{
+    String url = KBaseUrl+"api/public/category/all";
+    await http.get(Uri.parse(url)).then((response)
+      {
+        var data = json.decode(response.body);
+        var _categoryList = data.map((e) => AddPost_category.fromJson(e)).toList();
+        setState(() {
+          categoryList = _categoryList;
+          for (var item in categoryList) {
+                print('${item.categoryName} - ${item.categoryId} - ${item.type}');
+              }
+        });
+      }
+    );
+    return categoryList;
+    }
+
+
+  //********** to get sub category for dropdown ***********
+  late List sub_categoryList=[];
+  Future<dynamic> _getSubCategory( String id)async{
+    print("category Id+++" +id);
+    String url = KBaseUrl + "api/public/category?id="+id;
+    await http.get(
+        Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      }).then((response) {
+      late SelectedCatergory selectedCatergory;
+      var data = json.decode(response.body);
+
+      selectedCatergory = new SelectedCatergory(
+          categoryId: data['categoryId'],
+          categoryName: data['categoryName'],
+          type: data['type'],
+          subCategoryList: data['subCategoryList']);
+      if (selectedCatergory.subCategoryList != null) {
+        var _subcategoryList = selectedCatergory.subCategoryList.map((e) =>
+            GetSubCategory.fromJson(e)).toList();
+        setState(() {
+          sub_categoryList = _subcategoryList;
+          // for (var item in sub_categoryList) {
+          //   print('${item.subCategoryName} - ${item.subCategoryId}');
+          // }
+        });
+      }
+      else {
+        print("Sub category empty....");
+      }
+    });
+    return sub_categoryList;
   }
 
   Widget buildGridView() {
@@ -107,6 +194,25 @@ class _TestAddPostState extends State<TestAddPost> {
       images = resultList;
     });
   }
+
+  _saveImage()async{
+    if(images != null){
+      for(var i = 0; i< images.length; i++){
+        ByteData byteData = await images[i].getByteData();
+        List<int> imageData = byteData.buffer.asUint8List();
+        MultipartFile multipartFile = MultipartFile.fromBytes(
+            imageData,
+            filename: images[i].name,
+        contentType: MediaType('image', 'jpg'));
+        FormData formData = FormData.fromMap({
+          "image": multipartFile
+        });
+        print(formData);
+        // use formData to pass images....
+      }
+    }
+  }
+
   //******************for terms and conditions ******************************
   bool checkBox_1_Val = false;
   bool checkBox_2_Val = false;
@@ -182,8 +288,8 @@ class _TestAddPostState extends State<TestAddPost> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
-                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 10) ,
-                              height: MediaQuery.of(context).size.height * 0.06,
+                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 2) ,
+                              height: MediaQuery.of(context).size.height * 0.07,
                               padding: EdgeInsets.all(10.0),
                               decoration: BoxDecoration(
                                 color: Colors.blue[50],
@@ -194,25 +300,35 @@ class _TestAddPostState extends State<TestAddPost> {
                                     bottomRight: Radius.circular(10)
                                 ),
                               ),
-                              child: TextField(
+                              child: TextFormField(
+                                  initialValue: title,
+                                    onChanged: (text) {
+                                    print('First text field: $text');
+                                      title = '$text';
+                                    },
                                   cursorColor: Colors.black,
                                   //keyboardType: inputType,
                                   decoration: InputDecoration(
-                                    hintStyle: TextStyle(fontSize: 17),
-                                    hintText: 'Post Title',
+                                    // hintStyle: TextStyle(fontSize: 17),
+                                    hintText: 'Add Title',
                                     border: InputBorder.none,
                                     contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
                                   )
                               )
                           ),
-
-                          // for type selection dropdown field..
+                          //type..
                           Container(
-                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
-                              height: MediaQuery.of(context).size.height * 0.12,
-                              padding: EdgeInsets.all(0.0),
+                            margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
+                            height: MediaQuery.of(context).size.height * 0.09,
+                            padding: EdgeInsets.all(0.0),
+                            child: CustomSearchableDropDown(
+                              initialIndex: selectedTypeIndex,
+                              hideSearch: true,
+                              items: _type,
+                              label: 'Select Type',
+                              labelStyle:  TextStyle(fontSize: 17),
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: Colors.blue[50],
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(10),
                                     topRight: Radius.circular(10),
@@ -221,69 +337,156 @@ class _TestAddPostState extends State<TestAddPost> {
                                 ),
                               ),
 
-                              //Type selection dropdown..
-                              child: FindDropdown(
-                                items: type,
-                                onChanged: (item) {
-                                  print(item);
-                                },
-                                selectedItem: "Select type",
-                                showSearchBox: false,
-                                searchBoxDecoration: InputDecoration(hintText: "Search", border: OutlineInputBorder()),
-                                backgroundColor: Colors.white,
-                                titleStyle: TextStyle(color: Colors.blue),
-                                validate: (String? item) {
-                                  if (item == null)
-                                    return "Required field";
-                                  else if (item == "Brasil")
-                                    return "Invalid item";
-                                  else
-                                    return null;
-                                },
-                              )
+                              dropDownMenuItems: _type?.map((item) {
+                                return item['typeName'];
+                              })?.toList() ??
+                                  [],
+                              onChanged: (value){
+                                if(value!=null)
+                                {
+                                  setState(() {
+                                    selectedTypeIndex = _type.indexOf(value);
+                                    SelectedTypeName = value["typeName"];
+                                    SelectedType = value["value"];
+                                    _getCategory(SelectedType);
+                                  });
+
+                                }
+                                else{
+                                  selected_categoryId=null;
+                                }
+                              },
+                            ),
                           ),
 
-                          // for Category selection dropdown field..
+                          //Category...
                           Container(
-                              margin: EdgeInsets.only( left: 2, right: 2) ,
-                              height: MediaQuery.of(context).size.height * 0.12,
-                              padding: EdgeInsets.all(0.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10)
+                            margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
+                            height: MediaQuery.of(context).size.height * 0.09,
+                            padding: EdgeInsets.all(0.0),
+                            child: CustomSearchableDropDown(
+                                initialIndex: selectedCategoryIndex,
+                                items: categoryList,
+                                label: 'Select Category',
+                                labelStyle:  TextStyle(fontSize: 17),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue[50],
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)
+                                  ),
                                 ),
-                              ),
 
-                              //Type selection dropdown..
-                              child: FindDropdown(
-                                items: category,
-                                onChanged: (item) {
-                                  print(item);
+                                dropDownMenuItems: categoryList?.map((item) {
+                                  if(item.type == SelectedType){
+                                    return item.categoryName;
+                                  }
+                                })?.toList() ??
+                                    [],
+                                onChanged: (value){
+                                  if(value!=null)
+                                  {
+                                    setState(() {
+                                      selectedCategoryIndex = categoryList.indexOf(value);
+                                      selected_categoryId = '${value.categoryId}';
+                                      _getSubCategory(selected_categoryId.toString());
+                                    });
+
+                                  }
+                                  else{
+                                    selected_categoryId=null;
+                                  }
                                 },
-                                selectedItem: "Select Category",
-                                showSearchBox: true,
-                                searchBoxDecoration: InputDecoration(hintText: "Search", border: OutlineInputBorder()),
-                                backgroundColor: Colors.white,
-                                titleStyle: TextStyle(color: Colors.blue),
-                                validate: (String? item) {
-                                  if (item == null)
-                                    return "Required field";
-                                  else if (item == "Brasil")
-                                    return "Invalid item";
-                                  else
-                                    return null;
+                              ),
+                            ),
+
+
+                          //Subcategory...
+                          Container(
+                            margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
+                            height: MediaQuery.of(context).size.height * 0.09,
+                            padding: EdgeInsets.all(0.0),
+                              child: CustomSearchableDropDown(
+                                initialIndex: selectedSubCategoryIndex,
+                                items: sub_categoryList,
+                                label: 'Select Subcategory',
+                                labelStyle:  TextStyle(fontSize: 17),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue[50],
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)
+                                  ),
+                                ),
+
+                                dropDownMenuItems: sub_categoryList?.map((item) {
+                                  return item.subCategoryName;
+                                })?.toList() ??
+                                    [],
+                                onChanged: (value){
+                                  if(value!=null)
+                                  {
+                                    selectedSubCategoryIndex = sub_categoryList.indexOf(value);
+                                    //selected_categoryId = '${value.categoryId}';
+                                  }
+                                  else{
+                                    //selected_categoryId=null;
+                                  }
                                 },
-                              )
+                              ),
+                            ),
+
+
+                          //Brand...
+                          Container(
+                            margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
+                            height: MediaQuery.of(context).size.height * 0.09,
+                            padding: EdgeInsets.all(0.0),
+                            child: GestureDetector(
+                              onTap: (){print("Tapped____");},
+                              child: CustomSearchableDropDown(
+                                items: _categories,
+                                label: 'Select Brand',
+                                labelStyle:  TextStyle(fontSize: 17),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue[50],
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)
+                                  ),
+                                ),
+
+                                dropDownMenuItems: _categories.map((item) {
+                                  return item.categoryName;
+                                })?.toList() ??
+                                    [],
+                                onChanged: (value){
+                                  if(value!=null)
+                                  {
+                                    selected_categoryId = '${value.categoryId}';
+                                  }
+                                  else{
+                                    selected_categoryId=null;
+                                  }
+                                },
+                              ),
+                            ),
+
                           ),
+
+
+
 
                           // for date picker..
                           Container(
-                              margin: EdgeInsets.only(left: 2, right: 2, bottom: 10) ,
-                              height: MediaQuery.of(context).size.height * 0.06,
+                              margin: EdgeInsets.only(top:20, left: 2, right: 2, bottom: 10) ,
+                              height: MediaQuery.of(context).size.height * 0.07,
                               padding: EdgeInsets.only(top: 5.0, left: 10),
                               decoration: BoxDecoration(
                                 color: Colors.blue[50],
@@ -320,42 +523,6 @@ class _TestAddPostState extends State<TestAddPost> {
                           ),
 
 
-                          // for Category selection dropdown field..
-                          Container(
-                              margin: EdgeInsets.only( top: 20,left: 2, right: 2) ,
-                              height: MediaQuery.of(context).size.height * 0.12,
-                              padding: EdgeInsets.all(0.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10)
-                                ),
-                              ),
-
-                              //Type selection dropdown..
-                              child: FindDropdown(
-                                items: brands,
-                                onChanged: (item) {
-                                  print(item);
-                                },
-                                selectedItem: "Select Brand",
-                                showSearchBox: true,
-                                searchBoxDecoration: InputDecoration(hintText: "Search", border: OutlineInputBorder()),
-                                backgroundColor: Colors.white,
-                                titleStyle: TextStyle(color: Colors.blue),
-                                validate: (String? item) {
-                                  if (item == null)
-                                    return "Required field";
-                                  else if (item == "Brasil")
-                                    return "Invalid item";
-                                  else
-                                    return null;
-                                },
-                              )
-                          ),
 
                           Container(
                               margin: EdgeInsets.only(top: 10 ,left: 2, right: 2) ,
@@ -522,7 +689,7 @@ class _TestAddPostState extends State<TestAddPost> {
                               margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 10),
 
                               child: RaisedButton(
-                                onPressed: (){},
+                                onPressed: _saveImage,
                                 color: Kcolor,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
