@@ -45,7 +45,7 @@ class _ProductViewState extends State<ProductView> {
   }
   getReviews(){
 
-    fetchReviewStruct().then((value) {
+    fetchReviewStruct(widget.todos.postId.toString()).then((value) {
       setState(() {
         _isLoading = false;
         _reviewCards.addAll(value);

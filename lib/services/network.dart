@@ -169,8 +169,9 @@ List<ReviewStruct> parseReviewStructGet(String responseBody) {
   return posts;
 }
 
-Future<List<ReviewStruct>> fetchReviewStruct() async {
-  String url = KBaseUrl + "api/public/review/all?id=25";
+Future<List<ReviewStruct>> fetchReviewStruct(String postId) async {
+  print(postId);
+  String url = KBaseUrl + "api/public/review/all?id="+postId;
   final response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {
     return compute(parseReviewStructGet, response.body);
