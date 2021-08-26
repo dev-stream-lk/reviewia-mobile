@@ -119,7 +119,7 @@ class _ProductCardState extends State<ProductCard> {
                       Expanded(
                           flex: 4,
                           child:
-                              Text("Chamari Wikrmawardna", style: KPostCard)),
+                              Text(widget.detail.createdBy, style: KPostCard)),
                       Expanded(
                           flex: 1,
                           child: PopupMenuButton(
