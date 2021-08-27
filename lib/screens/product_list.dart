@@ -31,7 +31,6 @@ class _ProductListState extends State<ProductList> {
   List<CategoryView> _catView = <CategoryView>[];
   List<CategoryView> _catDisplayView = <CategoryView>[];
 
-
   bool _isLoading = true;
 
   bool _isLoadingCat = true;
@@ -95,13 +94,18 @@ class _ProductListState extends State<ProductList> {
         child: ProductCard(
           title: _postDisplayView[index].title,
           detail: _postDisplayView[index],
-          photoUrl1:_postDisplayView[index].imgURL.isNotEmpty?_postDisplayView[index].imgURL[0].url.toString():"https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
+          photoUrl1: _postDisplayView[index].imgURL.isNotEmpty
+              ? _postDisplayView[index].imgURL[0].url.toString()
+              : "https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
         ));
   }
 
-  _listCategoryView(index){
-    return topBarButon(t: _catDisplayView[index].categoryName,id:_catDisplayView[index].categoryId.toString());
+  _listCategoryView(index) {
+    return topBarButon(
+        t: _catDisplayView[index].categoryName,
+        id: _catDisplayView[index].categoryId.toString());
   }
+
   _searchBar() {
     return Padding(
       padding: EdgeInsets.all(8),
@@ -149,11 +153,14 @@ class _ProductListState extends State<ProductList> {
     //  });
     // });
     fetchCategoryView().then((val) {
-        setState(() {
+      setState(() {
         _isLoadingCat = false;
         _catView.addAll(val);
-        _catDisplayView =_catView;
-        });
+        _catDisplayView = _catView.where((element) {
+          var catType = element.type.toLowerCase();
+          return catType.contains("p");
+        }).toList();
+      });
     });
     fetchPostView().then((value) {
       setState(() {
@@ -182,16 +189,18 @@ class _ProductListState extends State<ProductList> {
         children: [
           Expanded(
             flex: 2,
-            child:(!_isLoadingCat)?ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: _catDisplayView.length,
-              itemBuilder: (BuildContext context, int index){
-                return _listCategoryView(index);
-              },
-            ):Center(
-              child: CircularProgressIndicator(),
-            ),
+            child: (!_isLoadingCat)
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _catDisplayView.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _listCategoryView(index);
+                    },
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
+                  ),
           ),
           Expanded(
             flex: 12,
@@ -221,8 +230,7 @@ class _ProductListState extends State<ProductList> {
 class topBarButon extends StatefulWidget {
   String t;
   String id;
-  topBarButon({required this.t,required this.id});
-
+  topBarButon({required this.t, required this.id});
 
   @override
   _topBarButonState createState() => _topBarButonState();
@@ -230,15 +238,15 @@ class topBarButon extends StatefulWidget {
 
 class _topBarButonState extends State<topBarButon> {
   late IconData k;
-  setIcon(String l){
+  setIcon(String l) {
     print(widget.id);
-    if(l.toLowerCase()=="clothes"){
-      k =FontAwesomeIcons.tshirt;
-    }else if(l.toLowerCase()=="electronics"){
-      k =FontAwesomeIcons.mobile;
-    }else if(l.toLowerCase()=="education"){
-      k= FontAwesomeIcons.book;
-    }else{
+    if (l.toLowerCase() == "clothes") {
+      k = FontAwesomeIcons.tshirt;
+    } else if (l.toLowerCase() == "electronics") {
+      k = FontAwesomeIcons.mobile;
+    } else if (l.toLowerCase() == "education") {
+      k = FontAwesomeIcons.book;
+    } else {
       k = FontAwesomeIcons.circle;
     }
   }
@@ -249,6 +257,7 @@ class _topBarButonState extends State<topBarButon> {
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return FlatButton(
@@ -256,7 +265,8 @@ class _topBarButonState extends State<topBarButon> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SubCatergoryList(catId: widget.id,catName:widget.t),
+            builder: (context) =>
+                SubCatergoryList(catId: widget.id, catName: widget.t),
           ),
         );
       },
@@ -266,21 +276,21 @@ class _topBarButonState extends State<topBarButon> {
           //         Radius.circular(30),
           //     )
           // ),
-        child: Column(
-          children: [
-            Expanded(
+          child: Column(
+        children: [
+          Expanded(
               flex: 3,
-                child: Container(child: Icon(k,color:Kcolor,))
-
-            ),
-            Expanded(
-              flex: 2,
               child: Container(
-                  child: Text(widget.t)),
-            )
-          ],
-        )
-      ),
+                  child: Icon(
+                k,
+                color: Kcolor,
+              ))),
+          Expanded(
+            flex: 2,
+            child: Container(child: Text(widget.t)),
+          )
+        ],
+      )),
     );
   }
 }
