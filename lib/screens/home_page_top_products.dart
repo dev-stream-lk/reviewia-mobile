@@ -108,13 +108,42 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
       ),
     );
   }
+
+  _searchBarBuild(){
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: CupertinoSearchTextField(
+        placeholder: "Search",
+        onChanged: (text) async {
+          text = text.toLowerCase();
+          if (text.isNotEmpty) {
+            var dd = await fetchPostViewSearch(text);
+            setState(() {
+              _postDisplayView=[];
+              var posts =  dd.posts.map((e) => PostsView.fromJson(e)).toList();
+              _postDisplayView.addAll(posts);
+              _isLoading = false;
+            });
+          }
+          if (text.isEmpty) {
+            setState(() {
+              _postDisplayView = _postView;
+            });
+          }
+        },
+      ),
+    );
+  }
   Future getBuildingData() async{
     var dd = await fetchPostViewStep("0","3");
     setState(() {
+      _postView=[];
+      _postDisplayView=[];
       var posts =  dd.posts.map((e) => PostsView.fromJson(e)).toList();
       totalPages = dd.totalPages;
       currentPage= dd.currentPage;
-      _postDisplayView.addAll(posts);
+      _postView.addAll(posts);
+      _postDisplayView.addAll(_postView);
       _isLoading = false;
       print(posts);
     });
@@ -128,10 +157,12 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
 
   }
   Future getMoreBuildingData()async{
+    print(currentPage.toString()+":is current page"+ "total pages:"+totalPages.toString());
     if(currentPage <= totalPages-1){
       var dd = await fetchPostViewStep((currentPage+1).toString(),"3");
       setState(() {
         var posts =  dd.posts.map((e) => PostsView.fromJson(e)).toList();
+        _postView.addAll(posts);
         _postDisplayView.addAll(posts);
         _isLoading = false;
         currentPage++;
@@ -206,7 +237,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: RefreshIndicator(
-      onRefresh: getData,
+      onRefresh: getBuildingData,
       child: Container(
         child: SingleChildScrollView(
           child: Container(

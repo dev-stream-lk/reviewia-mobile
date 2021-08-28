@@ -70,6 +70,28 @@ Future<LoadPost> fetchPostViewStep(String page, String size) async {
   }
 }
 
+
+Future<LoadPost> fetchPostViewSearch(String title) async {
+  String url = KBaseUrl + "api/public/posts??title="+title;
+  final response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    // return compute(parsePostViewStep, response.body);
+    // print(response.body);
+    late LoadPost loadPost;
+    var decodedUserData = jsonDecode(response.body);
+    loadPost = new LoadPost(
+        totalItems: decodedUserData['totalItems'],
+        totalPages: decodedUserData['totalPages'],
+        currentPage: decodedUserData['currentPage'],
+        posts: decodedUserData['posts']);
+
+
+    return loadPost;
+  } else {
+    throw Exception("API Error");
+  }
+}
+
 List<AllCatergory> parseCategoryView(String responseBody) {
   var list = json.decode(responseBody) as List<dynamic>;
   var posts = list.map((e) => AllCatergory.fromJson(e)).toList();
