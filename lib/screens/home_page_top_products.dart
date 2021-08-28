@@ -9,6 +9,7 @@ import 'package:reviewia/screens/product_list.dart';
 import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/servicesList.dart';
 import 'package:reviewia/services/network.dart';
+import 'package:reviewia/structures/loadPost.dart';
 import 'package:reviewia/structures/post.dart';
 import 'package:reviewia/structures/postView.dart';
 import 'package:search_choices/search_choices.dart';
@@ -31,9 +32,15 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
   List<PostsView> _postDisplayView = <PostsView>[];
   List<PostsView> _temppostDisplayView = <PostsView>[];
 
+
+  List<LoadPost> _loadPost = <LoadPost>[];
+
+
   bool _isLoading = true;
   ScrollController _scrollController =ScrollController();
   int _cMax = 0;
+  late int totalPages;
+  late int currentPage;
   late int _nOfPost = _postView.length;
   _listItem(index) {
     return Container(
@@ -61,8 +68,12 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
   }
 
   _listItemViewProductCards(index) {
+    // Brand brand = new Brand(id: _postDisplayView[index].brand.id, name: _postDisplayView[index].brand.name);
     // index = _postDisplayView.length - index - 1;
     print("created by " + _postDisplayView[index].createdBy);
+    print("LoadPost Size " + _postDisplayView[index].brand.name);
+    // print("total items " + _loadPost[0].totalItems.toString());
+
     return Container(
         child: ProductCard(
       title: _postDisplayView[index].title,
@@ -97,12 +108,68 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
       ),
     );
   }
+
+  _searchBarBuild(){
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: CupertinoSearchTextField(
+        placeholder: "Search",
+        onChanged: (text) async {
+          text = text.toLowerCase();
+          if (text.isNotEmpty) {
+            var dd = await fetchPostViewSearch(text);
+            setState(() {
+              _postDisplayView=[];
+              var posts =  dd.posts.map((e) => PostsView.fromJson(e)).toList();
+              _postDisplayView.addAll(posts);
+              _isLoading = false;
+            });
+          }
+          if (text.isEmpty) {
+            setState(() {
+              _postDisplayView = _postView;
+            });
+          }
+        },
+      ),
+    );
+  }
   Future getBuildingData() async{
-    fetchPostViewStep("5","1").then((value){
-      setState(() {
-        _postDisplayView.addAll(value);
-      });
+    var dd = await fetchPostViewStep("0","3");
+    setState(() {
+      _postView=[];
+      _postDisplayView=[];
+      var posts =  dd.posts.map((e) => PostsView.fromJson(e)).toList();
+      totalPages = dd.totalPages;
+      currentPage= dd.currentPage;
+      _postView.addAll(posts);
+      _postDisplayView.addAll(_postView);
+      _isLoading = false;
+      print(posts);
     });
+    // fetchPostViewStep("0","2").then((value){
+    //   setState(() {
+    //     _loadPost.add(value[0]);
+    //   });
+    // });
+
+
+
+  }
+  Future getMoreBuildingData()async{
+    print(currentPage.toString()+":is current page"+ "total pages:"+totalPages.toString());
+    if(currentPage <= totalPages-1){
+      var dd = await fetchPostViewStep((currentPage+1).toString(),"3");
+      setState(() {
+        var posts =  dd.posts.map((e) => PostsView.fromJson(e)).toList();
+        _postView.addAll(posts);
+        _postDisplayView.addAll(posts);
+        _isLoading = false;
+        currentPage++;
+        print(posts);
+      });
+    }
+
   }
 
 
@@ -135,11 +202,13 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
     //   });
     // });
     super.initState();
-    getData();
+    // getData();
+    getBuildingData();
     _scrollController.addListener(() {
       if(_scrollController.position.pixels==_scrollController.position.maxScrollExtent){
         print('Hello');
-        getMoreData();
+        // getMoreData();
+        getMoreBuildingData();
       }
 
     });
@@ -168,7 +237,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: RefreshIndicator(
-      onRefresh: getData,
+      onRefresh: getBuildingData,
       child: Container(
         child: SingleChildScrollView(
           child: Container(

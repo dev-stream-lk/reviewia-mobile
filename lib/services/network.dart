@@ -5,6 +5,7 @@ import 'package:reviewia/components/review_cards.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/structures/allCategory.dart';
 import 'package:reviewia/structures/categoryView.dart';
+import 'package:reviewia/structures/loadPost.dart';
 import 'package:reviewia/structures/post.dart';
 import 'package:reviewia/structures/postView.dart';
 import 'package:reviewia/structures/reviewStruct.dart';
@@ -42,17 +43,50 @@ Future<List<PostsView>> fetchPostView() async {
   }
 }
 
-List<PostsView> parsePostViewStep(String responseBody) {
+List<LoadPost> parsePostViewStep(String responseBody) {
   var list = json.decode(responseBody);
-  var posts = list.map((e) => PostsView.fromJson(e)).toList();
+  var posts = list.map((e) => LoadPost.fromJson(e)).toList();
   return posts;
 }
 
-Future<List<PostsView>> fetchPostViewStep(String page, String size) async {
-  String url = KBaseUrl + "api/public/posts?page=" + page + "&size=" + size;
+Future<LoadPost> fetchPostViewStep(String page, String size) async {
+  String url = KBaseUrl + "api/public/posts?page=" + page + "&size=" + size+"&sort=updatedAt";
   final response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {
-    return compute(parsePostViewStep, response.body);
+    // return compute(parsePostViewStep, response.body);
+    // print(response.body);
+    late LoadPost loadPost;
+    var decodedUserData = jsonDecode(response.body);
+    loadPost = new LoadPost(
+        totalItems: decodedUserData['totalItems'],
+        totalPages: decodedUserData['totalPages'],
+        currentPage: decodedUserData['currentPage'],
+        posts: decodedUserData['posts']);
+
+
+    return loadPost;
+  } else {
+    throw Exception("API Error");
+  }
+}
+
+
+Future<LoadPost> fetchPostViewSearch(String title) async {
+  String url = KBaseUrl + "api/public/posts??title="+title;
+  final response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    // return compute(parsePostViewStep, response.body);
+    // print(response.body);
+    late LoadPost loadPost;
+    var decodedUserData = jsonDecode(response.body);
+    loadPost = new LoadPost(
+        totalItems: decodedUserData['totalItems'],
+        totalPages: decodedUserData['totalPages'],
+        currentPage: decodedUserData['currentPage'],
+        posts: decodedUserData['posts']);
+
+
+    return loadPost;
   } else {
     throw Exception("API Error");
   }
