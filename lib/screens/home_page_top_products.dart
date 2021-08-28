@@ -9,6 +9,7 @@ import 'package:reviewia/screens/product_list.dart';
 import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/servicesList.dart';
 import 'package:reviewia/services/network.dart';
+import 'package:reviewia/structures/loadPost.dart';
 import 'package:reviewia/structures/post.dart';
 import 'package:reviewia/structures/postView.dart';
 import 'package:search_choices/search_choices.dart';
@@ -31,9 +32,15 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
   List<PostsView> _postDisplayView = <PostsView>[];
   List<PostsView> _temppostDisplayView = <PostsView>[];
 
+
+  List<LoadPost> _loadPost = <LoadPost>[];
+
+
   bool _isLoading = true;
   ScrollController _scrollController =ScrollController();
   int _cMax = 0;
+  late int totalPages;
+  late int currentPage;
   late int _nOfPost = _postView.length;
   _listItem(index) {
     return Container(
@@ -61,8 +68,12 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
   }
 
   _listItemViewProductCards(index) {
+    // Brand brand = new Brand(id: _postDisplayView[index].brand.id, name: _postDisplayView[index].brand.name);
     // index = _postDisplayView.length - index - 1;
     print("created by " + _postDisplayView[index].createdBy);
+    print("LoadPost Size " + _postDisplayView[index].brand.name);
+    // print("total items " + _loadPost[0].totalItems.toString());
+
     return Container(
         child: ProductCard(
       title: _postDisplayView[index].title,
@@ -98,11 +109,36 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
     );
   }
   Future getBuildingData() async{
-    fetchPostViewStep("5","1").then((value){
-      setState(() {
-        _postDisplayView.addAll(value);
-      });
+    var dd = await fetchPostViewStep("0","3");
+    setState(() {
+      var posts =  dd.posts.map((e) => PostsView.fromJson(e)).toList();
+      totalPages = dd.totalPages;
+      currentPage= dd.currentPage;
+      _postDisplayView.addAll(posts);
+      _isLoading = false;
+      print(posts);
     });
+    // fetchPostViewStep("0","2").then((value){
+    //   setState(() {
+    //     _loadPost.add(value[0]);
+    //   });
+    // });
+
+
+
+  }
+  Future getMoreBuildingData()async{
+    if(currentPage <= totalPages-1){
+      var dd = await fetchPostViewStep((currentPage+1).toString(),"3");
+      setState(() {
+        var posts =  dd.posts.map((e) => PostsView.fromJson(e)).toList();
+        _postDisplayView.addAll(posts);
+        _isLoading = false;
+        currentPage++;
+        print(posts);
+      });
+    }
+
   }
 
 
@@ -135,11 +171,13 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
     //   });
     // });
     super.initState();
-    getData();
+    // getData();
+    getBuildingData();
     _scrollController.addListener(() {
       if(_scrollController.position.pixels==_scrollController.position.maxScrollExtent){
         print('Hello');
-        getMoreData();
+        // getMoreData();
+        getMoreBuildingData();
       }
 
     });

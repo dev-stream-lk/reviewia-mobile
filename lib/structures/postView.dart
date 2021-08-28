@@ -11,7 +11,7 @@ class PostsView {
   late String createdBy;
   late bool blocked;
   late String subCategory;
-  late String brand;
+  late Brand brand;
   late List<dynamic> reviews;
 
   PostsView(
@@ -46,7 +46,11 @@ class PostsView {
     type = json['type'];
     blocked = json['blocked'];
     subCategory = json['subCategory'];
-    brand = json['brand'];
+     if (json['brand'] != null){
+      brand =new Brand.fromJson(json['brand']);
+    }
+    // brand = (json['brand'] != null ? new Brand.fromJson(json['brand']) : null)!;
+
     // reviews = json['reviews'];
 
     // if (json['reviews'] != null) {
@@ -70,6 +74,9 @@ class PostsView {
     data['createdBy'] = this.createdBy;
     data['blocked'] = this.blocked;
     data['subCategory'] = this.subCategory;
+    if (this.brand != null) {
+      data['brand'] = this.brand.toJson();
+    }
     // data['reviews']=this.reviews;
     // data['reviews'] = this.reviews.map((v) => v.toJson()).toList();
     return data;
@@ -94,4 +101,19 @@ class ImgURL {
   }
 }
 
+class Brand{
+  late int id;
+  late String name;
 
+  Brand ({required this.id,required this.name});
+  Brand.fromJson(Map<String,dynamic>json){
+    id = json['id'];
+    name = json['name'];
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    return data;
+  }
+}
