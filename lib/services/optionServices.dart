@@ -1,12 +1,19 @@
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
+import 'package:reviewia/screens/favourite_list.dart';
 import 'package:reviewia/services/userState.dart';
+import 'package:reviewia/structures/favouriteListStruct.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:reviewia/structures/postView.dart';
+
 
 selectedOption(String val, int id , context)  {
   print("The Selected Value is :"+val);
@@ -90,3 +97,29 @@ Future addToFavList(String id , BuildContext context)async{
 
 
 }
+
+
+Future<FavouriteListStruct>fetchFavPostView() async {
+  String url = KBaseUrl + "api/user/post/favourite?email=d%40gmail.com";
+  String t = await UserState().getToken();
+  http.Response response = await http.get(
+    Uri.parse(url),
+    headers: {
+      'Authorization' : t
+    },
+  );
+  if (response.statusCode == 200) {
+    late FavouriteListStruct favouriteListStruct;
+    var decodedUserData = jsonDecode(response.body);
+    favouriteListStruct = new FavouriteListStruct(
+        id:decodedUserData['id'] ,
+        createdBy: decodedUserData["createdBy"],
+        posts: decodedUserData["posts"]);
+
+
+    return favouriteListStruct;
+  } else {
+    throw Exception("API Error");
+  }
+}
+

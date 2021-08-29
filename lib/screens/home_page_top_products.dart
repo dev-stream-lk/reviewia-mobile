@@ -5,6 +5,7 @@ import 'package:reviewia/components/product_card.dart';
 import 'package:reviewia/components/selction_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/chatList.dart';
+import 'package:reviewia/screens/favourite_list.dart';
 import 'package:reviewia/screens/product_list.dart';
 import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/service_list.dart';
@@ -277,7 +278,11 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                         indent: 12,
                         thickness: 25,
                       ),
-                      SelectionCard(title: "Favourite Posts"),
+                      GestureDetector(
+                        child: SelectionCard(title: "Favourite Posts"),
+                        onTap: () =>
+                            {Navigator.pushNamed(context, FavouriteList.id)},
+                      ),
                       Divider(
                         indent: 12,
                         thickness: 25,
