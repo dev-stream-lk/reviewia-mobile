@@ -11,15 +11,17 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/screens/login_system_page.dart';
 import 'package:reviewia/screens/product_view.dart';
 import 'package:reviewia/screens/profile_page.dart';
+import 'package:reviewia/services/optionServices.dart';
 import 'package:reviewia/structures/postView.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class ProductCard extends StatefulWidget {
 
+  late int id;
   final String title;
   late PostsView detail;
   late String photoUrl1;
-  ProductCard({required this.title, required this.detail,required this.photoUrl1});
+  ProductCard({required this.id,required this.title, required this.detail,required this.photoUrl1});
 
 
 
@@ -123,13 +125,22 @@ class _ProductCardState extends State<ProductCard> {
                       Expanded(
                           flex: 1,
                           child: PopupMenuButton(
-                            icon: Icon(Icons.more_vert),
-                            onSelected: (item) => {print(item)},
+                            icon: Icon(Icons.more_vert,),
+                            onSelected: (item) {
+                              selectedOption(item.toString(),widget.id,context);
+                              print(item);},
                             itemBuilder: (context) => [
-                              PopupMenuItem<int>(
-                                value: 0,
+                              PopupMenuItem(
+                                value: 1,
                                 child: Text(
                                   "Report",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: 2,
+                                child: Text(
+                                  "Add Favorite",
                                   style: TextStyle(color: Colors.black),
                                 ),
                               ),

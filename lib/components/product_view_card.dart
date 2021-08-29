@@ -68,15 +68,23 @@ class _ProductViewCardState extends State<ProductViewCard> {
                         icon: Icon(Icons.more_vert),
                         onSelected: (item) => {print(item)},
                         itemBuilder: (context) => [
-                          PopupMenuItem<int>(
-                            value: 0,
+                          PopupMenuItem(
+                            value: 1,
                             child: Text(
                               "Report",
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
+                          PopupMenuItem(
+                            value: 2,
+                            child: Text(
+                              "Add Favorite",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
                         ],
-                      ))
+                      )),
+
                 ],
               ),
             ),

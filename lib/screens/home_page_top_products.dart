@@ -33,12 +33,10 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
   List<PostsView> _postDisplayView = <PostsView>[];
   List<PostsView> _temppostDisplayView = <PostsView>[];
 
-
   List<LoadPost> _loadPost = <LoadPost>[];
 
-
   bool _isLoading = true;
-  ScrollController _scrollController =ScrollController();
+  ScrollController _scrollController = ScrollController();
   int _cMax = 0;
   late int totalPages;
   late int currentPage;
@@ -82,6 +80,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
       photoUrl1: _postDisplayView[index].imgURL.isNotEmpty
           ? _postDisplayView[index].imgURL[0].url.toString()
           : "https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
+      id: _postDisplayView[index].postId,
     ));
   }
 
@@ -110,7 +109,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
     );
   }
 
-  _searchBarBuild(){
+  _searchBarBuild() {
     return Padding(
       padding: EdgeInsets.all(8),
       child: CupertinoSearchTextField(
@@ -120,8 +119,8 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
           if (text.isNotEmpty) {
             var dd = await fetchPostViewSearch(text);
             setState(() {
-              _postDisplayView=[];
-              var posts =  dd.posts.map((e) => PostsView.fromJson(e)).toList();
+              _postDisplayView = [];
+              var posts = dd.posts.map((e) => PostsView.fromJson(e)).toList();
               _postDisplayView.addAll(posts);
               _isLoading = false;
             });
@@ -135,14 +134,15 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
       ),
     );
   }
-  Future getBuildingData() async{
-    var dd = await fetchPostViewStep("0","3");
+
+  Future getBuildingData() async {
+    var dd = await fetchPostViewStep("0", "3");
     setState(() {
-      _postView=[];
-      _postDisplayView=[];
-      var posts =  dd.posts.map((e) => PostsView.fromJson(e)).toList();
+      _postView = [];
+      _postDisplayView = [];
+      var posts = dd.posts.map((e) => PostsView.fromJson(e)).toList();
       totalPages = dd.totalPages;
-      currentPage= dd.currentPage;
+      currentPage = dd.currentPage;
       _postView.addAll(posts);
       _postDisplayView.addAll(_postView);
       _isLoading = false;
@@ -153,16 +153,17 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
     //     _loadPost.add(value[0]);
     //   });
     // });
-
-
-
   }
-  Future getMoreBuildingData()async{
-    print(currentPage.toString()+":is current page"+ "total pages:"+totalPages.toString());
-    if(currentPage <= totalPages-1){
-      var dd = await fetchPostViewStep((currentPage+1).toString(),"3");
+
+  Future getMoreBuildingData() async {
+    print(currentPage.toString() +
+        ":is current page" +
+        "total pages:" +
+        totalPages.toString());
+    if (currentPage <= totalPages - 1) {
+      var dd = await fetchPostViewStep((currentPage + 1).toString(), "3");
       setState(() {
-        var posts =  dd.posts.map((e) => PostsView.fromJson(e)).toList();
+        var posts = dd.posts.map((e) => PostsView.fromJson(e)).toList();
         _postView.addAll(posts);
         _postDisplayView.addAll(posts);
         _isLoading = false;
@@ -170,24 +171,20 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
         print(posts);
       });
     }
-
   }
 
-
-
   Future getData() async {
-
     fetchPostView().then((val) {
       setState(() {
         _postView = <PostsView>[];
         _postDisplayView = <PostsView>[];
-        _temppostDisplayView=<PostsView>[];
-        _cMax=0;
+        _temppostDisplayView = <PostsView>[];
+        _cMax = 0;
         _isLoading = false;
         _postView.addAll(val);
         _nOfPost = _postView.length;
         _temppostDisplayView.addAll(_postView.reversed);
-        _postDisplayView=_temppostDisplayView.sublist(0,3);
+        _postDisplayView = _temppostDisplayView.sublist(0, 3);
       });
     });
   }
@@ -206,30 +203,32 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
     // getData();
     getBuildingData();
     _scrollController.addListener(() {
-      if(_scrollController.position.pixels==_scrollController.position.maxScrollExtent){
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         print('Hello');
         // getMoreData();
         getMoreBuildingData();
       }
-
     });
-
-
   }
 
-  getMoreData(){
+  getMoreData() {
     // _postDisplayView.add(_temppostDisplayView.elementAt(3));
     print("get more");
     setState(() {
-      for(int i = _cMax+3 ; i<_cMax+6;i++){
-        print(_cMax.toString() +" no of post"+_nOfPost.toString()+"i is"+i.toString());
-        if(i>= _nOfPost){
-          _cMax=_nOfPost;
+      for (int i = _cMax + 3; i < _cMax + 6; i++) {
+        print(_cMax.toString() +
+            " no of post" +
+            _nOfPost.toString() +
+            "i is" +
+            i.toString());
+        if (i >= _nOfPost) {
+          _cMax = _nOfPost;
           return;
         }
         _postDisplayView.add(_temppostDisplayView.elementAt(i));
       }
-      _cMax=_cMax+3;
+      _cMax = _cMax + 3;
     });
   }
 
@@ -305,7 +304,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                 // ),
                 SingleChildScrollView(
                   child: Container(
-                    height: MediaQuery.of(context).size.height*0.6,
+                    height: MediaQuery.of(context).size.height * 0.6,
                     child: ListView.builder(
                       physics: BouncingScrollPhysics(),
                       scrollDirection: Axis.vertical,
@@ -313,7 +312,9 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         if (!_isLoading) {
-                          return index==0 ? _searchBar(): _listItemViewProductCards(index-1);
+                          return index == 0
+                              ? _searchBar()
+                              : _listItemViewProductCards(index - 1);
                           // return _listItem(index);
                         } else {
                           return Center(
@@ -321,7 +322,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                           );
                         }
                       },
-                      itemCount: _postDisplayView.length+1,
+                      itemCount: _postDisplayView.length + 1,
                     ),
                   ),
                 ),
