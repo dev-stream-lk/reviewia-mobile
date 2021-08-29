@@ -92,6 +92,7 @@ class _ProductListState extends State<ProductList> {
         margin: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.040),
         child: ProductCard(
+          id: _postDisplayView[index].postId,
           title: _postDisplayView[index].title,
           detail: _postDisplayView[index],
           photoUrl1: _postDisplayView[index].imgURL.isNotEmpty
