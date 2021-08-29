@@ -277,7 +277,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                         indent: 12,
                         thickness: 25,
                       ),
-                      SelectionCard(title: "Most Viewed"),
+                      SelectionCard(title: "Favourite Posts"),
                       Divider(
                         indent: 12,
                         thickness: 25,
