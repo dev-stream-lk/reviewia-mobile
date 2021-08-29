@@ -7,6 +7,7 @@ import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/chatList.dart';
 import 'package:reviewia/screens/product_list.dart';
 import 'package:reviewia/screens/profile_page.dart';
+import 'package:reviewia/screens/service_list.dart';
 import 'package:reviewia/screens/servicesList.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/structures/loadPost.dart';
@@ -271,7 +272,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                       GestureDetector(
                         child: SelectionCard(title: "Services"),
                         onTap: () =>
-                            {Navigator.pushNamed(context, ServicesList.id)},
+                            {Navigator.pushNamed(context, ServiceList.id)},
                       ),
                       Divider(
                         indent: 12,
