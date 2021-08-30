@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/services/optionServices.dart';
 class ReviewCards extends StatefulWidget {
+  late int reviewId;
   late String reviewedBy;
   late String detail;
   late double rate;
-  ReviewCards({required this.reviewedBy,required this.detail,required this.rate});
+  ReviewCards({ required this.reviewId, required this.reviewedBy,required this.detail,required this.rate});
 
   @override
   _ReviewCardsState createState() => _ReviewCardsState();
 }
 
 class _ReviewCardsState extends State<ReviewCards> {
+  String status = "still not assign" ;
+
+  putReaction(String state)async{
+    bool s = state=="like"?true:false;
+    var dd  = await setReaction(widget.reviewId,s);
+    print(dd.toString());
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -106,12 +117,16 @@ class _ReviewCardsState extends State<ReviewCards> {
                               flex:2,
                               child: GestureDetector(
                                 onTap: (){
+                                  setState(() {
+                                    status="like";
+                                  });
+                                  putReaction(status);
                                   print('like');
                                 },
                                 child: Container(
                                   child: Icon(
                                     Icons.thumb_up,
-                                    color: Kcolor,
+                                    color: status=="still not assign"?Colors.black:status=="like"?Kcolor:Colors.black,
                                   ),
 // color: Colors.red,
                                 ),
@@ -121,11 +136,16 @@ class _ReviewCardsState extends State<ReviewCards> {
                               flex:2,
                               child: GestureDetector(
                                 onTap: (){
+                                  setState(() {
+                                    status="dislike";
+                                  });
+                                  putReaction(status);
                                   print('Dis like');
                                 },
                                 child: Container(
                                   child: Icon(
                                     Icons.thumb_down,
+                                    color: status=="still not assign"?Colors.black:status=="dislike"?Kcolor:Colors.black,
                                   ),
 // color: Colors.red,
                                 ),

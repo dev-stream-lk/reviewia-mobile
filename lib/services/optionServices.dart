@@ -200,4 +200,10 @@ Future<FavouriteListStruct>fetchFavPostView() async {
   }
 }
 
+Future setReaction(int id,bool reaction)async{
+  String url = KBaseUrl+"api/public/review/react?id="+id.toString()+"&like="+reaction.toString();
+  http.Response response = await http.get(Uri.parse(url));
+  return response.statusCode;
+}
+
 
