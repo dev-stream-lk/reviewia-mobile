@@ -21,6 +21,10 @@ selectedOption(String val, int id , context)  {
     case '2':
       addToFavList(id.toString(),context);
       break;
+    case '3':
+      removeFromFavList(id.toString(),context);
+      print("case--3");
+      break;
   }
 }
 
@@ -98,9 +102,82 @@ Future addToFavList(String id , BuildContext context)async{
 
 }
 
+Future removeFromFavList(String id , BuildContext context)async{
+  String userName = await UserState().getUserName();
+  String token = await UserState().getToken();
+
+  String url = KBaseUrl + "api/user/post/favourite?email="+userName+"&id="+id;
+  http.Response response = await http.delete(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization' : token
+    },
+  );
+  print(response.statusCode);
+  if(response.statusCode==200){
+    Alert(
+      context: context,
+      type: AlertType.success,
+      title: "Favorite list",
+      desc: "Successfully removed from favourite list",
+      buttons: [
+        DialogButton(
+          color: Kcolor,
+          child: Text(
+            "Okay",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: (){
+            Navigator.pop(context);},
+          width: MediaQuery.of(context).size.width*100/360,
+        )
+      ],
+    ).show();
+  }else if(response.statusCode==409){
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Favorite list",
+      desc: "Already added to fav list",
+      buttons: [
+        DialogButton(
+          color: Kcolor,
+          child: Text(
+            "Okay",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: MediaQuery.of(context).size.width*100/360,
+        )
+      ],
+    ).show();
+  }else{
+    Alert(
+      context: context,
+      type: AlertType.error,
+      title: "Favorite list",
+      desc: "Internal ERROR",
+      buttons: [
+        DialogButton(
+          color: Kcolor,
+          child: Text(
+            "Okay",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: MediaQuery.of(context).size.width*100/360,
+        )
+      ],
+    ).show();
+  }
+
+
+}
 
 Future<FavouriteListStruct>fetchFavPostView() async {
-  String url = KBaseUrl + "api/user/post/favourite?email=d%40gmail.com";
+  String userName = await UserState().getUserName();
+  String url = KBaseUrl + "api/user/post/favourite?email="+userName;
   String t = await UserState().getToken();
   http.Response response = await http.get(
     Uri.parse(url),
@@ -122,4 +199,5 @@ Future<FavouriteListStruct>fetchFavPostView() async {
     throw Exception("API Error");
   }
 }
+
 

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:reviewia/components/post_on_fav.dart';
+import 'package:reviewia/components/post_on_profile.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/services/optionServices.dart';
 import 'package:reviewia/structures/favouriteListStruct.dart';
@@ -47,30 +49,26 @@ class _FavouriteListState extends State<FavouriteList> {
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: Card(
         child: Padding(
-          padding: EdgeInsets.all(32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                index.toString(),
-              ),
-              Text(
-                _postDisplayView[index].postId.toString(),
-              ),
-              Text(
-                _postDisplayView[index].createdAt,
-              )
-            ],
-          ),
+          padding: EdgeInsets.all(05),
+          child: PostOnFav(detail: _postDisplayView[index],),
         ),
       ),
     );
   }
   _searchBarView(){
     return Container(
-      child: Text("Fav List"),
+      margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height*0.02,vertical: MediaQuery.of(context).size.height*0.02 ),
+      child: Text("Your wish list",style: KPostCard,textAlign: TextAlign.start,),
     );
   }
+  Future getBuildingData() async {
+    getFavList();
+  }
+    // fetchPostViewStep("0","2").then((value){
+    //   setState(() {
+    //     _loadPost.add(value[0]);
+    //   });
+    // });
 
 
   @override
@@ -82,29 +80,32 @@ class _FavouriteListState extends State<FavouriteList> {
           "Favourite List",
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            flex: 12,
-            // height: MediaQuery.of(context).size.height*0.8,
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                if (!_isLoading) {
-                  return index == 0
-                      ? _searchBarView()
-                      : _listItemViewPosts(index - 1);
-                  // return _listItem(index);
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-              itemCount: _postDisplayView.length + 1,
+      body: RefreshIndicator(
+        onRefresh: getBuildingData,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 12,
+              // height: MediaQuery.of(context).size.height*0.8,
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  if (!_isLoading) {
+                    return index == 0
+                        ? _searchBarView()
+                        : _listItemViewPosts(index - 1);
+                    // return _listItem(index);
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+                itemCount: _postDisplayView.length + 1,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
