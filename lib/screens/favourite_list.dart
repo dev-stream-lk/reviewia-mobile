@@ -61,6 +61,14 @@ class _FavouriteListState extends State<FavouriteList> {
       child: Text("Your wish list",style: KPostCard,textAlign: TextAlign.start,),
     );
   }
+  Future getBuildingData() async {
+    getFavList();
+  }
+    // fetchPostViewStep("0","2").then((value){
+    //   setState(() {
+    //     _loadPost.add(value[0]);
+    //   });
+    // });
 
 
   @override
@@ -72,29 +80,32 @@ class _FavouriteListState extends State<FavouriteList> {
           "Favourite List",
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            flex: 12,
-            // height: MediaQuery.of(context).size.height*0.8,
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                if (!_isLoading) {
-                  return index == 0
-                      ? _searchBarView()
-                      : _listItemViewPosts(index - 1);
-                  // return _listItem(index);
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-              itemCount: _postDisplayView.length + 1,
+      body: RefreshIndicator(
+        onRefresh: getBuildingData,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 12,
+              // height: MediaQuery.of(context).size.height*0.8,
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  if (!_isLoading) {
+                    return index == 0
+                        ? _searchBarView()
+                        : _listItemViewPosts(index - 1);
+                    // return _listItem(index);
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+                itemCount: _postDisplayView.length + 1,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
