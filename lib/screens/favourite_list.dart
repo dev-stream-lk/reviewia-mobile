@@ -57,7 +57,8 @@ class _FavouriteListState extends State<FavouriteList> {
   }
   _searchBarView(){
     return Container(
-      child: Text("Fav List"),
+      margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height*0.02,vertical: MediaQuery.of(context).size.height*0.02 ),
+      child: Text("Your wish list",style: KPostCard,textAlign: TextAlign.start,),
     );
   }
 
