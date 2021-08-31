@@ -229,45 +229,50 @@ class _TestAddPostState extends State<TestAddPost> {
     String token = (await UserState().getToken());
     print(token);
     List<MultipartFile> multipartImageList = <MultipartFile>[];
-    Dio dio = new Dio();
+    //Dio dio = new Dio();
+
+    var headers = {
+      'Authorization': token
+    };
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+    request.headers.addAll(headers);
+    request.fields.addAll({
+      'post': post
+    });
     if(images != null){
      // dio.options.headers['Authorization']= '$token';
       for(var i = 0; i< images.length; i++){
-        // ByteData byteData = await images[i].getByteData();
-        // List<int> imageData = byteData.buffer.asUint8List();
-        // MultipartFile multipartFile = MultipartFile.fromBytes(
-        //     imageData,
-        //     filename: images[i].name,
-        // contentType: MediaType('image', 'jpg'));
-        // FormData formData = FormData.fromMap({
-        //   "image": multipartFile
-        // });
-        //print(formData);
-        // use formData to pass images....
 
           ByteData byteData = await images[i].getByteData();
           List<int> imageData = byteData.buffer.asUint8List();
-          MultipartFile multipartFile = new MultipartFile.fromBytes(
-            imageData,
-            filename: images[i].name,
-            contentType: MediaType("image", "jpg"),
-          );
-          multipartImageList.add(multipartFile);
+          // MultipartFile multipartFile = new MultipartFile.fromBytes(
+          //   imageData,
+          //   filename: images[i].name,
+          //   contentType: MediaType("image", "jpg"),
+          // );
+          // multipartImageList.add(multipartFile);
+          request.files.add(http.MultipartFile.fromBytes('image', imageData, filename: images[i].name));
       }
-      // required.field.add['post']= post;
-      FormData formData = FormData.fromMap({
-        "post":post,
-        "image": multipartImageList,
+      var response = await request.send();
+      response.stream.bytesToString().asStream().listen((event) {
+        var parsedJson = json.decode(event);
+        print(parsedJson);
+        print(response.statusCode);
       });
-      var response = await dio.post(
-          url,
-        options: Options(headers: {
-          'Authorization': token,
-        }),
-          data: formData,
-      );
+      // required.field.add['post']= post;
+      // FormData formData = FormData.fromMap({
+      //   "post":post,
+      //   "image": multipartImageList,
+      // });
+      // var response = await dio.post(
+      //     url,
+      //   options: Options(headers: {
+      //     'Authorization': token,
+      //   }),
+      //     data: formData,
+      // );
 
-      print("Image uploading response:: "+response.toString());
+      //print("Image uploading response:: "+response.toString());
     }
   }
 
