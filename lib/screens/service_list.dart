@@ -1,27 +1,24 @@
-import 'dart:core';
-import 'dart:core';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/components/product_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/subCategoryList.dart';
-import 'package:reviewia/structures/categoryView.dart';
 import 'package:reviewia/services/network.dart';
+import 'package:reviewia/structures/categoryView.dart';
 import 'package:reviewia/structures/post.dart';
 import 'package:reviewia/structures/postView.dart';
+class ServiceList extends StatefulWidget {
+  static String id = 'service_list';
+  const ServiceList({Key? key}) : super(key: key);
 
-class ProductList extends StatefulWidget {
-  static String id = 'product_list';
-  const ProductList({Key? key}) : super(key: key);
 
   @override
-  _ProductListState createState() => _ProductListState();
+  _ServiceListState createState() => _ServiceListState();
 }
 
-class _ProductListState extends State<ProductList> {
+class _ServiceListState extends State<ServiceList> {
+
   List<Post> _post = <Post>[];
   List<Post> _postDisplay = <Post>[];
 
@@ -159,7 +156,7 @@ class _ProductListState extends State<ProductList> {
         _catView.addAll(val);
         _catDisplayView = _catView.where((element) {
           var catType = element.type.toLowerCase();
-          return catType.contains("p");
+          return catType.contains("s");
         }).toList();
       });
     });
@@ -169,7 +166,7 @@ class _ProductListState extends State<ProductList> {
         _postView.addAll(value);
         _postDisplayView = _postView.where((element) {
           var postTi = element.type.toLowerCase();
-          return postTi.contains("p");
+          return postTi.contains("s");
         }).toList();
       });
     });
@@ -182,7 +179,7 @@ class _ProductListState extends State<ProductList> {
       appBar: AppBar(
         backgroundColor: Kcolor,
         title: Text(
-          "All Products",
+          "All Services",
         ),
       ),
       body: Column(
@@ -192,16 +189,16 @@ class _ProductListState extends State<ProductList> {
             flex: 2,
             child: (!_isLoadingCat)
                 ? ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _catDisplayView.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return _listCategoryView(index);
-                    },
-                  )
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: _catDisplayView.length,
+              itemBuilder: (BuildContext context, int index) {
+                return _listCategoryView(index);
+              },
+            )
                 : Center(
-                    child: CircularProgressIndicator(),
-                  ),
+              child: CircularProgressIndicator(),
+            ),
           ),
           Expanded(
             flex: 12,
@@ -226,6 +223,7 @@ class _ProductListState extends State<ProductList> {
       ),
     );
   }
+
 }
 
 class topBarButon extends StatefulWidget {
@@ -272,26 +270,26 @@ class _topBarButonState extends State<topBarButon> {
         );
       },
       child: Container(
-          // decoration: BoxDecoration(
-          //     borderRadius: BorderRadius.all(
-          //         Radius.circular(30),
-          //     )
-          // ),
+        // decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.all(
+        //         Radius.circular(30),
+        //     )
+        // ),
           child: Column(
-        children: [
-          Expanded(
-              flex: 3,
-              child: Container(
-                  child: Icon(
-                k,
-                color: Kcolor,
-              ))),
-          Expanded(
-            flex: 2,
-            child: Container(child: Text(widget.t)),
-          )
-        ],
-      )),
+            children: [
+              Expanded(
+                  flex: 3,
+                  child: Container(
+                      child: Icon(
+                        k,
+                        color: Kcolor,
+                      ))),
+              Expanded(
+                flex: 2,
+                child: Container(child: Text(widget.t)),
+              )
+            ],
+          )),
     );
   }
 }

@@ -66,6 +66,7 @@ class _SubCatergoryListtState extends State<SubCatergoryList> {
         margin: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.040),
         child: ProductCard(
+          id: _postViewDisplay[index].postId,
           title: _postViewDisplay[index].title,
           detail: _postViewDisplay[index],
           photoUrl1: _postViewDisplay[index].imgURL.isNotEmpty
