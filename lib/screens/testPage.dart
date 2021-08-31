@@ -190,7 +190,7 @@ class _TestAddPostState extends State<TestAddPost> {
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 3,
+        maxImages: 1,
         enableCamera: true,
         selectedAssets: images,
         cupertinoOptions: CupertinoOptions(
