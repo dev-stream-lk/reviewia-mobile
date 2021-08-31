@@ -16,6 +16,8 @@ import 'package:reviewia/services/addPost_connection.dart';
 import 'package:reviewia/services/getSubCategory.dart';
 import 'package:reviewia/structures/selectedCatergory.dart';
 import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
+import 'package:reviewia/services/getBrands.dart';
+import 'package:reviewia/services/userState.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -60,7 +62,7 @@ class _TestAddPostState extends State<TestAddPost> {
   //****************** for picture area ******************************
   List<Asset> images = [];
   String _error = 'No Error Dectected';
-  Dio dio = Dio();
+
 
   @override
   void initState() {
@@ -69,27 +71,30 @@ class _TestAddPostState extends State<TestAddPost> {
   // **************data initializing
   String title= "";
   String SelectedType= "";
-  String SelectedTypeName= "";
   String SelectedCategoryName= "";
   String SelectedSubCategoryName= "";
+  String selectedBrand="";
+  String description= "";
   var selectedTypeIndex;
   var selectedCategoryIndex;
   var selectedSubCategoryIndex;
+  var selectedBrandIndex;
   var selected_categoryId;
   var selected_subCategory;
+  var selected_brand;
   final titleText = TextEditingController();
 
-   List<AddPost_category> _categories=[];
-   List _type = [
-     {
-     "typeName":"Products",
-     "value":"p"
-      },
-     {
-       "typeName":"Services",
-       "value":"s"
-     },
-   ];
+  List<AddPost_category> _categories=[];
+  List _type = [
+    {
+      "typeName":"Products",
+      "value":"p"
+    },
+    {
+      "typeName":"Services",
+      "value":"s"
+    },
+  ];
 
 
   //********** to get all category for dropdown ***********
@@ -97,19 +102,19 @@ class _TestAddPostState extends State<TestAddPost> {
   Future<dynamic> _getCategory( String selectedType)async{
     String url = KBaseUrl+"api/public/category/all";
     await http.get(Uri.parse(url)).then((response)
-      {
-        var data = json.decode(response.body);
-        var _categoryList = data.map((e) => AddPost_category.fromJson(e)).toList();
-        setState(() {
-          categoryList = _categoryList;
-          for (var item in categoryList) {
-                print('${item.categoryName} - ${item.categoryId} - ${item.type}');
-              }
-        });
-      }
+    {
+      var data = json.decode(response.body);
+      var _categoryList = data.map((e) => AddPost_category.fromJson(e)).toList();
+      setState(() {
+        categoryList = _categoryList;
+        for (var item in categoryList) {
+          print('${item.categoryName} - ${item.categoryId} - ${item.type}');
+        }
+      });
+    }
     );
     return categoryList;
-    }
+  }
 
 
   //********** to get sub category for dropdown ***********
@@ -119,9 +124,9 @@ class _TestAddPostState extends State<TestAddPost> {
     String url = KBaseUrl + "api/public/category?id="+id;
     await http.get(
         Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      }).then((response) {
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        }).then((response) {
       late SelectedCatergory selectedCatergory;
       var data = json.decode(response.body);
 
@@ -147,6 +152,25 @@ class _TestAddPostState extends State<TestAddPost> {
     return sub_categoryList;
   }
 
+  //************** get Brands for dropdown *******
+  late List brandsList=[];
+  Future<dynamic> _getBrands(String id)async{
+    String url = KBaseUrl+"api/public/subcategory/"+ id +"/brands";
+    await http.get(Uri.parse(url)).then((response)
+    {
+      var data = json.decode(response.body);
+      var _brandList = data.map((e) => GetBrands.fromJson(e)).toList();
+      setState(() {
+        brandsList = _brandList;
+        for (var item in brandsList) {
+          print('${item.id} - ${item.name}');
+        }
+      });
+    }
+    );
+    return brandsList;
+
+  }
   Widget buildGridView() {
     return GridView.count(
       crossAxisCount: 3,
@@ -195,21 +219,55 @@ class _TestAddPostState extends State<TestAddPost> {
     });
   }
 
-  _saveImage()async{
+  Future <void>_saveImage()async{
+    String email= (await UserState().getUserName());
+    String subCategory = selected_subCategory.toString();
+    String brand = selected_brand.toString();
+    String post = '{"title":'+ title +', "description":' + description + ', "type":'+ SelectedType +'}';
+    String url = KBaseUrl+"api/user/post/create?email="+ email +"&subcategory="+ subCategory +"&brand="+ brand;
+
+    String token = (await UserState().getToken());
+    print(token);
+    List<MultipartFile> multipartImageList = <MultipartFile>[];
+    Dio dio = new Dio();
     if(images != null){
+     // dio.options.headers['Authorization']= '$token';
       for(var i = 0; i< images.length; i++){
-        ByteData byteData = await images[i].getByteData();
-        List<int> imageData = byteData.buffer.asUint8List();
-        MultipartFile multipartFile = MultipartFile.fromBytes(
+        // ByteData byteData = await images[i].getByteData();
+        // List<int> imageData = byteData.buffer.asUint8List();
+        // MultipartFile multipartFile = MultipartFile.fromBytes(
+        //     imageData,
+        //     filename: images[i].name,
+        // contentType: MediaType('image', 'jpg'));
+        // FormData formData = FormData.fromMap({
+        //   "image": multipartFile
+        // });
+        //print(formData);
+        // use formData to pass images....
+
+          ByteData byteData = await images[i].getByteData();
+          List<int> imageData = byteData.buffer.asUint8List();
+          MultipartFile multipartFile = new MultipartFile.fromBytes(
             imageData,
             filename: images[i].name,
-        contentType: MediaType('image', 'jpg'));
-        FormData formData = FormData.fromMap({
-          "image": multipartFile
-        });
-        print(formData);
-        // use formData to pass images....
+            contentType: MediaType("image", "jpg"),
+          );
+          multipartImageList.add(multipartFile);
       }
+      // required.field.add['post']= post;
+      FormData formData = FormData.fromMap({
+        "post":post,
+        "image": multipartImageList,
+      });
+      var response = await dio.post(
+          url,
+        options: Options(headers: {
+          'Authorization': token,
+        }),
+          data: formData,
+      );
+
+      print("Image uploading response:: "+response.toString());
     }
   }
 
@@ -224,147 +282,146 @@ class _TestAddPostState extends State<TestAddPost> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Kcolor,
+        appBar: AppBar(
+          backgroundColor: Kcolor,
 
-        title: Text(
-          "Add new post",
-          style: KappTitle,
+          title: Text(
+            "Add new post",
+            style: KappTitle,
+          ),
         ),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            //margin with top of container between app bar...
-            margin: EdgeInsets.only(top: 10 ,left: 15, right: 15,bottom: 10) ,
-            height: MediaQuery.of(context).size.height * 1.10,
-            padding: EdgeInsets.all(10.0),
+        body: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              //margin with top of container between app bar...
+              margin: EdgeInsets.only(top: 10 ,left: 15, right: 15,bottom: 10) ,
+              height: MediaQuery.of(context).size.height * 1.10,
+              padding: EdgeInsets.all(10.0),
 
-            //container color, shadow, corner radius adjestment...
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10)
+              //container color, shadow, corner radius adjestment...
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10)
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3), // changes position of shadow
+                  ),
+                ],
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 3), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                NumberStepper(
+              child: Column(
+                children: [
+                  NumberStepper(
 
-                  numbers:[
-                    1,
-                    2,
-                    3,
-                  ],
-                  activeStep: activeStep,
-                  activeStepColor: Kcolor,
-                  numberStyle: const TextStyle(color: Colors.white),
+                    numbers:[
+                      1,
+                      2,
+                      3,
+                    ],
+                    activeStep: activeStep,
+                    activeStepColor: Kcolor,
+                    numberStyle: const TextStyle(color: Colors.white),
 
 
-                  // This ensures step-tapping updates the activeStep.
-                  onStepReached: (index) {
-                    setState(() {
-                      activeStep = index;
-                    });
-                  },
-                ),
-                header(),
-                Container(
-                  child: Conditioned(
-                    cases: [
-                      Case(activeStep == 0, builder: () => Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 2) ,
-                              height: MediaQuery.of(context).size.height * 0.07,
-                              padding: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                color: Colors.blue[50],
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10)
+                    // This ensures step-tapping updates the activeStep.
+                    onStepReached: (index) {
+                      setState(() {
+                        activeStep = index;
+                      });
+                    },
+                  ),
+                  header(),
+                  Container(
+                    child: Conditioned(
+                      cases: [
+                        Case(activeStep == 0, builder: () => Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                                margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 2) ,
+                                height: MediaQuery.of(context).size.height * 0.07,
+                                padding: EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue[50],
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)
+                                  ),
                                 ),
-                              ),
-                              child: TextFormField(
-                                  initialValue: title,
+                                child: TextFormField(
+                                    initialValue: title,
                                     onChanged: (text) {
-                                    print('First text field: $text');
+                                      print('First text field: $text');
                                       title = '$text';
                                     },
-                                  cursorColor: Colors.black,
-                                  //keyboardType: inputType,
-                                  decoration: InputDecoration(
-                                    // hintStyle: TextStyle(fontSize: 17),
-                                    hintText: 'Add Title',
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
-                                  )
-                              )
-                          ),
-                          //type..
-                          Container(
-                            margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
-                            height: MediaQuery.of(context).size.height * 0.09,
-                            padding: EdgeInsets.all(0.0),
-                            child: CustomSearchableDropDown(
-                              initialIndex: selectedTypeIndex,
-                              hideSearch: true,
-                              items: _type,
-                              label: 'Select Type',
-                              labelStyle:  TextStyle(fontSize: 17),
-                              decoration: BoxDecoration(
-                                color: Colors.blue[50],
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10)
-                                ),
-                              ),
-
-                              dropDownMenuItems: _type?.map((item) {
-                                return item['typeName'];
-                              })?.toList() ??
-                                  [],
-                              onChanged: (value){
-                                if(value!=null)
-                                {
-                                  setState(() {
-                                    selectedTypeIndex = _type.indexOf(value);
-                                    SelectedTypeName = value["typeName"];
-                                    SelectedType = value["value"];
-                                    _getCategory(SelectedType);
-                                  });
-
-                                }
-                                else{
-                                  selected_categoryId=null;
-                                }
-                              },
+                                    cursorColor: Colors.black,
+                                    //keyboardType: inputType,
+                                    decoration: InputDecoration(
+                                      // hintStyle: TextStyle(fontSize: 17),
+                                      hintText: 'Add Title',
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
+                                    )
+                                )
                             ),
-                          ),
+                            //type..
+                            Container(
+                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
+                              height: MediaQuery.of(context).size.height * 0.09,
+                              padding: EdgeInsets.all(0.0),
+                              child: CustomSearchableDropDown(
+                                initialIndex: selectedTypeIndex,
+                                hideSearch: true,
+                                items: _type,
+                                label: 'Select Type',
+                                labelStyle:  TextStyle(fontSize: 17),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue[50],
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)
+                                  ),
+                                ),
 
-                          //Category...
-                          Container(
-                            margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
-                            height: MediaQuery.of(context).size.height * 0.09,
-                            padding: EdgeInsets.all(0.0),
-                            child: CustomSearchableDropDown(
+                                dropDownMenuItems: _type?.map((item) {
+                                  return item['typeName'];
+                                })?.toList() ??
+                                    [],
+                                onChanged: (value){
+                                  if(value!=null)
+                                  {
+                                    setState(() {
+                                      selectedTypeIndex = _type.indexOf(value);
+                                      SelectedType = value["value"];
+                                      _getCategory(SelectedType);
+                                    });
+
+                                  }
+                                  else{
+                                    selected_categoryId=null;
+                                  }
+                                },
+                              ),
+                            ),
+
+                            //Category...
+                            Container(
+                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
+                              height: MediaQuery.of(context).size.height * 0.09,
+                              padding: EdgeInsets.all(0.0),
+                              child: CustomSearchableDropDown(
                                 initialIndex: selectedCategoryIndex,
                                 items: categoryList,
                                 label: 'Select Category',
@@ -391,6 +448,7 @@ class _TestAddPostState extends State<TestAddPost> {
                                     setState(() {
                                       selectedCategoryIndex = categoryList.indexOf(value);
                                       selected_categoryId = '${value.categoryId}';
+                                      SelectedCategoryName = '${value.categoryName}';
                                       _getSubCategory(selected_categoryId.toString());
                                     });
 
@@ -403,11 +461,11 @@ class _TestAddPostState extends State<TestAddPost> {
                             ),
 
 
-                          //Subcategory...
-                          Container(
-                            margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
-                            height: MediaQuery.of(context).size.height * 0.09,
-                            padding: EdgeInsets.all(0.0),
+                            //Subcategory...
+                            Container(
+                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
+                              height: MediaQuery.of(context).size.height * 0.09,
+                              padding: EdgeInsets.all(0.0),
                               child: CustomSearchableDropDown(
                                 initialIndex: selectedSubCategoryIndex,
                                 items: sub_categoryList,
@@ -430,8 +488,10 @@ class _TestAddPostState extends State<TestAddPost> {
                                 onChanged: (value){
                                   if(value!=null)
                                   {
+                                    selected_subCategory = '${value.subCategoryId}';
                                     selectedSubCategoryIndex = sub_categoryList.indexOf(value);
-                                    //selected_categoryId = '${value.categoryId}';
+                                    SelectedSubCategoryName = '${value.subCategoryName}';
+                                    _getBrands(selected_subCategory.toString());
                                   }
                                   else{
                                     //selected_categoryId=null;
@@ -441,15 +501,14 @@ class _TestAddPostState extends State<TestAddPost> {
                             ),
 
 
-                          //Brand...
-                          Container(
-                            margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
-                            height: MediaQuery.of(context).size.height * 0.09,
-                            padding: EdgeInsets.all(0.0),
-                            child: GestureDetector(
-                              onTap: (){print("Tapped____");},
+                            //Brand...
+                            Container(
+                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
+                              height: MediaQuery.of(context).size.height * 0.09,
+                              padding: EdgeInsets.all(0.0),
                               child: CustomSearchableDropDown(
-                                items: _categories,
+                                initialIndex: selectedBrandIndex,
+                                items: brandsList,
                                 label: 'Select Brand',
                                 labelStyle:  TextStyle(fontSize: 17),
                                 decoration: BoxDecoration(
@@ -462,269 +521,279 @@ class _TestAddPostState extends State<TestAddPost> {
                                   ),
                                 ),
 
-                                dropDownMenuItems: _categories.map((item) {
-                                  return item.categoryName;
+                                dropDownMenuItems: brandsList?.map((item) {
+                                  return item.name;
                                 })?.toList() ??
                                     [],
                                 onChanged: (value){
                                   if(value!=null)
                                   {
-                                    selected_categoryId = '${value.categoryId}';
+                                    selectedBrand = '${value.name}';
+                                    selectedBrandIndex = brandsList.indexOf(value);
+                                    selected_brand= '${value.id}';
                                   }
                                   else{
                                     selected_categoryId=null;
                                   }
                                 },
                               ),
+
                             ),
 
-                          ),
+
+                            // for date picker..
+                            // Container(
+                            //     margin: EdgeInsets.only(top:20, left: 2, right: 2, bottom: 10) ,
+                            //     height: MediaQuery.of(context).size.height * 0.07,
+                            //     padding: EdgeInsets.only(top: 5.0, left: 10),
+                            //     decoration: BoxDecoration(
+                            //       color: Colors.blue[50],
+                            //       borderRadius: BorderRadius.only(
+                            //           topLeft: Radius.circular(10),
+                            //           topRight: Radius.circular(10),
+                            //           bottomLeft: Radius.circular(10),
+                            //           bottomRight: Radius.circular(10)
+                            //       ),
+                            //     ),
+                            //     child: TextField(
+                            //         cursorColor: Colors.black,
+                            //         readOnly: true ,
+                            //         onTap: (){
+                            //           selectTimePicker(context);
+                            //         },
+                            //         //keyboardType: inputType,
+                            //         decoration: InputDecoration(
+                            //           hintStyle: TextStyle(fontSize: 17),
+                            //           hintText: 'Select Date',
+                            //           suffixIcon: IconButton(
+                            //             padding: EdgeInsets.only(bottom:MediaQuery.of(context).size.height * 0.022),
+                            //             onPressed: () {
+                            //               selectTimePicker(context);
+                            //             },
+                            //             icon: Icon(Icons.calendar_today_outlined),
+                            //             color: Kcolor,
+                            //           ),
+                            //           border: InputBorder.none,
+                            //           contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: MediaQuery.of(context).size.height * 0.022),
+                            //         )
+                            //
+                            //     )
+                            // ),
 
 
 
-
-                          // for date picker..
-                          Container(
-                              margin: EdgeInsets.only(top:20, left: 2, right: 2, bottom: 10) ,
-                              height: MediaQuery.of(context).size.height * 0.07,
-                              padding: EdgeInsets.only(top: 5.0, left: 10),
-                              decoration: BoxDecoration(
-                                color: Colors.blue[50],
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10)
-                                ),
-                              ),
-                              child: TextField(
-                                  cursorColor: Colors.black,
-                                  readOnly: true ,
-                                  onTap: (){
-                                    selectTimePicker(context);
-                                  },
-                                  //keyboardType: inputType,
-                                  decoration: InputDecoration(
-                                    hintStyle: TextStyle(fontSize: 17),
-                                    hintText: 'Select Date',
-                                    suffixIcon: IconButton(
-                                      padding: EdgeInsets.only(bottom:MediaQuery.of(context).size.height * 0.022),
-                                      onPressed: () {
-                                        selectTimePicker(context);
-                                      },
-                                      icon: Icon(Icons.calendar_today_outlined),
-                                      color: Kcolor,
-                                    ),
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: MediaQuery.of(context).size.height * 0.022),
-                                  )
-
-                              )
-                          ),
-
-
-
-                          Container(
-                              margin: EdgeInsets.only(top: 10 ,left: 2, right: 2) ,
-                              height: MediaQuery.of(context).size.height * 0.20,
-                              padding: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                color: Colors.blue[50],
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10)
-                                ),
-                              ),
-                              child: TextField(
-                                  cursorColor: Colors.black,
-                                  maxLines: null,
-                                  keyboardType: TextInputType.multiline,
-                                  decoration: InputDecoration(
-                                    hintStyle: TextStyle(fontSize: 17),
-                                    hintText: 'Description',
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
-                                  )
-                              )
-                          ),
-                        ],
-                      )),
-                      Case(activeStep == 1, builder: () =>Expanded(
-                          child:Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.05, bottom: MediaQuery.of(context).size.height * 0.05),
-                                child: RaisedButton(
-                                  onPressed:loadAssets ,
-                                  child: Text("Pick Image"),
-                                ),
-                              ),
-                              true == images.isEmpty?
-                                  Text("Choose maximum 3 photos"):Container(
+                            Container(
+                                margin: EdgeInsets.only(top: 10 ,left: 2, right: 2) ,
+                                height: MediaQuery.of(context).size.height * 0.20,
+                                padding: EdgeInsets.all(10.0),
                                 decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.5),
-                                        spreadRadius: 5,
-                                        blurRadius: 7,
-                                        offset: Offset(0, 3), // changes position of shadow
-                                      ),]
-                                ),
-                                height: MediaQuery.of(context).size.height * 0.3,
-                                padding: EdgeInsets.only(
-                                    top: MediaQuery.of(context).size.height * 0.05,
-                                    left: MediaQuery.of(context).size.height * 0.01,
-                                    right: MediaQuery.of(context).size.height * 0.01,
-                                    bottom: MediaQuery.of(context).size.height * 0.05),
-
-                                child: Center(
-                                  child: Expanded(
-                                    child: buildGridView(),
+                                  color: Colors.blue[50],
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)
                                   ),
                                 ),
-
-                              ),
-
-
-                            ],
-                          )
-                      )),
-                      Case(activeStep == 1, builder: () => Icon(Icons.wb_cloudy)),
-                      Case(activeStep == 2, builder: () => Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-
-                          // for Title text feild..
-                          Container(
-                            margin: EdgeInsets.only(top: 30 ,left: 2, right: 2, bottom: 10) ,
-                            height: MediaQuery.of(context).size.height * 0.15,
-                            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.008),
-                            decoration: BoxDecoration(
-                              color: Colors.blue[50],
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  topRight: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10),
-                                  bottomRight: Radius.circular(10)
-                              ),
+                                child: TextFormField(
+                                    initialValue: description,
+                                    onChanged: (text) {
+                                      description = '$text';
+                                    },
+                                    cursorColor: Colors.black,
+                                    maxLines: null,
+                                    keyboardType: TextInputType.multiline,
+                                    decoration: InputDecoration(
+                                      hintStyle: TextStyle(fontSize: 17),
+                                      hintText: 'Description',
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
+                                    )
+                                )
                             ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                          ],
+                        )),
+                        Case(activeStep == 1, builder: () =>Expanded(
+                            child:Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Checkbox(
-                                  value: checkBox_1_Val,
-                                  activeColor: Kcolor,
-                                  onChanged:(newVal){
-                                    setState(() {
-                                      checkBox_1_Val = newVal!;
-                                    });
-                                  },
-                                ),
                                 Container(
-                                  width:  MediaQuery.of(context).size.width * 0.70,
-                                  margin: EdgeInsets.only(top: 10),
-                                  child: Text(
-                                    'You will not be allowed to edit or delete a product or service post once it is submitted.',
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      fontFamily: 'Roboto',
-                                      fontWeight: FontWeight.w500,
+                                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.05, bottom: MediaQuery.of(context).size.height * 0.05),
+                                  child: RaisedButton(
+                                    onPressed:loadAssets ,
+                                    child: Text("Pick Image"),
+                                  ),
+                                ),
+                                true == images.isEmpty?
+                                Text("Choose maximum 3 photos"):Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset: Offset(0, 3), // changes position of shadow
+                                        ),]
+                                  ),
+                                  height: MediaQuery.of(context).size.height * 0.3,
+                                  padding: EdgeInsets.only(
+                                      top: MediaQuery.of(context).size.height * 0.05,
+                                      left: MediaQuery.of(context).size.height * 0.01,
+                                      right: MediaQuery.of(context).size.height * 0.01,
+                                      bottom: MediaQuery.of(context).size.height * 0.05),
+
+                                  child: Center(
+                                    child: Expanded(
+                                      child: buildGridView(),
                                     ),
                                   ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 10 ,left: 2, right: 2, bottom: 10) ,
-                            height: MediaQuery.of(context).size.height * 0.18,
-                            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.008),
-                            decoration: BoxDecoration(
-                              color: Colors.blue[50],
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  topRight: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10),
-                                  bottomRight: Radius.circular(10)
-                              ),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Checkbox(
-                                  value: checkBox_2_Val,
-                                  activeColor: Kcolor,
-                                  onChanged:(newVal){
-                                    setState(() {
-                                      checkBox_2_Val = newVal!;
-                                    });
-                                  },
+
                                 ),
-                                Container(
-                                  width:  MediaQuery.of(context).size.width * 0.70,
-                                  margin: EdgeInsets.only(top: 10),
-                                  child: Text(
-                                    'You will agree to follow the Terms & Conditions and refrain from adding any sort of inapprpriate, plagarized or invalid details.',
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      fontFamily: 'Roboto',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                )
+
+
                               ],
-                            ),
-                          ),
+                            )
+                        )),
+                        Case(activeStep == 2, builder: () => Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
 
-                          // Button next....
-                          Container(
-                              width: MediaQuery.of(context).size.width * 0.28,
-                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 10),
-
-                              child: RaisedButton(
-                                onPressed: _saveImage,
-                                color: Kcolor,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child:Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Submit',
+                            // for Title text feild..
+                            Container(
+                              margin: EdgeInsets.only(top: 30 ,left: 2, right: 2, bottom: 10) ,
+                              height: MediaQuery.of(context).size.height * 0.15,
+                              padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.008),
+                              decoration: BoxDecoration(
+                                color: Colors.blue[50],
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10)
+                                ),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Checkbox(
+                                    value: checkBox_1_Val,
+                                    activeColor: Kcolor,
+                                    onChanged:(newVal){
+                                      setState(() {
+                                        checkBox_1_Val = newVal!;
+                                      });
+                                    },
+                                  ),
+                                  Container(
+                                    width:  MediaQuery.of(context).size.width * 0.70,
+                                    margin: EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      'You will not be allowed to edit or delete a product or service post once it is submitted.',
                                       style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
+                                        fontSize: 17,
                                         fontFamily: 'Roboto',
-                                        fontWeight: FontWeight.w300,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                  ],
-                                ) ,
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 10 ,left: 2, right: 2, bottom: 10) ,
+                              height: MediaQuery.of(context).size.height * 0.18,
+                              padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.008),
+                              decoration: BoxDecoration(
+                                color: Colors.blue[50],
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10)
+                                ),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Checkbox(
+                                    value: checkBox_2_Val,
+                                    activeColor: Kcolor,
+                                    onChanged:(newVal){
+                                      setState(() {
+                                        checkBox_2_Val = newVal!;
+                                      });
+                                    },
+                                  ),
+                                  Container(
+                                    width:  MediaQuery.of(context).size.width * 0.70,
+                                    margin: EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      'You will agree to follow the Terms & Conditions and refrain from adding any sort of inapprpriate, plagarized or invalid details.',
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
 
-                              )
-                          )
+                            // Button next....
+                            Container(
+                                width: MediaQuery.of(context).size.width * 0.28,
+                                margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 10),
 
-                        ],
-                      )),
-                    ],
-                    defaultBuilder: () => Icon(Icons.wb_sunny),
+                                child: RaisedButton(
+                                  onPressed: (){
+                                    setState(() {
+                                      _saveImage();
+                                      print("Selected Type: "+ SelectedType);
+                                      print("Selected Category: "+ SelectedCategoryName);
+                                      print("Selected SubCategory: "+ SelectedSubCategoryName);
+                                      print("Selected Brand: "+ selectedBrand);
+                                    });
+                                  },
+                                  color: Kcolor,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child:Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Submit',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontFamily: 'Roboto',
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                      ),
+                                    ],
+                                  ) ,
+
+                                )
+                            )
+
+                          ],
+                        )),
+                      ],
+                      defaultBuilder: () => Icon(Icons.wb_sunny),
+                    ),
                   ),
-                ),
 
-              ],
+                ],
 
+              ),
             ),
           ),
-        ),
 
-      )
+        )
     );
   }
 
