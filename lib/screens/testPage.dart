@@ -219,62 +219,98 @@ class _TestAddPostState extends State<TestAddPost> {
     });
   }
 
-  Future <void>_saveImage()async{
+  Future<void> _saveImage()async {
     String email= (await UserState().getUserName());
     String subCategory = selected_subCategory.toString();
     String brand = selected_brand.toString();
-    String post = '{"title":'+ title +', "description":' + description + ', "type":'+ SelectedType +'}';
     String url = KBaseUrl+"api/user/post/create?email="+ email +"&subcategory="+ subCategory +"&brand="+ brand;
-
     String token = (await UserState().getToken());
-    print(token);
-    List<MultipartFile> multipartImageList = <MultipartFile>[];
-    //Dio dio = new Dio();
 
     var headers = {
       'Authorization': token
     };
+
     var request = http.MultipartRequest('POST', Uri.parse(url));
-    request.headers.addAll(headers);
     request.fields.addAll({
-      'post': post
+      'post': '{"title":"$title","description":"$description", "type":"$SelectedType"}'
     });
-    if(images != null){
-     // dio.options.headers['Authorization']= '$token';
-      for(var i = 0; i< images.length; i++){
 
-          ByteData byteData = await images[i].getByteData();
-          List<int> imageData = byteData.buffer.asUint8List();
-          // MultipartFile multipartFile = new MultipartFile.fromBytes(
-          //   imageData,
-          //   filename: images[i].name,
-          //   contentType: MediaType("image", "jpg"),
-          // );
-          // multipartImageList.add(multipartFile);
-          request.files.add(http.MultipartFile.fromBytes('image', imageData, filename: images[i].name));
-      }
-      var response = await request.send();
-      response.stream.bytesToString().asStream().listen((event) {
-        var parsedJson = json.decode(event);
-        print(parsedJson);
-        print(response.statusCode);
-      });
-      // required.field.add['post']= post;
-      // FormData formData = FormData.fromMap({
-      //   "post":post,
-      //   "image": multipartImageList,
-      // });
-      // var response = await dio.post(
-      //     url,
-      //   options: Options(headers: {
-      //     'Authorization': token,
-      //   }),
-      //     data: formData,
-      // );
-
-      //print("Image uploading response:: "+response.toString());
+    for (var i = 0; i < images.length; i++) {
+      ByteData byteData = await images[i].getByteData();
+      List<int> imageData = byteData.buffer.asUint8List();
+      request.files.add(http.MultipartFile.fromBytes('image', imageData, filename: images[i].name));
     }
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+
   }
+
+  // Future <void>_saveImage()async{
+  //   String email= (await UserState().getUserName());
+  //   String subCategory = selected_subCategory.toString();
+  //   String brand = selected_brand.toString();
+  //   String post = '{"title": $title,"description":$description,"type":$SelectedType}';
+  //   // String post = '{"title":'+ title +', "description":' + description + ', "type":'+ SelectedType +'}';
+  //   String url = KBaseUrl+"api/user/post/create?email="+ email +"&subcategory="+ subCategory +"&brand="+ brand;
+  //
+  //   String token = (await UserState().getToken());
+  //   print(token);
+  //   List<MultipartFile> multipartImageList = <MultipartFile>[];
+  //   //Dio dio = new Dio();
+  //
+  //   var headers = {
+  //     'Authorization': token
+  //   };
+  //   var request = http.MultipartRequest('POST', Uri.parse(url));
+  //   request.headers.addAll(headers);
+  //   request.fields.addAll({
+  //     'post': post
+  //   });
+  //   if(images != null){
+  //    // dio.options.headers['Authorization']= '$token';
+  //     for(var i = 0; i< images.length; i++){
+  //
+  //         ByteData byteData = await images[i].getByteData();
+  //         List<int> imageData = byteData.buffer.asUint8List();
+  //         // MultipartFile multipartFile = new MultipartFile.fromBytes(
+  //         //   imageData,
+  //         //   filename: images[i].name,
+  //         //   contentType: MediaType("image", "jpg"),
+  //         // );
+  //         // multipartImageList.add(multipartFile);
+  //         request.files.add(http.MultipartFile.fromBytes('image', imageData, filename: images[i].name));
+  //     }
+  //     var response = await request.send();
+  //     response.stream.bytesToString().asStream().listen((event) {
+  //       var parsedJson = json.decode(event);
+  //       print(parsedJson);
+  //       print(response.statusCode);
+  //     });
+  //     // required.field.add['post']= post;
+  //     // FormData formData = FormData.fromMap({
+  //     //   "post":post,
+  //     //   "image": multipartImageList,
+  //     // });
+  //     // var response = await dio.post(
+  //     //     url,
+  //     //   options: Options(headers: {
+  //     //     'Authorization': token,
+  //     //   }),
+  //     //     data: formData,
+  //     // );
+  //
+  //     //print("Image uploading response:: "+response.toString());
+  //   }
+  // }
 
   //******************for terms and conditions ******************************
   bool checkBox_1_Val = false;
