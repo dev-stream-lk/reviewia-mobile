@@ -20,7 +20,7 @@ import 'package:reviewia/services/getBrands.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
+import 'package:reviewia/constrains/validation.dart';
 
 class TestAddPost extends StatefulWidget {
   const TestAddPost({Key? key}) : super(key: key);
@@ -222,7 +222,7 @@ class _TestAddPostState extends State<TestAddPost> {
   Future<void> _saveImage()async {
     String email= (await UserState().getUserName());
     String subCategory = selected_subCategory.toString();
-    String brand = selected_brand.toString();
+    String brand = selectedBrand.toString();
     String url = KBaseUrl+"api/user/post/create?email="+ email +"&subcategory="+ subCategory +"&brand="+ brand;
     String token = (await UserState().getToken());
 
@@ -234,7 +234,7 @@ class _TestAddPostState extends State<TestAddPost> {
     request.fields.addAll({
       'post': '{"title":"$title","description":"$description", "type":"$SelectedType"}'
     });
-
+    print("Url ::"+ url);
     for (var i = 0; i < images.length; i++) {
       ByteData byteData = await images[i].getByteData();
       List<int> imageData = byteData.buffer.asUint8List();
@@ -254,64 +254,6 @@ class _TestAddPostState extends State<TestAddPost> {
 
   }
 
-  // Future <void>_saveImage()async{
-  //   String email= (await UserState().getUserName());
-  //   String subCategory = selected_subCategory.toString();
-  //   String brand = selected_brand.toString();
-  //   String post = '{"title": $title,"description":$description,"type":$SelectedType}';
-  //   // String post = '{"title":'+ title +', "description":' + description + ', "type":'+ SelectedType +'}';
-  //   String url = KBaseUrl+"api/user/post/create?email="+ email +"&subcategory="+ subCategory +"&brand="+ brand;
-  //
-  //   String token = (await UserState().getToken());
-  //   print(token);
-  //   List<MultipartFile> multipartImageList = <MultipartFile>[];
-  //   //Dio dio = new Dio();
-  //
-  //   var headers = {
-  //     'Authorization': token
-  //   };
-  //   var request = http.MultipartRequest('POST', Uri.parse(url));
-  //   request.headers.addAll(headers);
-  //   request.fields.addAll({
-  //     'post': post
-  //   });
-  //   if(images != null){
-  //    // dio.options.headers['Authorization']= '$token';
-  //     for(var i = 0; i< images.length; i++){
-  //
-  //         ByteData byteData = await images[i].getByteData();
-  //         List<int> imageData = byteData.buffer.asUint8List();
-  //         // MultipartFile multipartFile = new MultipartFile.fromBytes(
-  //         //   imageData,
-  //         //   filename: images[i].name,
-  //         //   contentType: MediaType("image", "jpg"),
-  //         // );
-  //         // multipartImageList.add(multipartFile);
-  //         request.files.add(http.MultipartFile.fromBytes('image', imageData, filename: images[i].name));
-  //     }
-  //     var response = await request.send();
-  //     response.stream.bytesToString().asStream().listen((event) {
-  //       var parsedJson = json.decode(event);
-  //       print(parsedJson);
-  //       print(response.statusCode);
-  //     });
-  //     // required.field.add['post']= post;
-  //     // FormData formData = FormData.fromMap({
-  //     //   "post":post,
-  //     //   "image": multipartImageList,
-  //     // });
-  //     // var response = await dio.post(
-  //     //     url,
-  //     //   options: Options(headers: {
-  //     //     'Authorization': token,
-  //     //   }),
-  //     //     data: formData,
-  //     // );
-  //
-  //     //print("Image uploading response:: "+response.toString());
-  //   }
-  // }
-
   //******************for terms and conditions ******************************
   bool checkBox_1_Val = false;
   bool checkBox_2_Val = false;
@@ -320,6 +262,26 @@ class _TestAddPostState extends State<TestAddPost> {
 
   int activeStep = 0;
   int upperBound = 2;
+
+  //*****************input validation.. ***********
+  String title_warning="";
+  String type_warning="";
+  String category_warning="";
+  String subCategory_warning="";
+  String brand_warning="";
+  String description_warning="";
+  String imageText = "Choose maximum 3 photos";
+  Color buttonColour = Colors.grey;
+  setButtonColour(){
+    print(checkBox_1_Val);
+    if(checkBox_1_Val && checkBox_2_Val ){
+      buttonColour = Kcolor;
+    }
+    else{
+      buttonColour = Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -374,7 +336,57 @@ class _TestAddPostState extends State<TestAddPost> {
                     // This ensures step-tapping updates the activeStep.
                     onStepReached: (index) {
                       setState(() {
-                        activeStep = index;
+                        if(index==1){
+                            //check validation...
+                          bool flag = true;
+                          if(title.isEmpty){
+                            flag = false;
+                            title_warning = "Title is a required field";
+                            print("Title empty");
+
+                          }
+                          if(SelectedType.isEmpty){
+                            flag = false;
+                            print("type empty");
+                            type_warning = "Type is a required field";
+                          }
+                          if(SelectedCategoryName.isEmpty){
+                            flag = false;
+                            print("Category empty");
+                            category_warning = "Category is a required field";
+                          }
+                          if(SelectedSubCategoryName.isEmpty){
+                            flag = false;
+                            print("Subcategory empty");
+                            subCategory_warning = "Sub category is a required field";
+                          }
+                          if(selectedBrand.isEmpty){
+                            flag = false;
+                            print("Brand empty");
+                            brand_warning = "brand is a required field";
+                          }
+                          if(description.isEmpty){
+                            flag = false;
+                            print("Description empty");
+                            description_warning = "Desription is a required field";
+                          }
+                          if(flag == true){
+                            activeStep = index;
+                          }
+
+
+                        }
+                        else if(index == 2){
+                          if(images.isEmpty){
+                            imageText = "Please insert at least an image";
+                          }
+                          else{
+                            activeStep = index;
+                          }
+                        }
+                        else {
+                          activeStep = index;
+                        }
                       });
                     },
                   ),
@@ -405,6 +417,11 @@ class _TestAddPostState extends State<TestAddPost> {
                                       print('First text field: $text');
                                       title = '$text';
                                     },
+                                    onTap: (){
+                                      setState(() {
+                                        title_warning="";
+                                      });
+                                    },
                                     cursorColor: Colors.black,
                                     //keyboardType: inputType,
                                     decoration: InputDecoration(
@@ -414,6 +431,12 @@ class _TestAddPostState extends State<TestAddPost> {
                                       contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
                                     )
                                 )
+                            ),
+                            Text(
+                                title_warning,
+                                style: TextStyle(
+                                  color: Colors.red
+                                ),
                             ),
                             //type..
                             Container(
@@ -441,6 +464,7 @@ class _TestAddPostState extends State<TestAddPost> {
                                 })?.toList() ??
                                     [],
                                 onChanged: (value){
+                                  type_warning = "";
                                   if(value!=null)
                                   {
                                     setState(() {
@@ -456,7 +480,12 @@ class _TestAddPostState extends State<TestAddPost> {
                                 },
                               ),
                             ),
-
+                            Text(
+                              type_warning,
+                              style: TextStyle(
+                                  color: Colors.red
+                              ),
+                            ),
                             //Category...
                             Container(
                               margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
@@ -484,6 +513,7 @@ class _TestAddPostState extends State<TestAddPost> {
                                 })?.toList() ??
                                     [],
                                 onChanged: (value){
+                                  category_warning = "";
                                   if(value!=null)
                                   {
                                     setState(() {
@@ -491,6 +521,7 @@ class _TestAddPostState extends State<TestAddPost> {
                                       selected_categoryId = '${value.categoryId}';
                                       SelectedCategoryName = '${value.categoryName}';
                                       _getSubCategory(selected_categoryId.toString());
+                                      category_warning = "";
                                     });
 
                                   }
@@ -498,6 +529,12 @@ class _TestAddPostState extends State<TestAddPost> {
                                     selected_categoryId=null;
                                   }
                                 },
+                              ),
+                            ),
+                            Text(
+                              category_warning,
+                              style: TextStyle(
+                                  color: Colors.red
                               ),
                             ),
 
@@ -527,12 +564,14 @@ class _TestAddPostState extends State<TestAddPost> {
                                 })?.toList() ??
                                     [],
                                 onChanged: (value){
+                                  subCategory_warning="";
                                   if(value!=null)
                                   {
                                     selected_subCategory = '${value.subCategoryId}';
                                     selectedSubCategoryIndex = sub_categoryList.indexOf(value);
                                     SelectedSubCategoryName = '${value.subCategoryName}';
                                     _getBrands(selected_subCategory.toString());
+
                                   }
                                   else{
                                     //selected_categoryId=null;
@@ -540,7 +579,12 @@ class _TestAddPostState extends State<TestAddPost> {
                                 },
                               ),
                             ),
-
+                            Text(
+                              subCategory_warning,
+                              style: TextStyle(
+                                  color: Colors.red
+                              ),
+                            ),
 
                             //Brand...
                             Container(
@@ -567,11 +611,12 @@ class _TestAddPostState extends State<TestAddPost> {
                                 })?.toList() ??
                                     [],
                                 onChanged: (value){
+                                  brand_warning="";
                                   if(value!=null)
                                   {
                                     selectedBrand = '${value.name}';
                                     selectedBrandIndex = brandsList.indexOf(value);
-                                    selected_brand= '${value.id}';
+
                                   }
                                   else{
                                     selected_categoryId=null;
@@ -580,47 +625,12 @@ class _TestAddPostState extends State<TestAddPost> {
                               ),
 
                             ),
-
-
-                            // for date picker..
-                            // Container(
-                            //     margin: EdgeInsets.only(top:20, left: 2, right: 2, bottom: 10) ,
-                            //     height: MediaQuery.of(context).size.height * 0.07,
-                            //     padding: EdgeInsets.only(top: 5.0, left: 10),
-                            //     decoration: BoxDecoration(
-                            //       color: Colors.blue[50],
-                            //       borderRadius: BorderRadius.only(
-                            //           topLeft: Radius.circular(10),
-                            //           topRight: Radius.circular(10),
-                            //           bottomLeft: Radius.circular(10),
-                            //           bottomRight: Radius.circular(10)
-                            //       ),
-                            //     ),
-                            //     child: TextField(
-                            //         cursorColor: Colors.black,
-                            //         readOnly: true ,
-                            //         onTap: (){
-                            //           selectTimePicker(context);
-                            //         },
-                            //         //keyboardType: inputType,
-                            //         decoration: InputDecoration(
-                            //           hintStyle: TextStyle(fontSize: 17),
-                            //           hintText: 'Select Date',
-                            //           suffixIcon: IconButton(
-                            //             padding: EdgeInsets.only(bottom:MediaQuery.of(context).size.height * 0.022),
-                            //             onPressed: () {
-                            //               selectTimePicker(context);
-                            //             },
-                            //             icon: Icon(Icons.calendar_today_outlined),
-                            //             color: Kcolor,
-                            //           ),
-                            //           border: InputBorder.none,
-                            //           contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: MediaQuery.of(context).size.height * 0.022),
-                            //         )
-                            //
-                            //     )
-                            // ),
-
+                            Text(
+                              brand_warning,
+                              style: TextStyle(
+                                  color: Colors.red
+                              ),
+                            ),
 
 
                             Container(
@@ -641,6 +651,11 @@ class _TestAddPostState extends State<TestAddPost> {
                                     onChanged: (text) {
                                       description = '$text';
                                     },
+                                    onTap: (){
+                                      setState(() {
+                                        description_warning="";
+                                      });
+                                    },
                                     cursorColor: Colors.black,
                                     maxLines: null,
                                     keyboardType: TextInputType.multiline,
@@ -651,6 +666,12 @@ class _TestAddPostState extends State<TestAddPost> {
                                       contentPadding: EdgeInsets.only(left: 2,right: 2,top: 2,bottom: 10),
                                     )
                                 )
+                            ),
+                            Text(
+                              description_warning,
+                              style: TextStyle(
+                                  color: Colors.red
+                              ),
                             ),
                           ],
                         )),
@@ -667,7 +688,7 @@ class _TestAddPostState extends State<TestAddPost> {
                                   ),
                                 ),
                                 true == images.isEmpty?
-                                Text("Choose maximum 3 photos"):Container(
+                                Text(imageText):Container(
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -726,6 +747,7 @@ class _TestAddPostState extends State<TestAddPost> {
                                     onChanged:(newVal){
                                       setState(() {
                                         checkBox_1_Val = newVal!;
+                                        setButtonColour();
                                       });
                                     },
                                   ),
@@ -766,6 +788,7 @@ class _TestAddPostState extends State<TestAddPost> {
                                     onChanged:(newVal){
                                       setState(() {
                                         checkBox_2_Val = newVal!;
+                                        setButtonColour();
                                       });
                                     },
                                   ),
@@ -792,15 +815,17 @@ class _TestAddPostState extends State<TestAddPost> {
 
                                 child: RaisedButton(
                                   onPressed: (){
-                                    setState(() {
-                                      _saveImage();
-                                      print("Selected Type: "+ SelectedType);
-                                      print("Selected Category: "+ SelectedCategoryName);
-                                      print("Selected SubCategory: "+ SelectedSubCategoryName);
-                                      print("Selected Brand: "+ selectedBrand);
-                                    });
+                                    if(buttonColour == Kcolor){
+                                      setState(() {
+                                        _saveImage();
+                                        print("Selected Type: "+ SelectedType);
+                                        print("Selected Category: "+ SelectedCategoryName);
+                                        print("Selected SubCategory: "+ SelectedSubCategoryName);
+                                        print("Selected Brand: "+ selectedBrand);
+                                      });
+                                    }
                                   },
-                                  color: Kcolor,
+                                  color: buttonColour,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10)),
                                   child:Row(
