@@ -16,6 +16,7 @@ import 'package:reviewia/structures/post.dart';
 import 'package:reviewia/structures/postView.dart';
 import 'package:search_choices/search_choices.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePageTopProducts extends StatefulWidget {
   const HomePageTopProducts({Key? key}) : super(key: key);
@@ -260,36 +261,93 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                     padding: EdgeInsets.all(15),
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
-                      GestureDetector(
-                        child: SelectionCard(title: "Products"),
-                        onTap: () =>
-                            {Navigator.pushNamed(context, ProductList.id)},
-                      ),
+                      // GestureDetector(
+                      //   child: SelectionCard(title: "Products"),
+                      //   onTap: () =>
+                      //       {Navigator.pushNamed(context, ProductList.id)},
+                      // ),
                       Divider(
-                        indent: 12,
+                        indent: 20,
                         thickness: 25,
                       ),
-                      GestureDetector(
-                        child: SelectionCard(title: "Services"),
-                        onTap: () =>
-                            {Navigator.pushNamed(context, ServiceList.id)},
+                      Column(
+                          children: [
+                            IconButton(
+                              iconSize: 30.0,
+                              icon: const Icon(Icons.devices_other, color: Kcolor),
+                              tooltip: 'Products',
+                              onPressed: () {Navigator.pushNamed(context, ProductList.id);},
+                            ),
+                            Text('Products',
+                                style: TextStyle(color: Kcolor)
+                            )
+                          ]
                       ),
                       Divider(
-                        indent: 12,
+                        indent: 30,
                         thickness: 25,
                       ),
-                      GestureDetector(
-                        child: SelectionCard(title: "Favourite Posts"),
-                        onTap: () =>
-                            {Navigator.pushNamed(context, FavouriteList.id)},
+                      // GestureDetector(
+                      //   child: SelectionCard(title: "Services"),
+                      //   onTap: () =>
+                      //       {Navigator.pushNamed(context, ServiceList.id)},
+                      // ),
+
+                      Column(
+                          children: [
+                            IconButton(
+                              iconSize: 30.0,
+                              icon: const FaIcon(FontAwesomeIcons.userCog ,  color: Kcolor),
+                              tooltip: 'Services',
+                              onPressed: () {Navigator.pushNamed(context, ServiceList.id);},
+                            ),
+                            Text('Services',
+                                style: TextStyle(color: Kcolor)
+                            )
+                          ]
                       ),
                       Divider(
-                        indent: 12,
+                        indent: 30,
                         thickness: 25,
                       ),
-                      SelectionCard(title: "My posts"),
+                      // GestureDetector(
+                      //   child: SelectionCard(title: "Favourite Posts"),
+                      //   onTap: () =>
+                      //       {Navigator.pushNamed(context, FavouriteList.id)},
+                      // ),
+                      Column(
+                          children: [
+                            IconButton(
+                              iconSize: 30.0,
+                              icon: const Icon( Icons.favorite,  color: Kcolor),
+                              tooltip: 'Favorites',
+                              onPressed: () {Navigator.pushNamed(context, FavouriteList.id);},
+                            ),
+                            Text('Favorites',
+                                style: TextStyle(color: Kcolor)
+                            )
+                          ]
+                      ),
                       Divider(
-                        indent: 12,
+                        indent: 30,
+                        thickness: 25,
+                      ),
+                      // SelectionCard(title: "My posts"),
+                      Column(
+                          children: [
+                            IconButton(
+                              iconSize: 30.0,
+                              icon: const FaIcon(FontAwesomeIcons.userTag ,  color: Kcolor),
+                              tooltip: 'My Posts',
+                              onPressed: () {  },
+                            ),
+                            Text('My Posts',
+                                style: TextStyle(color: Kcolor)
+                            )
+                          ]
+                      ),
+                      Divider(
+                        indent: 30,
                         thickness: 25,
                       ),
                     ],
