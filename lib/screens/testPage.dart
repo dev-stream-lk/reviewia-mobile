@@ -309,7 +309,7 @@ class _TestAddPostState extends State<TestAddPost> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Kcolor,
-
+          automaticallyImplyLeading: false,
           title: Text(
             "Add new post",
             style: KappTitle,
