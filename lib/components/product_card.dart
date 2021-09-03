@@ -79,14 +79,14 @@ class _ProductCardState extends State<ProductCard> {
         },
         child: Container(
           height: MediaQuery.of(context).size.height * 0.62,
-          margin: EdgeInsets.only(bottom: 10, top: 10),
+          margin: EdgeInsets.symmetric(vertical: 10,horizontal: 5),
           decoration: BoxDecoration(
             // color: Colors.cyan,
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(5)),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: Colors.grey.withOpacity(0.35),
                 spreadRadius: 5,
                 blurRadius: 7,
                 offset: Offset(0, 3), // changes position of shadow
