@@ -266,16 +266,13 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                       //   onTap: () =>
                       //       {Navigator.pushNamed(context, ProductList.id)},
                       // ),
-                      Divider(
-                        indent: 20,
-                        thickness: 25,
-                      ),
                       Column(
                           children: [
                             IconButton(
                               iconSize: 30.0,
                               icon: const Icon(Icons.devices_other, color: Kcolor),
                               tooltip: 'Products',
+                              color: Colors.blueGrey,
                               onPressed: () {Navigator.pushNamed(context, ProductList.id);},
                             ),
                             Text('Products',
@@ -346,10 +343,10 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                             )
                           ]
                       ),
-                      Divider(
-                        indent: 30,
-                        thickness: 25,
-                      ),
+                      // Divider(
+                      //   indent: 30,
+                      //   thickness: 25,
+                      // ),
                     ],
                   ),
                 ),

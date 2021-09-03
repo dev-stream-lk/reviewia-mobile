@@ -241,13 +241,21 @@ class _topBarButonState extends State<topBarButon> {
   late IconData k;
   setIcon(String l) {
     print(widget.id);
-    if (l.toLowerCase() == "clothes") {
+    if (l.toLowerCase() == "fashion") {
       k = FontAwesomeIcons.tshirt;
-    } else if (l.toLowerCase() == "electronics") {
+    } else if (l.toLowerCase() == "electronic") {
       k = FontAwesomeIcons.mobile;
     } else if (l.toLowerCase() == "education") {
       k = FontAwesomeIcons.book;
-    } else {
+    } else if (l.toLowerCase() == "food") {
+      k = Icons.lunch_dining;
+    }else if (l.toLowerCase() == "beauty culture") {
+      k = Icons.face_retouching_natural;
+    }
+    else if (l.toLowerCase() == "bank") {
+      k = FontAwesomeIcons.university;
+    }
+    else {
       k = FontAwesomeIcons.circle;
     }
   }
