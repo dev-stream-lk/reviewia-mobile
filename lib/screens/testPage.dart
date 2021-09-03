@@ -23,6 +23,8 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:http/http.dart' as http;
 import 'package:rflutter_alert/rflutter_alert.dart';
 
+import '../home_data.dart';
+
 class TestAddPost extends StatefulWidget {
   const TestAddPost({Key? key}) : super(key: key);
 
@@ -260,10 +262,9 @@ class _TestAddPostState extends State<TestAddPost> {
               "Ok",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            onPressed: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) {
-                  return HomePage();
-                })),
+            onPressed: () {
+              Navigator.pushNamed(context, HomePage.id,arguments:HomeData(email));
+            },
             width: MediaQuery.of(context).size.width*100/360,
           )
         ],
@@ -308,7 +309,7 @@ class _TestAddPostState extends State<TestAddPost> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Kcolor,
-
+          automaticallyImplyLeading: false,
           title: Text(
             "Add new post",
             style: KappTitle,
