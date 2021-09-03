@@ -258,7 +258,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                   // margin: EdgeInsets.symmetric(horizontal:MediaQuery.of(context).size.height * 0.020),
                   height: MediaQuery.of(context).size.height * 0.1485,
                   child: ListView(
-                    padding: EdgeInsets.all(15),
+                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
                       // GestureDetector(
@@ -294,6 +294,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                           children: [
                             IconButton(
                               iconSize: 30.0,
+
                               icon: const FaIcon(FontAwesomeIcons.userCog ,  color: Kcolor),
                               tooltip: 'Services',
                               onPressed: () {Navigator.pushNamed(context, ServiceList.id);},

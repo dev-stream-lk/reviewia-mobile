@@ -11,6 +11,7 @@ import 'package:conditioned/conditioned.dart';
 import 'package:find_dropdown/find_dropdown.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
+import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/services/addPost.dart';
 import 'package:reviewia/services/addPost_connection.dart';
 import 'package:reviewia/services/getSubCategory.dart';
@@ -20,7 +21,7 @@ import 'package:reviewia/services/getBrands.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:http/http.dart' as http;
-import 'package:reviewia/constrains/validation.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class TestAddPost extends StatefulWidget {
   const TestAddPost({Key? key}) : super(key: key);
@@ -247,6 +248,26 @@ class _TestAddPostState extends State<TestAddPost> {
 
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
+      Alert(
+        context: context,
+        type: AlertType.success,
+        title: "Post Created",
+        desc: "Your post has been added to the Recently added posts ",
+        buttons: [
+          DialogButton(
+            color: Kcolor,
+            child: Text(
+              "Ok",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) {
+                  return HomePage();
+                })),
+            width: MediaQuery.of(context).size.width*100/360,
+          )
+        ],
+      ).show();
     }
     else {
       print(response.reasonPhrase);
@@ -510,6 +531,9 @@ class _TestAddPostState extends State<TestAddPost> {
                                   if(item.type == SelectedType){
                                     return item.categoryName;
                                   }
+                                  else{
+                                    item = categoryList.indexOf(item)+1;
+                                  }
                                 })?.toList() ??
                                     [],
                                 onChanged: (value){
@@ -635,7 +659,7 @@ class _TestAddPostState extends State<TestAddPost> {
 
                             Container(
                                 margin: EdgeInsets.only(top: 10 ,left: 2, right: 2) ,
-                                height: MediaQuery.of(context).size.height * 0.20,
+                                height: MediaQuery.of(context).size.height * 0.10,
                                 padding: EdgeInsets.all(10.0),
                                 decoration: BoxDecoration(
                                   color: Colors.blue[50],
