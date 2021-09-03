@@ -245,7 +245,10 @@ class _topBarButonState extends State<topBarButon> {
       k = FontAwesomeIcons.mobile;
     } else if (l.toLowerCase() == "education") {
       k = FontAwesomeIcons.book;
-    } else {
+    }
+    else if (l.toLowerCase() == "bank") {
+      k = FontAwesomeIcons.university;
+    }else {
       k = FontAwesomeIcons.circle;
     }
   }
