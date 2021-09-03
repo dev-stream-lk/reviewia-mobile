@@ -262,7 +262,6 @@ class _TestAddPostState extends State<TestAddPost> {
             ),
             onPressed: () => Navigator.push(context,
                 MaterialPageRoute(builder: (context) {
-                  return HomePage();
                 })),
             width: MediaQuery.of(context).size.width*100/360,
           )
