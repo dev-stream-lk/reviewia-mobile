@@ -43,6 +43,38 @@ Future<List<PostsView>> fetchPostView() async {
   }
 }
 
+Future<PostsView>fetchPostViewById(String id) async {
+  String url = KBaseUrl + "api/public/post?id="+id;
+  final response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    late PostsView postsView;
+    var decodedUserData = jsonDecode(response.body);
+    postsView = new PostsView(
+        title: decodedUserData['title'],
+        createdBy: '',
+        reviews: [],
+        viewCount:decodedUserData['viewCount'] ,
+        rate: decodedUserData['rate'],
+      description: '',
+      subCategory: '',
+      blocked: false,
+      type: 'no',
+      brand:new Brand.fromJson(decodedUserData['brand']),
+      postId: decodedUserData['postId'],
+      createdAt: '',
+      imgURL: [],
+
+
+    );
+    return postsView;
+  } else {
+    throw Exception("API Error");
+  }
+}
+
+
+
+
 List<LoadPost> parsePostViewStep(String responseBody) {
   var list = json.decode(responseBody);
   var posts = list.map((e) => LoadPost.fromJson(e)).toList();
