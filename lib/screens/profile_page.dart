@@ -309,8 +309,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Center(
                     child: CircleAvatar(
                       backgroundColor: Color(0xFFC494C4),
-                      backgroundImage: AssetImage('images/pep.jpg'),
-                      radius: MediaQuery.of(context).size.width * 75 / 360,
+                      backgroundImage: AssetImage('images/profile.png'),
+                      radius: MediaQuery.of(context).size.width * 79 / 360,
                     ),
                   ),
                 ),
@@ -422,55 +422,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
                         )
 
-
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-
-                  // width: double.infinity,
-                  margin: EdgeInsets.only(bottom:MediaQuery.of(context).size.height*10/692),
-                  // color: Colors.blueGrey,
-                    child: Text(
-                  "Your posts",
-                  textAlign: TextAlign.left,
-                      style: KPostCard,
-                )),
-                Container(
-                  decoration: BoxDecoration(
-                    // color: Colors.cyan,
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  width: double.infinity,
-                  margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 15 / 360,right:MediaQuery.of(context).size.width * 15 / 360,),
-                  // margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 15 / 659,),
-                  height: MediaQuery.of(context).size.height * 105*3/692,
-                  // color: Color(0xFF39667F),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 11 / 659,
-                        ),
-                        PostsOnProfile(),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 11 / 659,
-                        ),
-                        PostsOnProfile(),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 11 / 659,
-                        ),
-                        PostsOnProfile(),
 
                       ],
                     ),

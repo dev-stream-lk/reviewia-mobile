@@ -8,8 +8,6 @@ import 'package:reviewia/components/review_cards.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/search_page.dart';
-
-import 'add_post_page.dart';
 import 'home_Page.dart';
 
 class GroupChat extends StatefulWidget {
@@ -23,7 +21,6 @@ class _GroupChatState extends State<GroupChat> {
   int _currentIndex = 0;
   List<Widget> _screenContainer = [
     HomePage(),
-    AddPost(),
     ProfilePage(),
   ];
 

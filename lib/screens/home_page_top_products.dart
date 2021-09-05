@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:reviewia/components/post_on_profile.dart';
 import 'package:reviewia/components/product_card.dart';
 import 'package:reviewia/components/selction_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
@@ -337,7 +338,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                               iconSize: 30.0,
                               icon: const FaIcon(FontAwesomeIcons.userTag ,  color: Kcolor),
                               tooltip: 'My Posts',
-                              onPressed: () {  },
+                                onPressed: () {Navigator.pushNamed(context, MyPost.id);},
                             ),
                             Text('My Posts',
                                 style: TextStyle(color: Kcolor)

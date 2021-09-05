@@ -1,7 +1,6 @@
 // @dart = 2.9
 import 'package:flutter/material.dart';
-import 'package:reviewia/screens/add_post_page2.dart';
-import 'package:reviewia/screens/add_post_page3.dart';
+import 'package:reviewia/components/post_on_profile.dart';
 import 'package:reviewia/screens/chatList.dart';
 import 'package:reviewia/screens/contactUs.dart';
 import 'package:reviewia/screens/favourite_list.dart';
@@ -46,8 +45,6 @@ class MyApp extends StatelessWidget {
         LoginSystem.id:(context)=> LoginSystem(),
         SearchPage.id:(context)=>SearchPage(),
         HomePage.id :(context)=>ScreenSelector(),
-        AddPost2.id :(context)=>AddPost2(),
-        AddPost3.id :(context)=>AddPost3(),
         ProductView.id:(context)=>ProductView(),
         ServiceList.id:(context)=>ServiceList(),
         ContactUs.id :(context)=> ContactUs(),
@@ -57,6 +54,7 @@ class MyApp extends StatelessWidget {
         ProductList.id:(context)=> ProductList(),
         ServicesList.id:(context)=> ServicesList(),
         FavouriteList.id:(context)=> FavouriteList(),
+        MyPost.id:(context)=> MyPost(),
       },
 
     );
