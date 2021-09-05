@@ -25,6 +25,9 @@ selectedOption(String val, int id , context)  {
       removeFromFavList(id.toString(),context);
       print("case--3");
       break;
+    case '4':
+      print("case--4");
+      break;
   }
 }
 
