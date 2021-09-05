@@ -102,6 +102,7 @@ class _TestAddPostState extends State<TestAddPost> {
 
   //********** to get all category for dropdown ***********
   late List categoryList=[];
+  late List categoryListall=[];
   Future<dynamic> _getCategory( String selectedType)async{
     String url = KBaseUrl+"api/public/category/all";
     await http.get(Uri.parse(url)).then((response)
@@ -109,7 +110,11 @@ class _TestAddPostState extends State<TestAddPost> {
       var data = json.decode(response.body);
       var _categoryList = data.map((e) => AddPost_category.fromJson(e)).toList();
       setState(() {
-        categoryList = _categoryList;
+        categoryListall = _categoryList;
+        categoryList = categoryListall.where((element) {
+          var catType = '${element.type}'.toLowerCase();
+          return catType.contains(SelectedType);
+        }).toList();
         for (var item in categoryList) {
           print('${item.categoryName} - ${item.categoryId} - ${item.type}');
         }
@@ -302,6 +307,27 @@ class _TestAddPostState extends State<TestAddPost> {
     else{
       buttonColour = Colors.grey;
     }
+  }
+
+  //******** Reset input feilds *****
+  _resetFields(){
+    checkBox_1_Val = false;
+    checkBox_2_Val = false;
+
+    title= "";
+    SelectedType= "";
+    SelectedCategoryName= "";
+    SelectedSubCategoryName= "";
+    selectedBrand="";
+    description= "";
+    selectedTypeIndex = null;
+    selectedCategoryIndex = null;
+    selectedSubCategoryIndex = null;
+    selectedBrandIndex = null;
+    selected_categoryId = null;
+    selected_subCategory = null;
+    selected_brand = null;
+    images.clear();
   }
 
   @override
@@ -529,12 +555,7 @@ class _TestAddPostState extends State<TestAddPost> {
                                 ),
 
                                 dropDownMenuItems: categoryList?.map((item) {
-                                  if(item.type == SelectedType){
                                     return item.categoryName;
-                                  }
-                                  else{
-                                    item = categoryList.indexOf(item)+1;
-                                  }
                                 })?.toList() ??
                                     [],
                                 onChanged: (value){
@@ -843,6 +864,7 @@ class _TestAddPostState extends State<TestAddPost> {
                                     if(buttonColour == Kcolor){
                                       setState(() {
                                         _saveImage();
+                                        _resetFields();
                                         print("Selected Type: "+ SelectedType);
                                         print("Selected Category: "+ SelectedCategoryName);
                                         print("Selected SubCategory: "+ SelectedSubCategoryName);

@@ -9,12 +9,12 @@ import 'package:reviewia/components/review_cards.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/search_page.dart';
+import 'package:reviewia/screens/testPage.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/postView.dart';
 import 'package:reviewia/structures/reviewStruct.dart';
 
-import 'add_post_page.dart';
 import 'home_Page.dart';
 
 class ProductView extends StatefulWidget {
@@ -40,7 +40,7 @@ class _ProductViewState extends State<ProductView> {
   late String userName;
   List<Widget> _screenContainer = [
     HomePage(),
-    AddPost(),
+    TestAddPost(),
     ProfilePage(),
   ];
   List<ImgURL> _image = <ImgURL>[];

@@ -6,15 +6,15 @@ import 'package:reviewia/screens/product_view.dart';
 import 'package:reviewia/services/optionServices.dart';
 import 'package:reviewia/structures/postView.dart';
 
-class PostOnFav extends StatefulWidget {
+class MyPostComp extends StatefulWidget {
   late PostsView detail;
-  PostOnFav({required this.detail});
+  MyPostComp({required this.detail});
 
   @override
-  _PostOnFavState createState() => _PostOnFavState();
+  _MyPostCompState createState() => _MyPostCompState();
 }
 
-class _PostOnFavState extends State<PostOnFav> {
+class _MyPostCompState extends State<MyPostComp> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -29,7 +29,7 @@ class _PostOnFavState extends State<PostOnFav> {
       },
       child: Container(
         // margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 15 / 360,right:MediaQuery.of(context).size.width * 15 / 360,),
-        height: MediaQuery.of(context).size.height * 105 / 659,
+        height: MediaQuery.of(context).size.height * 150 / 659,
         decoration: BoxDecoration(
           color: Colors.blue[50],
           borderRadius: BorderRadius.only(
@@ -72,7 +72,7 @@ class _PostOnFavState extends State<PostOnFav> {
                         child: CircularProgressIndicator(
                           value: loadingProgress.expectedTotalBytes != null
                               ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
+                              loadingProgress.expectedTotalBytes!
                               : null,
                         ),
                       );
@@ -124,7 +124,7 @@ class _PostOnFavState extends State<PostOnFav> {
                                     10 /
                                     360,
                                 itemPadding:
-                                    EdgeInsets.symmetric(horizontal: 3.0),
+                                EdgeInsets.symmetric(horizontal: 3.0),
                                 itemBuilder: (context, _) => Icon(
                                   Icons.star,
                                   color: Kcolor,
@@ -136,12 +136,27 @@ class _PostOnFavState extends State<PostOnFav> {
                         ),
                       ),
                       Expanded(
-                        flex: 2,
+                        flex: 1,
                         child: Container(
                           // margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*18/692),
                           child: Text(
                             "Created date: " +
                                 widget.detail.createdAt.substring(0, 10),
+                            style: TextStyle(
+                              fontSize: 10,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                          // color: Colors.yellow,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                           margin: EdgeInsets.only(left: MediaQuery.of(context).size.width*1/692),
+                          child: Text(
+                            "Sub Category: " +
+                                widget.detail.subCategory.substring(0, 10),
                             style: TextStyle(
                               fontSize: 10,
                             ),
@@ -171,7 +186,7 @@ class _PostOnFavState extends State<PostOnFav> {
                         PopupMenuItem(
                           value: 3,
                           child: Text(
-                            "Remove",
+                            "Request to delete",
                             style: TextStyle(color: Colors.black),
                           ),
                         ),

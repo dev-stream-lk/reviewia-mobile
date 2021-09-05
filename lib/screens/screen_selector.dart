@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/profile_page.dart';
-import 'add_post_page.dart';
 import 'home_Page.dart';
 import 'testPage.dart';
 import 'home_page_top_products.dart';

@@ -1,110 +1,115 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:reviewia/components/MyPost_comp.dart';
+import 'package:reviewia/components/post_on_fav.dart';
+import 'package:reviewia/components/post_on_profile.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/services/fetchMyPost.dart';
+import 'package:reviewia/services/optionServices.dart';
+import 'package:reviewia/structures/favouriteListStruct.dart';
+import 'package:reviewia/structures/postView.dart';
 
-class PostsOnProfile extends StatelessWidget {
-  const PostsOnProfile({
-    Key? key,
-  }) : super(key: key);
+
+class MyPost extends StatefulWidget {
+  static String id = 'myPost';
+  const MyPost({Key? key}) : super(key: key);
+
+  @override
+  _MyPostState createState() => _MyPostState();
+}
+
+class _MyPostState extends State<MyPost> {
+  bool _isLoading = true;
+  List<PostsView> _postView = <PostsView>[];
+  List<PostsView> _postDisplayView = <PostsView>[];
+
+
+  getMyPostList()async{
+    _postView = await fetchMyPost();
+    //var dd = await fetchMyPost();
+    setState(() {
+      _isLoading=false;
+      _postDisplayView = [];
+      _postDisplayView.addAll(_postView);
+      for (var item in _postView) {
+        print('${item.title} - ${item.brand} - ${item.postId}');
+      }
+    });
+  }
+
+
+  @override
+  void initState() {
+    setState(() {
+      _isLoading=true;
+      print('Hello my post');
+    });
+    getMyPostList();
+    super.initState();
+  }
+
+  _listItemViewPosts(int index){
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(05),
+          child: MyPostComp(detail: _postDisplayView[index],),
+        ),
+      ),
+    );
+  }
+  _searchBarView(){
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height*0.02,vertical: MediaQuery.of(context).size.height*0.02 ),
+      child: Center(child: Text("Pull down to refresh",style: KPostCard,textAlign: TextAlign.start,)),
+    );
+  }
+  Future getBuildingData() async {
+    getMyPostList();
+  }
+  // fetchPostViewStep("0","2").then((value){
+  //   setState(() {
+  //     _loadPost.add(value[0]);
+  //   });
+  // });
+
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 15 / 360,right:MediaQuery.of(context).size.width * 15 / 360,),
-      height: MediaQuery.of(context).size.height * 95 / 659,
-      decoration: BoxDecoration(
-        color: Color(0xFFAAAAAA),
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
-            bottomLeft: Radius.circular(15),
-            bottomRight: Radius.circular(15)),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Kcolor,
+        title: Text(
+          "My Posts",
+        ),
       ),
-      child: Row(
-        children: [
-          Expanded(
-            flex:3,
-            child: Container(
-              margin: EdgeInsets.only(top: MediaQuery.of(context).size.width * 15 / 360,bottom:MediaQuery.of(context).size.width * 15 / 360,right: MediaQuery.of(context).size.width * 15 / 360,left:MediaQuery.of(context).size.width * 15 / 360,),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/product_one.jpg'),
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15)),
-                color: Colors.white,
-              ) ,
+      body: RefreshIndicator(
+        onRefresh: getBuildingData,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 12,
+              // height: MediaQuery.of(context).size.height*0.8,
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  if (!_isLoading) {
+                    return index == 0
+                        ? _searchBarView()
+                        : _listItemViewPosts(index - 1);
+                    // return _listItem(index);
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+                itemCount: _postDisplayView.length + 1,
+              ),
             ),
-          ),
-          Expanded(
-              flex:4,
-              child: Container(
-                // color: Colors.red,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      flex:2,
-                      child: Center(
-                        child: Container(
-                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 15/692),
-                          width: double.infinity,
-                          // color: Colors.orange,
-                          child: Text("Prdouct-01",style: KPostCard,),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex:2,
-                      child: Container(
-                        // color: Colors.white,
-                        margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 25/692 ),
-                        child: Row(
-                          children: [
-                            Text('3.5'),
-                            RatingBar.builder(
-                              initialRating: 4.5,
-                              minRating: 1,
-                              direction: Axis.horizontal,
-                              allowHalfRating: true,
-                              itemCount: 5,
-                              itemSize: MediaQuery.of(context).size.width*10/360,
-                              itemPadding:
-                              EdgeInsets.symmetric(horizontal: 3.0),
-                              itemBuilder: (context, _) => Icon(
-                                Icons.star,
-                                color: Kcolor,
-                              ),
-                              onRatingUpdate: (rating) {
-
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-          ),
-          Expanded(
-            flex:2,
-            child: Container(
-              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*18/692),
-              child: Text("2021-07-05",style: TextStyle(
-                fontSize: 10,
-              ),),
-              // color: Colors.yellow,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
-
     );
   }
 }
