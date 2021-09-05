@@ -26,9 +26,39 @@ selectedOption(String val, int id , context)  {
       print("case--3");
       break;
     case '4':
+      createInstantGroup(context);
       print("case--4");
       break;
   }
+}
+
+createInstantGroup (BuildContext context){
+    List<String> locations = ["1", "2", "3", "4", "5"];
+      return  showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            elevation: 200, //16
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child:ListView.builder(
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Center(
+                    child: Container(
+                      child: Text(locations[index].toString()),
+                    ),
+                  );
+                },
+                itemCount: locations.length,
+              ),
+            ),
+          );
+        },
+      );
 }
 
 
