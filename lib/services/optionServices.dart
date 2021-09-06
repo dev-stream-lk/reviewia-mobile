@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:reviewia/components/loading.dart';
@@ -125,29 +126,48 @@ class _ReviewersLoadingState extends State<ReviewersLoading> {
       });
     }
 
-    return Container(
-      height: widget._isloading
-          ? MediaQuery.of(context).size.height * (40 / 765)
-          : MediaQuery.of(context).size.height * (220 / 765),
-      child: widget._isloading
-          ? CircularProgressIndicator()
-          : ListView.builder(
-              physics: BouncingScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return Center(
-                  child: SelectReviewerCard(
-                    isSelected: widget.reviwersEmails
-                        .contains(widget._uniquereviewCards[index].email),
-                    reviewerEmail: widget._uniquereviewCards[index].email,
-                    reviewerName: widget._uniquereviewCards[index].reviewedBy,
-                    onSelectedReviewer: selectReviewer,
-                  ),
-                );
-              },
-              itemCount: widget._uniquereviewCards.length,
-            ),
+    return Column(
+      children: [
+        Container(
+          height: widget._isloading
+              ? MediaQuery.of(context).size.height * (40 / 765)
+              : MediaQuery.of(context).size.height * (190 / 765),
+          child: widget._isloading
+              ? CircularProgressIndicator()
+              : ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Center(
+                      child: SelectReviewerCard(
+                        isSelected: widget.reviwersEmails
+                            .contains(widget._uniquereviewCards[index].email),
+                        reviewerEmail: widget._uniquereviewCards[index].email,
+                        reviewerName: widget._uniquereviewCards[index].reviewedBy,
+                        onSelectedReviewer: selectReviewer,
+                      ),
+                    );
+                  },
+                  itemCount: widget._uniquereviewCards.length,
+                ),
+        ),
+          !widget._isloading ? Container(
+          height:  MediaQuery.of(context).size.height * (60 / 765),
+          width:MediaQuery.of(context).size.width * (210 / 362) ,
+          child:widget.reviwersEmails.length>0 ?FlatButton(
+            padding: EdgeInsets.all(10),
+            child: Text("Create Instant group \n with "+widget.reviwersEmails.length.toString() +" \n reviewers",textAlign: TextAlign.center,),
+            onPressed: (){
+              print(widget.reviwersEmails);
+            },
+            color: Kcolor,
+            textColor: Colors.white,
+          ):null,
+        ): Container(
+           height:  MediaQuery.of(context).size.height * (2 / 765),
+         )
+      ],
     );
   }
 }
