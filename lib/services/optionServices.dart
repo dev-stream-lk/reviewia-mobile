@@ -55,7 +55,8 @@ createInstantGroup(String id, BuildContext context) {
             children: [
               Container(
                 height: MediaQuery.of(context).size.height * (50 / 765),
-                child: Text("\n Reviews \n"),
+                margin: EdgeInsets.only(bottom: 10,top: 10),
+                child: Text("Add Reviewers to group \n",style: TextStyle(fontWeight: FontWeight.bold,fontSize:20),),
               ),
               ReviewersLoading(postId: id),
             ],
@@ -99,8 +100,8 @@ class _ReviewersLoadingState extends State<ReviewersLoading> {
     // List<ReviewStruct> unique = reviewCards.
   }
 
-  createInstantGroupUser(List<String> listOfReviewers){
-      print(listOfReviewers);
+  createInstantGroupUser(List<String> listOfReviewers) {
+    print(listOfReviewers);
   }
 
   @override
@@ -135,44 +136,59 @@ class _ReviewersLoadingState extends State<ReviewersLoading> {
         Container(
           height: widget._isloading
               ? MediaQuery.of(context).size.height * (40 / 765)
-              : MediaQuery.of(context).size.height * (190 / 765),
+              : MediaQuery.of(context).size.height * (180 / 765),
           child: widget._isloading
               ? CircularProgressIndicator()
-              : ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Center(
-                      child: SelectReviewerCard(
-                        isSelected: widget.reviwersEmails
-                            .contains(widget._uniquereviewCards[index].email),
-                        reviewerEmail: widget._uniquereviewCards[index].email,
-                        reviewerName: widget._uniquereviewCards[index].reviewedBy,
-                        onSelectedReviewer: selectReviewer,
-                      ),
-                    );
-                  },
-                  itemCount: widget._uniquereviewCards.length,
-                ),
+              : widget._uniquereviewCards.length > 0
+                  ? ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Center(
+                          child: SelectReviewerCard(
+                            isSelected: widget.reviwersEmails.contains(
+                                widget._uniquereviewCards[index].email),
+                            reviewerEmail:
+                                widget._uniquereviewCards[index].email,
+                            reviewerName:
+                                widget._uniquereviewCards[index].reviewedBy,
+                            onSelectedReviewer: selectReviewer,
+                          ),
+                        );
+                      },
+                      itemCount: widget._uniquereviewCards.length,
+                    )
+                  : Container(
+                      child: Text("Still Not any reviewers on the post",style: TextStyle(color: Colors.redAccent,fontSize: 12),),
+                    ),
         ),
-          !widget._isloading ? Container(
-          height:  MediaQuery.of(context).size.height * (60 / 765),
-          width:MediaQuery.of(context).size.width * (210 / 362) ,
-          child:widget.reviwersEmails.length>0 ?FlatButton(
-            padding: EdgeInsets.all(10),
-            child: Text("Create Instant group \n with "+widget.reviwersEmails.length.toString() +" \n reviewers",textAlign: TextAlign.center,),
-            onPressed: (){
-              print(widget.reviwersEmails);
-              createInstantGroupUser(widget.reviwersEmails);
-              Navigator.pop(context);
-            },
-            color: Kcolor,
-            textColor: Colors.white,
-          ):null,
-        ): Container(
-           height:  MediaQuery.of(context).size.height * (2 / 765),
-         )
+        !widget._isloading
+            ? Container(
+                height: MediaQuery.of(context).size.height * (60 / 765),
+                width: MediaQuery.of(context).size.width * (210 / 362),
+                child: widget.reviwersEmails.length > 0
+                    ? FlatButton(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          "Create Instant group \n with " +
+                              widget.reviwersEmails.length.toString() +
+                              " \n reviewers",
+                          textAlign: TextAlign.center,
+                        ),
+                        onPressed: () {
+                          print(widget.reviwersEmails);
+                          createInstantGroupUser(widget.reviwersEmails);
+                          Navigator.pop(context);
+                        },
+                        color: Kcolor,
+                        textColor: Colors.white,
+                      )
+                    : null,
+              )
+            : Container(
+                height: MediaQuery.of(context).size.height * (2 / 765),
+              )
       ],
     );
   }
