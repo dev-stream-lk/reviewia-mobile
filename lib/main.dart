@@ -6,6 +6,7 @@ import 'package:reviewia/screens/contactUs.dart';
 import 'package:reviewia/screens/favourite_list.dart';
 import 'package:reviewia/screens/fogotPassword.dart';
 import 'package:reviewia/screens/groupChat.dart';
+import 'package:reviewia/screens/previewPage.dart';
 import 'package:reviewia/screens/product_list.dart';
 import 'package:reviewia/screens/product_view.dart';
 import 'package:reviewia/screens/search_page.dart';
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
         ServicesList.id:(context)=> ServicesList(),
         FavouriteList.id:(context)=> FavouriteList(),
         MyPost.id:(context)=> MyPost(),
+        PreviewPost.id:(context)=> PreviewPost(),
       },
 
     );
