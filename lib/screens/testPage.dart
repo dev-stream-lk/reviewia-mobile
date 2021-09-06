@@ -12,9 +12,11 @@ import 'package:find_dropdown/find_dropdown.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/screens/home_Page.dart';
+import 'package:reviewia/screens/previewPage.dart';
 import 'package:reviewia/services/addPost.dart';
 import 'package:reviewia/services/addPost_connection.dart';
 import 'package:reviewia/services/getSubCategory.dart';
+import 'package:reviewia/structures/addPostStruct.dart';
 import 'package:reviewia/structures/selectedCatergory.dart';
 import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
 import 'package:reviewia/services/getBrands.dart';
@@ -862,15 +864,30 @@ class _TestAddPostState extends State<TestAddPost> {
                                 child: RaisedButton(
                                   onPressed: (){
                                     if(buttonColour == Kcolor){
-                                      setState(() {
-                                        _saveImage();
-                                        _resetFields();
-                                        print("Selected Type: "+ SelectedType);
-                                        print("Selected Category: "+ SelectedCategoryName);
-                                        print("Selected SubCategory: "+ SelectedSubCategoryName);
-                                        print("Selected Brand: "+ selectedBrand);
-                                      });
+                                      Navigator.pushNamed(
+                                        context,
+                                        PreviewPost.id,
+                                          arguments: AddPost(
+                                          images: images,
+                                          title: title,
+                                          Category: SelectedCategoryName,
+                                          type: SelectedType,
+                                          brand: selectedBrand,
+                                          SubCategory: SelectedSubCategoryName,
+                                          subId: selected_subCategory.toString(),
+                                          description: description)
+                                      );
                                     }
+
+                                      // setState(() {
+                                      //
+                                      //   //_saveImage();
+                                      //   //_resetFields();
+                                      //   print("Selected Type: "+ SelectedType);
+                                      //   print("Selected Category: "+ SelectedCategoryName);
+                                      //   print("Selected SubCategory: "+ SelectedSubCategoryName);
+                                      //   print("Selected Brand: "+ selectedBrand);
+                                      // });
                                   },
                                   color: buttonColour,
                                   shape: RoundedRectangleBorder(
