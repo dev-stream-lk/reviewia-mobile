@@ -99,6 +99,10 @@ class _ReviewersLoadingState extends State<ReviewersLoading> {
     // List<ReviewStruct> unique = reviewCards.
   }
 
+  createInstantGroupUser(List<String> listOfReviewers){
+      print(listOfReviewers);
+  }
+
   @override
   void initState() {
     setState(() {
@@ -160,6 +164,8 @@ class _ReviewersLoadingState extends State<ReviewersLoading> {
             child: Text("Create Instant group \n with "+widget.reviwersEmails.length.toString() +" \n reviewers",textAlign: TextAlign.center,),
             onPressed: (){
               print(widget.reviwersEmails);
+              createInstantGroupUser(widget.reviwersEmails);
+              Navigator.pop(context);
             },
             color: Kcolor,
             textColor: Colors.white,
