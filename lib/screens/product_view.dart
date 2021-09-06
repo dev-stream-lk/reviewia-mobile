@@ -49,6 +49,12 @@ class _ProductViewState extends State<ProductView> {
       _currentIndex = index;
     });
   }
+  loadPost()async{
+    var data = await fetchPostViewById(widget.todos.postId.toString());
+    setState(() {
+        widget.todos.rate = data.rate;
+    });
+  }
 
   getReviews() {
     fetchReviewStruct(widget.todos.postId.toString()).then((value) {
@@ -108,6 +114,7 @@ class _ProductViewState extends State<ProductView> {
         displayName.toString(), widget.todos.postId, rate, reviewDetail);
     print(n.toString());
     Navigator.pop(context);
+    loadPost();
     getReviews();
   }
 

@@ -144,6 +144,13 @@ class _ProductCardState extends State<ProductCard> {
                                   style: TextStyle(color: Colors.black),
                                 ),
                               ),
+                              PopupMenuItem(
+                                value: 4,
+                                child: Text(
+                                  "Create a group",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
                             ],
                           ))
                     ],
