@@ -23,6 +23,7 @@ class _FavouriteListState extends State<FavouriteList> {
 
   getFavList()async{
     var dd = await fetchFavPostView();
+    print(dd.toString()+"The error");
     setState(() {
       _isLoading=false;
       _postView = [];
