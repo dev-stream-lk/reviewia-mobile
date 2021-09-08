@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/services/optionServices.dart';
+import 'package:reviewia/structures/reviewStruct.dart';
 class ReviewCards extends StatefulWidget {
   late int reviewId;
   late String reviewedBy;
   late String detail;
   late double rate;
-  ReviewCards({ required this.reviewId, required this.reviewedBy,required this.detail,required this.rate});
+  late ReviewStruct reviewCardAllDetails;
+  ReviewCards({ required this.reviewId, required this.reviewedBy,required this.detail,required this.rate,required this.reviewCardAllDetails});
 
   @override
   _ReviewCardsState createState() => _ReviewCardsState();
@@ -89,7 +91,7 @@ class _ReviewCardsState extends State<ReviewCards> {
 
                       Container(child: Text(widget.rate.toString(),style:TextStyle(fontSize: 16,fontWeight:FontWeight.w600),)),
                       SizedBox(
-                        width: 15,
+                        width: 12,
                       ),
                       RatingBar.builder(
                         initialRating:widget.rate,
@@ -109,43 +111,55 @@ class _ReviewCardsState extends State<ReviewCards> {
                         },
                       ),
                       Container(
-                        width: 60,
+                        width: 85,
                         margin: EdgeInsets.only(left: MediaQuery.of(context).size.width*20/360),
                         child: Row(
                           children: [
                             Expanded(
-                              flex:2,
+                              flex:3,
                               child: GestureDetector(
                                 onTap: (){
                                   setState(() {
                                     status="like";
+                                    widget.reviewCardAllDetails.likeCount++;
                                   });
                                   putReaction(status);
                                   print('like');
                                 },
                                 child: Container(
-                                  child: Icon(
-                                    Icons.thumb_up,
-                                    color: status=="still not assign"?Colors.black:status=="like"?Kcolor:Colors.black,
-                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.thumb_up,
+                                        color: status=="still not assign"?Colors.black:status=="like"?Kcolor:Colors.black,
+                                      ),
+                                      Text("("+widget.reviewCardAllDetails.likeCount.toString()+")"),
+                                    ],
+                                  )
 // color: Colors.red,
                                 ),
                               ),
                             ),
                             Expanded(
-                              flex:2,
+                              flex:3,
                               child: GestureDetector(
                                 onTap: (){
                                   setState(() {
                                     status="dislike";
+                                    widget.reviewCardAllDetails.dislikeCount++;
                                   });
                                   putReaction(status);
                                   print('Dis like');
                                 },
                                 child: Container(
-                                  child: Icon(
-                                    Icons.thumb_down,
-                                    color: status=="still not assign"?Colors.black:status=="dislike"?Kcolor:Colors.black,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.thumb_down,
+                                        color: status=="still not assign"?Colors.black:status=="dislike"?Kcolor:Colors.black,
+                                      ),
+                                      Text("("+widget.reviewCardAllDetails.dislikeCount.toString()+")"),
+                                    ],
                                   ),
 // color: Colors.red,
                                 ),

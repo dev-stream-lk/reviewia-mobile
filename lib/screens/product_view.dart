@@ -86,6 +86,7 @@ class _ProductViewState extends State<ProductView> {
           rate: _reviewCards[index].finalRate,
           detail: _reviewCards[index].description,
           reviewId: _reviewCards[index].reviewId,
+          reviewCardAllDetails:_reviewCards[index],
         ));
   }
 

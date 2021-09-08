@@ -56,8 +56,11 @@ createInstantGroup(String id, BuildContext context) {
             children: [
               Container(
                 height: MediaQuery.of(context).size.height * (50 / 765),
-                margin: EdgeInsets.only(bottom: 10,top: 10),
-                child: Text("Add Reviewers to group \n",style: TextStyle(fontWeight: FontWeight.bold,fontSize:20),),
+                margin: EdgeInsets.only(bottom: 10, top: 10),
+                child: Text(
+                  "Add Reviewers to group \n",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
               ),
               ReviewersLoading(postId: id),
             ],
@@ -67,8 +70,6 @@ createInstantGroup(String id, BuildContext context) {
     },
   );
 }
-
-
 
 Future addToFavList(String id, BuildContext context) async {
   String userName = await UserState().getUserName();
@@ -237,11 +238,21 @@ Future<FavouriteListStruct> fetchFavPostView() async {
 }
 
 Future setReaction(int id, bool reaction) async {
+  String userName = await UserState().getUserName();
+  print("review id is:" + id.toString());
+  // String url = KBaseUrl +
+  //     "api/public/review/react?id=" +
+  //     id.toString() +
+  //     "&like=" +
+  //     reaction.toString()+"&remove="+false.toString();
   String url = KBaseUrl +
-      "api/public/review/react?id=" +
+      "api/public/review/react?email=" +
+      userName +
+      "&id=" +
       id.toString() +
       "&like=" +
-      reaction.toString();
+      reaction.toString() +
+      "&remove=false";
   http.Response response = await http.get(Uri.parse(url));
   return response.statusCode;
 }
