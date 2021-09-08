@@ -237,7 +237,7 @@ Future<FavouriteListStruct> fetchFavPostView() async {
   }
 }
 
-Future setReaction(int id, bool reaction) async {
+Future setReaction(int id, bool reaction,bool remove) async {
   String userName = await UserState().getUserName();
   print("review id is:" + id.toString());
   // String url = KBaseUrl +
@@ -252,7 +252,7 @@ Future setReaction(int id, bool reaction) async {
       id.toString() +
       "&like=" +
       reaction.toString() +
-      "&remove=false";
+      "&remove="+remove.toString();
   http.Response response = await http.get(Uri.parse(url));
   return response.statusCode;
 }
