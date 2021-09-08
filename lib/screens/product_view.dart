@@ -172,6 +172,7 @@ class _ProductViewState extends State<ProductView> {
                         ? widget.todos.imgURL[0].url.toString()
                         : "https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
                     createdBy: widget.todos.createdBy,
+                    todos: widget.todos,
                     // photoUrl1:widget.todos.imgURL,
                     // widget.todos.imgURL[0],
                   ),
