@@ -315,6 +315,9 @@ class _ProductViewCardState extends State<ProductViewCard> {
                     Text(
                       "sub category: " + widget.todos.subCategory,
                     ),
+                    Text(widget.todos.brand.name.isNotEmpty ?
+                      "Brand: " + widget.todos.brand.name:" ",
+                    ),
                   ],
                 ),
               ),

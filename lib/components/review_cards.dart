@@ -24,6 +24,11 @@ class _ReviewCardsState extends State<ReviewCards> {
     print(dd.toString());
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
