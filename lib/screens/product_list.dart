@@ -243,7 +243,7 @@ class _topBarButonState extends State<topBarButon> {
     print(widget.id);
     if (l.toLowerCase() == "fashion") {
       k = FontAwesomeIcons.tshirt;
-    } else if (l.toLowerCase() == "electronic") {
+    } else if (l.toLowerCase() == "electronics") {
       k = FontAwesomeIcons.mobile;
     } else if (l.toLowerCase() == "education") {
       k = FontAwesomeIcons.book;

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:reviewia/components/review_cards.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
+import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/allCategory.dart';
 import 'package:reviewia/structures/categoryView.dart';
 import 'package:reviewia/structures/loadPost.dart';
@@ -266,4 +267,30 @@ Future postReview(String userName,String t,String createdUser,int postId,double 
     return "Review is set";
   }
   // if(response.)
+}
+
+Future createInstantGroup(String postId,List<String>reviewersList)async{
+  String userName = await UserState().getUserName();
+  String token = await UserState().getToken();
+  print(postId);
+  String url = KBaseUrl+"api/user/group?email="+userName+"&post="+postId;
+
+  http.Response response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization' : token,
+      },
+      body: jsonEncode(<String,dynamic>{
+        "emails": reviewersList
+      })
+  );
+
+  print(response.statusCode);
+  if (response.statusCode==200){
+    return "Instant Group is Created";
+  }else if(response.statusCode==412){
+    return "Already Group is crated";
+  }
+
 }
