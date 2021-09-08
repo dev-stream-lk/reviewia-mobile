@@ -4,6 +4,7 @@ import 'package:reviewia/components/groupCard.dart';
 import 'package:reviewia/components/product_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/services/fetchChatList.dart';
+import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/chatListStruct.dart';
 
 class ChatList extends StatefulWidget {
@@ -17,11 +18,12 @@ class ChatList extends StatefulWidget {
 class _ChatListState extends State<ChatList> {
   bool _isLoading = true;
   List<dynamic> _allData = <dynamic>[];
-  List<Users> _users = <Users>[];
+  late String email;
 
 
   _loadChatList() async {
     var data = await fetchCatList();
+    email = await UserState().getUserName();
     setState(() {
       _allData = data;
       for (var item in _allData) {
@@ -47,7 +49,7 @@ class _ChatListState extends State<ChatList> {
       child: Card(
         child: Padding(
           padding: EdgeInsets.all(05),
-          child: GroupCard(detail: _allData[index],),
+          child: GroupCard(detail: _allData[index],email:email),
         ),
       ),
     );

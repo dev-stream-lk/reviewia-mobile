@@ -6,24 +6,18 @@ import 'package:reviewia/structures/chatListStruct.dart';
 
 class GroupCard extends StatefulWidget {
   late ChatListStruct detail;
-  GroupCard({required this.detail});
+  late String email;
+  GroupCard({required this.detail, required this.email});
 
   @override
   _GroupCardState createState() => _GroupCardState();
 }
 
 class _GroupCardState extends State<GroupCard> {
-  late String email;
-
-  setEmail() async {
-    email = await UserState().getUserName();
-    print("My email::"+ email);
-  }
 
 
   @override
   void initState() {
-    setEmail();
     super.initState();
   }
 
@@ -43,7 +37,7 @@ class _GroupCardState extends State<GroupCard> {
         // margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 15 / 360,right:MediaQuery.of(context).size.width * 15 / 360,),
         height: MediaQuery.of(context).size.height * 105 / 659,
         decoration: BoxDecoration(
-          color: email == widget.detail.createdBy.email?
+          color: widget.email == widget.detail.createdBy.email?
           Colors.blue[50]:Colors.amberAccent,
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(15),
@@ -109,7 +103,7 @@ class _GroupCardState extends State<GroupCard> {
                                     692),
                             width: double.infinity,
                             // color: Colors.orange,
-                            child:email == widget.detail.createdBy.email?
+                            child:widget.email == widget.detail.createdBy.email?
                             Text("Creator: You",
                               style: KPostCard,
                             ):Text("Creator: "+
