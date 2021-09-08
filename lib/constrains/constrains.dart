@@ -81,4 +81,5 @@ List<Widget> KscreenContainer = [
   TestAddPost(),
   ProfilePage(),
 ];
-
+const Color KDetailColor = Color(0xFF020902);
+const double KOpacityOnDetail = 0.5;

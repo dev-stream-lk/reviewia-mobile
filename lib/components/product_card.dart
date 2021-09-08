@@ -120,8 +120,33 @@ class _ProductCardState extends State<ProductCard> {
                       ),
                       Expanded(
                           flex: 4,
-                          child:
-                              Text(widget.detail.createdBy, style: KPostCard)),
+                          child: Container(
+                            margin: EdgeInsets.only(left: 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(widget.detail.createdBy, style: KPostCard),
+                                Text("Created Date: " +
+                                    widget.detail.createdAt.substring(0, 10),style:  TextStyle(
+                                  fontWeight: FontWeight.w100,
+                                  color: KDetailColor.withOpacity(KOpacityOnDetail),
+                                ),),
+                                Text(int.parse(widget.detail.createdAt
+                                    .substring(11, 13)) >
+                                    12
+                                    ?
+                                widget.detail.createdAt.substring(11, 16) +
+                                    "pm"
+                                    :
+                                widget.detail.createdAt.substring(11, 16)+"am",style:  TextStyle(
+                                  fontWeight: FontWeight.w100,
+                                  color: KDetailColor.withOpacity(KOpacityOnDetail),
+                                ),)
+
+                              ],
+                            ),
+                          )),
                       Expanded(
                           flex: 1,
                           child: PopupMenuButton(
