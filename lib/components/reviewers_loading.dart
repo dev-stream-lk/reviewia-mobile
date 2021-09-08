@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:reviewia/components/select_reviewer_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/services/network.dart';
+import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/reviewStruct.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
+import '../home_data.dart';
 
 class ReviewersLoading extends StatefulWidget {
   late String postId;
+  late String state;
   ReviewersLoading({required this.postId});
   late List<ReviewStruct> _reviewCards = <ReviewStruct>[];
   List<ReviewStruct> _uniquereviewCards = <ReviewStruct>[];
@@ -37,9 +43,70 @@ class _ReviewersLoadingState extends State<ReviewersLoading> {
     // List<ReviewStruct> unique = reviewCards.
   }
 
-  createInstantGroupUser(List<String> listOfReviewers) {
+  createInstantGroupUser(List<String> listOfReviewers) async {
+    String userName = await UserState().getUserName();
     print(listOfReviewers);
+    var d = await createInstantGroup(widget.postId, listOfReviewers);
+    // Navigator.pop(context);
+    if (d.toString() == "Instant Group is Created") {
+      setState(() {
+        widget._isloading=false;
+      });
+      Alert(
+        context: context,
+        type: AlertType.success,
+        title: "Instant Group Created",
+        desc:
+            "Group is created you can ask futher details about product using it ",
+        buttons: [
+          DialogButton(
+            color: Kcolor,
+            child: Text(
+              "Okay",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () {
+              int count = 0;
+              Navigator.of(context).popUntil((_) => count++ >= 2);
+              // Navigator.pop(context);
+              // Navigator.of(context).popUntil(ModalRoute.withName(HomePage.id,));
+              // Navigator.pushNamedAndRemoveUntil(context, HomePage.id, (route) => false,arguments: (userName));
+            },
+            // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
+            width: MediaQuery.of(context).size.width * 100 / 360,
+          )
+        ],
+      ).show();
+    } else if (d.toString() == "Already Group is crated") {
+      setState(() {
+        widget._isloading=false;
+      });
+      Alert(
+        context: context,
+        type: AlertType.warning,
+        title: "Already Create a group",
+        desc:
+            "You  can  only create one group please deactivate previous created groups",
+        buttons: [
+          DialogButton(
+            color: Kcolor,
+            child: Text(
+              "Okay",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () {
+              int count = 0;
+              Navigator.of(context).popUntil((_) => count++ >= 2);
 
+              // Navigator.pushNamedAndRemoveUntil(context, HomePage.id, (route) => false,arguments: (userName));
+            },
+            width: MediaQuery.of(context).size.width * 100 / 360,
+          )
+        ],
+      ).show();
+    } else {
+      return "widget.state";
+    }
   }
 
   @override
@@ -78,55 +145,65 @@ class _ReviewersLoadingState extends State<ReviewersLoading> {
           child: widget._isloading
               ? CircularProgressIndicator()
               : widget._uniquereviewCards.length > 0
-              ? ListView.builder(
-            physics: BouncingScrollPhysics(),
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return Center(
-                child: SelectReviewerCard(
-                  isSelected: widget.reviwersEmails.contains(
-                      widget._uniquereviewCards[index].email),
-                  reviewerEmail:
-                  widget._uniquereviewCards[index].email,
-                  reviewerName:
-                  widget._uniquereviewCards[index].reviewedBy,
-                  onSelectedReviewer: selectReviewer,
-                ),
-              );
-            },
-            itemCount: widget._uniquereviewCards.length,
-          )
-              : Container(
-            child: Text("Still Not any reviewers on the post",style: TextStyle(color: Colors.redAccent,fontSize: 12),),
-          ),
+                  ? ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Center(
+                          child: SelectReviewerCard(
+                            isSelected: widget.reviwersEmails.contains(
+                                widget._uniquereviewCards[index].email),
+                            reviewerEmail:
+                                widget._uniquereviewCards[index].email,
+                            reviewerName:
+                                widget._uniquereviewCards[index].reviewedBy,
+                            onSelectedReviewer: selectReviewer,
+                          ),
+                        );
+                      },
+                      itemCount: widget._uniquereviewCards.length,
+                    )
+                  : Container(
+                      child: Text(
+                        "Still Not any reviewers on the post",
+                        style: TextStyle(color: Colors.redAccent, fontSize: 12),
+                      ),
+                    ),
         ),
         !widget._isloading
             ? Container(
-          height: MediaQuery.of(context).size.height * (60 / 765),
-          width: MediaQuery.of(context).size.width * (210 / 362),
-          child: widget.reviwersEmails.length > 0
-              ? FlatButton(
-            padding: EdgeInsets.all(10),
-            child: Text(
-              "Create Instant group \n with " +
-                  widget.reviwersEmails.length.toString() +
-                  " \n reviewers",
-              textAlign: TextAlign.center,
-            ),
-            onPressed: () {
-              print(widget.reviwersEmails);
-              createInstantGroupUser(widget.reviwersEmails);
-              Navigator.pop(context);
-            },
-            color: Kcolor,
-            textColor: Colors.white,
-          )
-              : null,
-        )
+                height: MediaQuery.of(context).size.height * (60 / 765),
+                width: MediaQuery.of(context).size.width * (210 / 362),
+                child: widget.reviwersEmails.length > 0
+                    ? FlatButton(
+                        padding: EdgeInsets.all(10),
+                        child: widget._isloading
+                            ? Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : Text(
+                                "Create Instant group \n with " +
+                                    widget.reviwersEmails.length.toString() +
+                                    " \n reviewers",
+                                textAlign: TextAlign.center,
+                              ),
+                        onPressed: () async {
+                          setState(() {
+                            widget._isloading=true;
+                          });
+                          print(widget.reviwersEmails);
+                          createInstantGroupUser(widget.reviwersEmails);
+                          // Navigator.pop(context);
+                        },
+                        color: Kcolor,
+                        textColor: Colors.white,
+                      )
+                    : null,
+              )
             : Container(
-          height: MediaQuery.of(context).size.height * (2 / 765),
-        )
+                height: MediaQuery.of(context).size.height * (2 / 765),
+              )
       ],
     );
   }
