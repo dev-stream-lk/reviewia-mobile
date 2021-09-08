@@ -17,6 +17,7 @@ class ReviewersLoading extends StatefulWidget {
   List<ReviewStruct> _uniquereviewCards = <ReviewStruct>[];
   List<String> reviwersEmails = <String>[];
   bool _isloading = true;
+  bool _isloadingBtn = true;
   var d = false;
   @override
   _ReviewersLoadingState createState() => _ReviewersLoadingState();
@@ -50,7 +51,7 @@ class _ReviewersLoadingState extends State<ReviewersLoading> {
     // Navigator.pop(context);
     if (d.toString() == "Instant Group is Created") {
       setState(() {
-        widget._isloading=false;
+        widget._isloadingBtn=false;
       });
       Alert(
         context: context,
@@ -79,7 +80,7 @@ class _ReviewersLoadingState extends State<ReviewersLoading> {
       ).show();
     } else if (d.toString() == "Already Group is crated") {
       setState(() {
-        widget._isloading=false;
+        widget._isloadingBtn=false;
       });
       Alert(
         context: context,
@@ -119,6 +120,7 @@ class _ReviewersLoadingState extends State<ReviewersLoading> {
         widget._reviewCards.addAll(value);
         getUniqueSet(widget._reviewCards);
         widget._isloading = false;
+        widget._isloadingBtn=false;
       });
     });
     super.initState();
@@ -178,9 +180,11 @@ class _ReviewersLoadingState extends State<ReviewersLoading> {
                 child: widget.reviwersEmails.length > 0
                     ? FlatButton(
                         padding: EdgeInsets.all(10),
-                        child: widget._isloading
+                        child: widget._isloadingBtn
                             ? Center(
-                                child: CircularProgressIndicator(),
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
                               )
                             : Text(
                                 "Create Instant group \n with " +
@@ -190,7 +194,7 @@ class _ReviewersLoadingState extends State<ReviewersLoading> {
                               ),
                         onPressed: () async {
                           setState(() {
-                            widget._isloading=true;
+                            widget._isloadingBtn=true;
                           });
                           print(widget.reviwersEmails);
                           createInstantGroupUser(widget.reviwersEmails);
