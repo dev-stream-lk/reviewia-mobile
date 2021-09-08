@@ -2,8 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/services/network.dart';
 import 'package:reviewia/structures/postView.dart';
-
 
 class ProductViewCard extends StatefulWidget {
   late String createdBy;
@@ -12,7 +12,13 @@ class ProductViewCard extends StatefulWidget {
   late double rating;
   late String photoUrl1;
   late PostsView todos;
-  ProductViewCard({required this.createdBy,required this.title, required this.description, required this.rating,required this.photoUrl1,required this.todos});
+  ProductViewCard(
+      {required this.createdBy,
+      required this.title,
+      required this.description,
+      required this.rating,
+      required this.photoUrl1,
+      required this.todos});
 
   @override
   _ProductViewCardState createState() => _ProductViewCardState();
@@ -24,7 +30,8 @@ class _ProductViewCardState extends State<ProductViewCard> {
     'https://cdn.vox-cdn.com/thumbor/0vkUlE9CGelZsRZlY1XZZGqsZVQ=/1400x0/filters:no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/22015272/cgartenberg_201105_4276_004.0.jpg',
     'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
     'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
-    'https://cdn.tmobile.com/content/dam/t-mobile/en-p/cell-phones/apple/Apple-iPhone-12/Blue/Apple-iPhone-12-Blue-backimage.png'];
+    'https://cdn.tmobile.com/content/dam/t-mobile/en-p/cell-phones/apple/Apple-iPhone-12/Blue/Apple-iPhone-12-Blue-backimage.png'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +79,27 @@ class _ProductViewCardState extends State<ProductViewCard> {
                   ),
                   Expanded(
                       flex: 4,
-                      child: Text(widget.createdBy, style: KPostCard)),
+                      child: Container(
+                        margin: EdgeInsets.only(left: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(widget.createdBy, style: KPostCard),
+                            Text("Created Date: " +
+                                widget.todos.createdAt.substring(0, 10)),
+                            Text(int.parse(widget.todos.createdAt
+                                        .substring(11, 13)) >
+                                    12
+                                ?
+                                    widget.todos.createdAt.substring(11, 16) +
+                                    "pm"
+                                :
+                                    widget.todos.createdAt.substring(11, 16)+"am")
+
+                          ],
+                        ),
+                      )),
                   Expanded(
                       flex: 1,
                       child: PopupMenuButton(
@@ -95,7 +122,6 @@ class _ProductViewCardState extends State<ProductViewCard> {
                           ),
                         ],
                       )),
-
                 ],
               ),
             ),
@@ -135,65 +161,78 @@ class _ProductViewCardState extends State<ProductViewCard> {
             //     ),
             //   ),
             // ),
+            ////////////Here is the Image Slider ////////
             child: Container(
                 child: CarouselSlider(
-                  options: CarouselOptions(),
-                  items: widget.todos.imgURL.isNotEmpty? widget.todos.imgURL
+              options: CarouselOptions(),
+              items: widget.todos.imgURL.isNotEmpty
+                  ? widget.todos.imgURL
                       .map((item) => Container(
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Image.network(
-                        item.url,
-                        fit: BoxFit.contain,
-                        loadingBuilder: (BuildContext context, Widget child,
-                            ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          }
-                          return Center(
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                                  : null,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Image.network(
+                                item.url,
+                                fit: BoxFit.contain,
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                  ))
-                      .toList():imgList
+                          ))
+                      .toList()
+                  : imgList
                       .map((item) => Container(
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Image.network(
-                        item,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (BuildContext context, Widget child,
-                            ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          }
-                          return Center(
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                                  : null,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Image.network(
+                                item,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                  ))
+                          ))
                       .toList(),
-                )),
+            )),
           ),
           Expanded(
             flex: 2,
@@ -264,28 +303,26 @@ class _ProductViewCardState extends State<ProductViewCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Sub Category: " + widget.title,
-                    ),
-                    Text(
-                      "Year",
-                    ),
-                    Text(
                       "Description: " + widget.description,
                     ),
                     Text(
-                      "Year",
+                      "Created By: " + widget.todos.createdBy,
                     ),
                     Text(
-                      "Year",
+                      "Type: " +
+                          (widget.todos.type == 'p' ? "Product" : "service"),
                     ),
                     Text(
-                      "Year",
+                      "sub category: " + widget.todos.subCategory,
                     ),
                   ],
                 ),
               ),
             ),
           ),
+          SizedBox(
+            height: 30,
+          )
         ],
       ),
     );
