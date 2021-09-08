@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/services/optionServices.dart';
+import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/reviewStruct.dart';
 class ReviewCards extends StatefulWidget {
   late int reviewId;
@@ -16,7 +17,7 @@ class ReviewCards extends StatefulWidget {
 }
 
 class _ReviewCardsState extends State<ReviewCards> {
-  String status = "still not assign" ;
+  late String status = "still not assign";
 
   putReaction(String state)async{
     bool s = state=="like"?true:false;
@@ -24,14 +25,39 @@ class _ReviewCardsState extends State<ReviewCards> {
     print(dd.toString());
   }
 
+  userReaction()async{
+    var userName = await UserState().getUserName();
+    for(int i = 0 ; i< widget.reviewCardAllDetails.likedList.length;i++){
+      if(userName.toString()==widget.reviewCardAllDetails.likedList[i].email.toString()){
+          setState(() {
+            status = "like";
+          });
+          return;
+      }
+    }
+    for(int i = 0 ; i< widget.reviewCardAllDetails.dislikedList.length;i++){
+      if(userName.toString()==widget.reviewCardAllDetails.dislikedList[i].email.toString()){
+          setState(() {
+            status = "dislike";
+          });
+          return;
+
+      }
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
+
+    userReaction();
     super.initState();
+
   }
 
   @override
   Widget build(BuildContext context) {
+    print("status is = " + status);
     return Container(
       height: MediaQuery.of(context).size.height * 0.275,
       margin:
@@ -129,7 +155,6 @@ class _ReviewCardsState extends State<ReviewCards> {
                                     widget.reviewCardAllDetails.likeCount++;
                                   });
                                   putReaction(status);
-                                  print('like');
                                 },
                                 child: Container(
                                   child: Row(
