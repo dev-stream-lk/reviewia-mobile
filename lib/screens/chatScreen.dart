@@ -34,37 +34,38 @@ class _ChatScreenState extends State<ChatScreen> {
     String token = (await UserState().getToken());
     String url = KBaseUrl + "api/user/group/"+id;
 
-    while(true){
-      Timer(Duration(seconds: 1), () async {
-        print(" This line is execute after 5 seconds");
-        await http.get(
-            Uri.parse(url),
-            headers: <String, String>{
-              'Authorization': token,
-            }).then((response) {
-          late SlectedGroup selectedgroup;
-          var data = json.decode(response.body);
-          selectedgroup = new SlectedGroup(
-              id: data['id'],
-              createdAt: data['createdAt'],
-              postId: data['postId'],
-              active: data['active'],
-              messages: data['messages']);
-          if (selectedgroup.messages != null) {
-            var messageList = selectedgroup.messages.map((e) => Messages.fromJson(e)).toList();
-            setState(() {
-              message = messageList;
-            });
-            for (var item in message) {
-              print('${item.content} - ${item.createdBy}');
-            }
-          }
-          else {
-            print("Sub category empty....");
-          }
+    // while(true){
+    //   Timer(Duration(seconds: 1), () async {
+    //     print(" This line is execute after 5 seconds");
+    //
+    //   });
+    //}
+    await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Authorization': token,
+        }).then((response) {
+      late SlectedGroup selectedgroup;
+      var data = json.decode(response.body);
+      selectedgroup = new SlectedGroup(
+          id: data['id'],
+          createdAt: data['createdAt'],
+          postId: data['postId'],
+          active: data['active'],
+          messages: data['messages']);
+      if (selectedgroup.messages != null) {
+        var messageList = selectedgroup.messages.map((e) => Messages.fromJson(e)).toList();
+        setState(() {
+          message = messageList;
         });
-      });
-    }
+        for (var item in message) {
+          print('${item.content} - ${item.createdBy}');
+        }
+      }
+      else {
+        print("Sub category empty....");
+      }
+    });
   }
 
   @override
@@ -95,7 +96,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 itemCount: message.length,
                 itemBuilder: (BuildContext context, int index)
                 {
-                  return Text(message[index].content);
+                  //return Text(message[index].content);
+                  return Row(
+
+                    children: [
+                      Text(message[index].content)
+                    ],
+                  );
                 },
 
               )
