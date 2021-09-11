@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:reviewia/components/post_on_profile.dart';
 import 'package:reviewia/screens/chatList.dart';
+import 'package:reviewia/screens/chatScreen.dart';
 import 'package:reviewia/screens/contactUs.dart';
 import 'package:reviewia/screens/favourite_list.dart';
 import 'package:reviewia/screens/fogotPassword.dart';
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
         FavouriteList.id:(context)=> FavouriteList(),
         MyPost.id:(context)=> MyPost(),
         PreviewPost.id:(context)=> PreviewPost(),
+        ChatScreen.id:(context)=> ChatScreen(),
       },
 
     );

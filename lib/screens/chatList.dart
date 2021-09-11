@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:reviewia/components/groupCard.dart';
-import 'package:reviewia/components/product_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/services/fetchChatList.dart';
 import 'package:reviewia/services/userState.dart';
-import 'package:reviewia/structures/chatListStruct.dart';
 
 class ChatList extends StatefulWidget {
   static String id = 'ChatList';

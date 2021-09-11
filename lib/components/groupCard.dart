@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/screens/chatScreen.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/chatListStruct.dart';
 
@@ -25,13 +26,12 @@ class _GroupCardState extends State<GroupCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => ProductView(todos: widget.detail),
-        //   ),
-        // );
-        // Navigator.pushNamed(context, ProductView.id);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatScreen(detail: widget.detail,userName:widget.email),
+          ),
+        );
       },
       child: Container(
         // margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 15 / 360,right:MediaQuery.of(context).size.width * 15 / 360,),
