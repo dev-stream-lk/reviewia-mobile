@@ -287,7 +287,7 @@ Future createInstantGroup(String postId,List<String>reviewersList)async{
   );
 
   print(response.statusCode);
-  if (response.statusCode==200){
+  if (response.statusCode==201){
     return "Instant Group is Created";
   }else if(response.statusCode==412){
     return "Already Group is crated";
