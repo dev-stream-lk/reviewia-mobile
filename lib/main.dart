@@ -1,4 +1,6 @@
 // @dart = 2.9
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:reviewia/components/post_on_profile.dart';
 import 'package:reviewia/screens/chatList.dart';
@@ -25,12 +27,31 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Timer timer;
+  int number=0;
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(Duration(seconds: 15), (Timer t) => getNewNotification());
+  }
+
+  getNewNotification(){
+    setState(() {
+      number++;
+    });
+    print(number.toString());
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Reviewia',
       theme: ThemeData.light().copyWith(
         primaryColor: Colors.blue,
         accentColor: Color(0xFFFFFFFF),
