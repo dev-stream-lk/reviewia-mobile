@@ -22,9 +22,13 @@ class _ChatListState extends State<ChatList> {
     var data = await fetchCatList();
     email = await UserState().getUserName();
     setState(() {
-      _allData = data;
+      _allData = data.where((element) {
+        String isActive = '${element.active}';
+        return isActive== "true";
+      }).toList();
+       //_allData = data;
       for (var item in _allData) {
-        print('${item.postId} - ${item.id}-${item.createdBy.id}');
+        print('${item.postId} - ${item.id}-${item.createdBy.id}-${item.active}');
       }
       print("Lenght of array::"+ _allData.length.toString());
       _isLoading = false;

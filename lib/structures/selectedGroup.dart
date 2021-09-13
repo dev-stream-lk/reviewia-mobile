@@ -8,6 +8,7 @@ class SlectedGroup {
   late int postId;
   late List<dynamic> messages;
   late bool active;
+  late List<dynamic> users;
 
   SlectedGroup(
       {required this.id,
@@ -15,6 +16,7 @@ class SlectedGroup {
         required this.postId,
         required this.messages,
         required this.active,
+        required this.users
       });
 
   SlectedGroup.fromJson(Map<String, dynamic> json) {
@@ -70,5 +72,33 @@ class Messages {
     return data;
   }
 
+}
 
+class Users {
+  late int id;
+  late String firstName;
+  late String lastName;
+  late String email;
+
+  Users(
+      {required this.id,
+        required this.firstName,
+        required this.lastName,
+        required this.email});
+
+  Users.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    firstName = json['firstName'];
+    lastName = json['lastName'];
+    email = json['email'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['firstName'] = this.firstName;
+    data['lastName'] = this.lastName;
+    data['email'] = this.email;
+    return data;
+  }
 }

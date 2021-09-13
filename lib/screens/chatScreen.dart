@@ -2,13 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:reviewia/components/chatScreen_post.dart';
 import 'package:reviewia/components/groupCard.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/services/fetchChatList.dart';
+import 'package:reviewia/services/network.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/chatListStruct.dart';
 import 'package:http/http.dart' as http;
+import 'package:reviewia/structures/postView.dart';
 import 'package:reviewia/structures/selectedGroup.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -24,8 +27,10 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
 
-
+  bool _loadingPost = true;
+  late  PostsView post;
   List<Messages> message= <Messages>[];
+  List<Users> userList= <Users>[];
   late List list =[];
   final inputController = TextEditingController();
 
@@ -34,12 +39,6 @@ class _ChatScreenState extends State<ChatScreen> {
     String token = (await UserState().getToken());
     String url = KBaseUrl + "api/user/group/"+id;
 
-    // while(true){
-    //   Timer(Duration(seconds: 1), () async {
-    //     print(" This line is execute after 5 seconds");
-    //
-    //   });
-    //}
     await http.get(
         Uri.parse(url),
         headers: <String, String>{
@@ -52,14 +51,23 @@ class _ChatScreenState extends State<ChatScreen> {
           createdAt: data['createdAt'],
           postId: data['postId'],
           active: data['active'],
-          messages: data['messages']);
+          messages: data['messages'],
+          users: data['users']);
+      var members = selectedgroup.users.map((e) => Users.fromJson(e)).toList();
+      setState(() {
+        userList = members;
+      });
       if (selectedgroup.messages != null) {
         var messageList = selectedgroup.messages.map((e) => Messages.fromJson(e)).toList();
         setState(() {
           message = messageList;
+          _fetchPost();
         });
         for (var item in message) {
-          print('${item.content} - ${item.createdBy}');
+          print('${item.createdBy} - ${item.content}');
+        }
+        for (var item in userList) {
+          print('${item.firstName} - ${item.lastName}');
         }
       }
       else {
@@ -68,28 +76,45 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
+
+  Future <void> _fetchPost() async {
+    String id = widget.detail.postId.toString();
+    var postData = await fetchPostViewById(id);
+    setState(() {
+      post = postData;
+      _loadingPost = false;
+    });
+    print("Post Title"+ postData.title);
+  }
+
   Future <void> _SendMessage(String msg) async {
+    print("Function: "+ msg);
     String id = widget.detail.id.toString();
     String token = (await UserState().getToken());
-    String url = KBaseUrl + "api/user/chat?email="+widget.userName+"&group="+id;
-
-    await http.post(
-        Uri.parse(url),
-        headers: <String, String>{
-          'Authorization': token,
-        },
-        body: jsonEncode(<String,String>{
-          "content": msg,
-        })
-        ).then((response) {
-      if (response.statusCode==200){
-        _loadChat();
-        print("Message sent");
-      }
-      else{
-        print("Message not sent");
-      }
+    String url = KBaseUrl + 'api/user/chat?email='+widget.userName+'&group='+id;
+    var headers = {
+      'Authorization': token,
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse(url));
+    request.body = json.encode({
+      "content": msg
     });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 201) {
+      print(await response.stream.bytesToString());
+      print("Sent");
+      msg = "";
+      inputController.text = "";
+      _loadChat();
+    }
+    else {
+      print(response.statusCode);
+      print("not sent");
+    }
   }
   @override
   void initState() {
@@ -108,98 +133,108 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         backgroundColor: Kcolor,
         title: Text(
-          "My Chat",
-          style: KappTitle,
+          post.title,
+          style: TextStyle(
+            fontSize: 20
+          ),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                // Navigator.pushNamed(context, SearchPage.id);
+              },
+              icon: Icon(Icons.more_vert)),
+        ],
       ),
 
       body: RefreshIndicator(
         onRefresh: getRefreshData,
         child: Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.all(30.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: message.length,
-                  // itemBuilder: (BuildContext context, int index)
-                  // {
-                    //return Text(message[index].content);
-                    // return Row(
-                    //
-                    //   children: [
-                    //     Text(message[index].content)
-                    //   ],
-                    // );
-                  //},
+            alignment: Alignment.center,
+            padding: EdgeInsets.only(left: 30,right: 30, top: 10),
+            child: Column(
+              children: [
+                _loadingPost == false?
+                ChatScreenPostCard(detail: post):CircularProgressIndicator(),
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: message.length,
 
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(top: 10,bottom: 10),
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index){
-                    return Container(
-                      padding: EdgeInsets.only(left: 14,right: 14,top: 10,bottom: 10),
-                      child: Align(
-                        alignment: (message[index].createdBy == widget.userName?Alignment.topRight:Alignment.topLeft),
-                        child: (message[index].createdBy == widget.userName?
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text("You"+ " - "+ message[index].createdAt.substring(0, 10),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueGrey[100],
-                              ),
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(top: 10,bottom: 10),
+                    itemBuilder: (context, index){
+                      return Container(
+                        padding: EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
+                        child: Align(
+                          alignment: (message[index].createdBy == widget.userName?Alignment.topRight:Alignment.topLeft),
+                          child: (message[index].createdBy == widget.userName?
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                int.parse(message[index].createdAt.substring(11, 13)) > 12 ?
+                                "You"+ " - "+ message[index].createdAt.substring(0, 10)+" "+message[index].createdAt.substring(11, 16) +"pm":
+                                "You"+ " - "+ message[index].createdAt.substring(0, 10)+" "+message[index].createdAt.substring(11, 16)+"am",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blueGrey[100],
+                                ),
 
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(20),
-                                  topLeft: Radius.circular(20),
-                                  bottomLeft: Radius.circular(20),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(20),
+                                    topLeft: Radius.circular(20),
+                                    bottomLeft: Radius.circular(20),
+                                  ),
+                                  color: (message[index].createdBy == widget.userName?Colors.blue[200]:Colors.grey.shade200),
                                 ),
-                                color: (message[index].createdBy == widget.userName?Colors.blue[200]:Colors.grey.shade200),
+                                padding: EdgeInsets.all(16),
+                                child: Text(message[index].content, style: TextStyle(fontSize: 15),),
                               ),
-                              padding: EdgeInsets.all(16),
-                              child: Text(message[index].content, style: TextStyle(fontSize: 15),),
-                            ),
-                          ],
-                        ):Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(message[index].createdBy+ " - "+ message[index].createdAt.substring(0, 10),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueGrey[100],
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(20),
-                                  bottomRight: Radius.circular(20),
-                                  bottomLeft: Radius.circular(20),
+                            ],
+                          ):Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                int.parse(message[index].createdAt.substring(11, 13)) > 12 ?
+                                message[index].createdBy+ " - "+ message[index].createdAt.substring(0, 10)+" "+message[index].createdAt.substring(11, 16) +"pm":
+                                message[index].createdBy+ " - "+ message[index].createdAt.substring(0, 10)+" "+message[index].createdAt.substring(11, 16)+"am",
+
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blueGrey[100],
                                 ),
-                                color: (message[index].createdBy == widget.userName?Colors.blue[200]:Colors.grey.shade200),
                               ),
-                              padding: EdgeInsets.all(16),
-                              child: Text(message[index].content, style: TextStyle(fontSize: 15),),
-                            ),
-                          ],
-                        )
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(20),
+                                    bottomRight: Radius.circular(20),
+                                    bottomLeft: Radius.circular(20),
+                                  ),
+                                  color: (message[index].createdBy == widget.userName?Colors.blue[200]:Colors.grey.shade200),
+                                ),
+                                padding: EdgeInsets.all(16),
+                                child: Text(message[index].content, style: TextStyle(fontSize: 15),),
+                              ),
+                            ],
+                          )
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
 
-                )
-              ),
-              _bottomChatArea()
-            ],
+                  )
+                ),
+                _bottomChatArea()
+              ],
+            ),
           ),
-        ),
       ),
     );
   }
@@ -218,7 +253,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     setState(() {
                       _SendMessage(inputController.text);
                     });
-                    inputController.text = "";
+                   // inputController.text = "";
                   }
               },
               icon: Icon(Icons.send))
