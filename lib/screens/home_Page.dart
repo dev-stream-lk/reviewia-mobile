@@ -83,6 +83,11 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pushNamed(context, SearchPage.id);
               },
               icon: Icon(Icons.search)),
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, SearchPage.id);
+              },
+              icon: Icon(Icons.notifications_active)),
         ],
       ),
       drawer: Container(
