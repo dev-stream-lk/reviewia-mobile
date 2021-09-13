@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:reviewia/components/post_on_profile.dart';
+import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/chatList.dart';
 import 'package:reviewia/screens/contactUs.dart';
 import 'package:reviewia/screens/favourite_list.dart';
@@ -36,25 +37,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Timer timer;
+
   int number=0;
-  @override
-  void initState() {
-    super.initState();
-    timer = Timer.periodic(Duration(seconds: 10), (Timer t) => getNewNotification());
-  }
 
-  getNewNotification()async{
-    String userName = await UserState().getUserName();
-    if(userName.isNotEmpty){
-      var dd = await getNumberOfNotification(userName);
-      setState(() {
-        number++;
-      });
-      print("Number of Notification:"+dd.toString());
-    }
-
-  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -90,4 +75,5 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
 

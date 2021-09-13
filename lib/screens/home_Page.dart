@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:find_dropdown/find_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,6 +11,7 @@ import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/home_page_top_products.dart';
 import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/register_page.dart';
+import 'package:reviewia/services/optionServices.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:badges/badges.dart';
 
@@ -25,6 +28,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Timer timer;
   UserState userState = new UserState();
   String userName = '';
   String k = '';
@@ -47,6 +51,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(Duration(seconds: 10), (Timer t) => getNewNotification());
+  }
+
+  getNewNotification()async{
+    String userName = await UserState().getUserName();
+    if(userName.isNotEmpty){
+      var dd = await getNumberOfNotification(userName);
+      setState(() {
+        kNotificationNumber=int.parse(dd.toString());
+      });
+    }
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     final arguments = ModalRoute.of(context)!.settings.arguments as HomeData;
     print("user name is saved " + arguments.title);
@@ -55,7 +76,6 @@ class _HomePageState extends State<HomePage> {
     // setState(() {
     //   settheUserProfile(arguments.title.toString());
     // });
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Kcolor,
@@ -84,7 +104,7 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(50),
               child: Icon(Icons.notifications_active),
               badgeContent: Container(
-                child: Text("10",style: TextStyle(fontSize: MediaQuery.of(context).textScaleFactor*8.5,color: Colors.white),),
+                child: Text(kNotificationNumber.toString(),style: TextStyle(fontSize: MediaQuery.of(context).textScaleFactor*8.5,color: Colors.white),),
               ),
             ),
           ),
