@@ -20,6 +20,8 @@ import 'package:reviewia/screens/register_page.dart';
 import 'package:reviewia/screens/screen_selector.dart';
 import 'package:reviewia/screens/service_list.dart';
 import 'package:reviewia/screens/servicesList.dart';
+import 'package:reviewia/services/optionServices.dart';
+import 'package:reviewia/services/userState.dart';
 
 
 
@@ -39,14 +41,19 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(Duration(seconds: 15), (Timer t) => getNewNotification());
+    timer = Timer.periodic(Duration(seconds: 10), (Timer t) => getNewNotification());
   }
 
-  getNewNotification(){
-    setState(() {
-      number++;
-    });
-    print(number.toString());
+  getNewNotification()async{
+    String userName = await UserState().getUserName();
+    if(userName.isNotEmpty){
+      var dd = await getNumberOfNotification(userName);
+      setState(() {
+        number++;
+      });
+      print("Number of Notification:"+dd.toString());
+    }
+
   }
   @override
   Widget build(BuildContext context) {
