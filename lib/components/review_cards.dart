@@ -82,7 +82,39 @@ class _ReviewCardsState extends State<ReviewCards> {
                   ),
                 ),
                 Expanded(
-                    flex: 3, child: Text(widget.reviewedBy, style: KPostCard)),
+                  flex: 3,
+                  child: Container(
+                    margin: EdgeInsets.only(left: 3),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(widget.reviewedBy, style: KPostCard),
+                        Text(
+                          "Created Date: " +
+                              widget.reviewCardAllDetails.createdAt
+                                  .substring(0, 10),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w100,
+                            color: KDetailColor.withOpacity(KOpacityOnDetail),
+                          ),
+                        ),
+                        Text(int.parse(widget.reviewCardAllDetails.createdAt
+                                    .substring(11, 13)) >
+                                12
+                            ? widget.reviewCardAllDetails.createdAt
+                                    .substring(11, 16) +
+                                "pm"
+                            : widget.reviewCardAllDetails.createdAt
+                                    .substring(11, 16) +
+                                "am",style:  TextStyle(
+                          fontWeight: FontWeight.w100,
+                          color: KDetailColor.withOpacity(KOpacityOnDetail),
+                        ),)
+                      ],
+                    ),
+                  ),
+                ),
                 Expanded(
                     flex: 1,
                     child: PopupMenuButton(
@@ -110,7 +142,9 @@ class _ReviewCardsState extends State<ReviewCards> {
                       horizontal: MediaQuery.of(context).size.width * 10 / 360),
                   child: Text(
                     widget.detail,
-                    style: KPostReviewCard,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
                   // color: Colors.red,
                 )),
@@ -160,14 +194,14 @@ class _ReviewCardsState extends State<ReviewCards> {
                                   if (status == "dislike" ||
                                       status == "still not assign") {
                                     setState(() {
-                                      if(status=="dislike"){
+                                      if (status == "dislike") {
                                         setState(() {
-                                          widget.reviewCardAllDetails.dislikeCount--;
+                                          widget.reviewCardAllDetails
+                                              .dislikeCount--;
                                         });
                                       }
                                       status = "like";
                                       widget.reviewCardAllDetails.likeCount++;
-
                                     });
                                     putReaction(status, false);
                                   } else if (status == "like") {
@@ -206,7 +240,7 @@ class _ReviewCardsState extends State<ReviewCards> {
                                   if (status == "like" ||
                                       status == "still not assign") {
                                     setState(() {
-                                      if(status=='like'){
+                                      if (status == 'like') {
                                         widget.reviewCardAllDetails.likeCount--;
                                       }
                                       status = "dislike";
