@@ -28,7 +28,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Timer timer;
   UserState userState = new UserState();
   String userName = '';
   String k = '';
@@ -48,23 +47,6 @@ class _HomePageState extends State<HomePage> {
   void settheUserProfile(String s, String t) async {
     k = await userState.setStateUserName(s, t);
     print(k);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    timer = Timer.periodic(Duration(seconds: 10), (Timer t) => getNewNotification());
-  }
-
-  getNewNotification()async{
-    String userName = await UserState().getUserName();
-    if(userName.isNotEmpty){
-      var dd = await getNumberOfNotification(userName);
-      setState(() {
-        kNotificationNumber=int.parse(dd.toString());
-      });
-    }
-
   }
 
   @override
@@ -95,25 +77,12 @@ class _HomePageState extends State<HomePage> {
           style: KappTitle,
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, SearchPage.id);
-            },
-            icon: Badge(
-              shape: BadgeShape.circle,
-              borderRadius: BorderRadius.circular(50),
-              child: Icon(Icons.notifications_active),
-              badgeContent: Container(
-                child: Text(kNotificationNumber.toString(),style: TextStyle(fontSize: MediaQuery.of(context).textScaleFactor*8.5,color: Colors.white),),
-              ),
-            ),
-          ),
+          NotificationBell(),
           IconButton(
               onPressed: () {
                 Navigator.pushNamed(context, SearchPage.id);
               },
               icon: Icon(Icons.search)),
-
         ],
       ),
       drawer: Container(
@@ -264,6 +233,57 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: HomePageTopProducts(),
+    );
+  }
+}
+
+class NotificationBell extends StatefulWidget {
+  const NotificationBell({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _NotificationBellState createState() => _NotificationBellState();
+}
+
+class _NotificationBellState extends State<NotificationBell> {
+  late Timer timer;
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(
+        Duration(seconds: 10), (Timer t) => getNewNotification());
+  }
+
+  getNewNotification() async {
+    String userName = await UserState().getUserName();
+    if (userName.isNotEmpty) {
+      var dd = await getNumberOfNotification(userName);
+      setState(() {
+        kNotificationNumber = int.parse(dd.toString());
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        Navigator.pushNamed(context, SearchPage.id);
+      },
+      icon: Badge(
+        shape: BadgeShape.circle,
+        borderRadius: BorderRadius.circular(50),
+        child: Icon(Icons.notifications_active),
+        badgeContent: Container(
+          child: Text(
+            kNotificationNumber.toString(),
+            style: TextStyle(
+                fontSize: MediaQuery.of(context).textScaleFactor * 8.5,
+                color: Colors.white),
+          ),
+        ),
+      ),
     );
   }
 }
