@@ -1,6 +1,9 @@
 // @dart = 2.9
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:reviewia/components/post_on_profile.dart';
+import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/chatList.dart';
 import 'package:reviewia/screens/chatScreen.dart';
 import 'package:reviewia/screens/contactUs.dart';
@@ -19,6 +22,8 @@ import 'package:reviewia/screens/register_page.dart';
 import 'package:reviewia/screens/screen_selector.dart';
 import 'package:reviewia/screens/service_list.dart';
 import 'package:reviewia/screens/servicesList.dart';
+import 'package:reviewia/services/optionServices.dart';
+import 'package:reviewia/services/userState.dart';
 
 
 
@@ -26,12 +31,20 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  int number=0;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Reviewia',
       theme: ThemeData.light().copyWith(
         primaryColor: Colors.blue,
         accentColor: Color(0xFFFFFFFF),
@@ -64,4 +77,5 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 
