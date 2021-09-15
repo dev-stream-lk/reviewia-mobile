@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/chatScreen.dart';
+import 'package:reviewia/services/network.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/chatListStruct.dart';
+import 'package:reviewia/structures/postView.dart';
 
 class GroupCard extends StatefulWidget {
   late ChatListStruct detail;
@@ -16,10 +18,21 @@ class GroupCard extends StatefulWidget {
 
 class _GroupCardState extends State<GroupCard> {
 
+  late PostsView post;
+  String PostTitle = "";
+  Future _fetchPost() async {
+    String id = widget.detail.postId.toString();
+    var postData = await fetchPostViewById(id);
+    setState(() {
+      post = postData;
+      PostTitle = post.title;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _fetchPost().whenComplete((){});
   }
 
   @override
@@ -29,21 +42,14 @@ class _GroupCardState extends State<GroupCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen(detail: widget.detail,userName:widget.email),
+            builder: (context) => ChatScreen(detail: widget.detail,userName:widget.email,post:post),
           ),
         );
       },
       // child: Container(
       //   // margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 15 / 360,right:MediaQuery.of(context).size.width * 15 / 360,),
       //   height: MediaQuery.of(context).size.height * 105 / 659,
-      //   decoration: BoxDecoration(
-      //     color: widget.email == widget.detail.createdBy.email?
-      //     Colors.blue[50]:Colors.amberAccent,
-      //     borderRadius: BorderRadius.only(
-      //         topLeft: Radius.circular(20),
-      //         topRight: Radius.circular(20),
-      //         bottomLeft: Radius.circular(20),
-      //         bottomRight: Radius.circular(20)),
+
       //   ),
       //   child: Row(
       //     children: [
@@ -181,6 +187,14 @@ class _GroupCardState extends State<GroupCard> {
       // ),
       child: Container(
         padding: EdgeInsets.only(left: 16,right: 16,top: 10,bottom: 10),
+        decoration: BoxDecoration(
+          color: widget.email == widget.detail.createdBy.email?
+          Colors.blue[50]:Colors.white,
+          borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+          bottomLeft: Radius.circular(20),
+          bottomRight: Radius.circular(20))),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -202,9 +216,14 @@ class _GroupCardState extends State<GroupCard> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
+                          Text(PostTitle,
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold
+                            ),),
                           Text("Creator: "+
                             widget.detail.createdBy.firstName+" "+widget.detail.createdBy.lastName,
-                            style: TextStyle(fontSize: 16),),
+                            style: TextStyle(fontSize: 13,color: Colors.grey.shade600, fontWeight:FontWeight.normal),),
                           SizedBox(height: 6,),
                           Text("Created date: "+widget.detail.createdAt.substring(0, 10),
                             style: TextStyle(fontSize: 13,color: Colors.grey.shade600, fontWeight:FontWeight.normal),),
