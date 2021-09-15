@@ -18,7 +18,8 @@ class ChatScreen extends StatefulWidget {
   static String id = 'ChatScreen';
   late ChatListStruct detail;
   late String userName;
-  ChatScreen({required this.detail,required this.userName});
+  late  PostsView post;
+  ChatScreen({required this.detail,required this.userName, required this.post});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -28,7 +29,6 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
 
   bool _loadingPost = true;
-  late  PostsView post;
   List<Messages> message= <Messages>[];
   List<Users> userList= <Users>[];
   late List list =[];
@@ -61,7 +61,7 @@ class _ChatScreenState extends State<ChatScreen> {
         var messageList = selectedgroup.messages.map((e) => Messages.fromJson(e)).toList();
         setState(() {
           message = messageList;
-          _fetchPost();
+          //_fetchPost();
         });
         for (var item in message) {
           print('${item.createdBy} - ${item.content}');
@@ -76,16 +76,6 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-
-  Future <void> _fetchPost() async {
-    String id = widget.detail.postId.toString();
-    var postData = await fetchPostViewById(id);
-    setState(() {
-      post = postData;
-      _loadingPost = false;
-    });
-    print("Post Title"+ postData.title);
-  }
 
   Future <void> _SendMessage(String msg) async {
     print("Function: "+ msg);
@@ -133,17 +123,53 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         backgroundColor: Kcolor,
         title: Text(
-          post.title,
+          widget.post.title,
           style: TextStyle(
             fontSize: 20
           ),
         ),
         actions: [
-          IconButton(
-              onPressed: () {
-                // Navigator.pushNamed(context, SearchPage.id);
-              },
-              icon: Icon(Icons.more_vert)),
+          PopupMenuButton(
+                icon: Icon(Icons.more_vert,),
+                onSelected: (item) {
+                 // selectedOption(item.toString(),widget.id,context);
+                  print(item);},
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 1,
+                    child: Text(
+                      "Group Info",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 2,
+                    child: Text(
+                      "Add Members",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 3,
+                    child: Text(
+                      "Remove Members",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: widget.userName == widget.detail.createdBy.email? 4:5,
+                    child: widget.userName == widget.detail.createdBy.email?
+                    Text(
+                      "Delete chat",
+                      style: TextStyle(color: Colors.black),
+                    ):
+                    Text(
+                      "Leave Group",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ],
+              )
         ],
       ),
 
@@ -154,8 +180,7 @@ class _ChatScreenState extends State<ChatScreen> {
             padding: EdgeInsets.only(left: 30,right: 30, top: 10),
             child: Column(
               children: [
-                _loadingPost == false?
-                ChatScreenPostCard(detail: post):CircularProgressIndicator(),
+                ChatScreenPostCard(detail: widget.post),
                 SizedBox(
                   height: 10,
                 ),
@@ -202,8 +227,8 @@ class _ChatScreenState extends State<ChatScreen> {
                             children: [
                               Text(
                                 int.parse(message[index].createdAt.substring(11, 13)) > 12 ?
-                                message[index].createdBy+ " - "+ message[index].createdAt.substring(0, 10)+" "+message[index].createdAt.substring(11, 16) +"pm":
-                                message[index].createdBy+ " - "+ message[index].createdAt.substring(0, 10)+" "+message[index].createdAt.substring(11, 16)+"am",
+                                message[index].fullName+ " - "+ message[index].createdAt.substring(0, 10)+" "+message[index].createdAt.substring(11, 16) +"pm":
+                                message[index].fullName+ " - "+ message[index].createdAt.substring(0, 10)+" "+message[index].createdAt.substring(11, 16)+"am",
 
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,

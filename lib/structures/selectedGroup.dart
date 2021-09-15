@@ -52,15 +52,17 @@ class Messages {
   late String createdAt;
   late String createdBy;
   late String content;
+  late String fullName;
 
 
-  Messages({required this.id, required this.createdAt, required this.createdBy, required this.content});
+  Messages({required this.id, required this.createdAt, required this.createdBy, required this.content, required this.fullName});
 
   Messages.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     createdAt = json['createdAt'];
     createdBy = json['createdBy'];
     content = json['content'];
+    fullName = json['fullName'];
   }
 
   Map<String, dynamic> toJson() {
@@ -69,6 +71,7 @@ class Messages {
     data['createdAt'] = this.createdAt;
     data['createdBy'] = this.createdBy;
     data['content'] = this.content;
+    data['fullName'] = this.fullName;
     return data;
   }
 
