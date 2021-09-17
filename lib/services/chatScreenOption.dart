@@ -54,7 +54,7 @@ selectedOption(String val, String id,PostsView post, String creator,context) asy
       removeFromGroup(selectedgroup,context);
       break;
     case '4':
-      //createInstantGroup(id.toString(), context);
+      deactivateChat(selectedgroup.id,token, context);
       print("case--4");
       break;
   }
@@ -287,26 +287,77 @@ Future removeFromGroup(SlectedGroup selectedgroup, BuildContext context) async {
 
 }
 
-Future<FavouriteListStruct> fetchFavPostView() async {
-  String userName = await UserState().getUserName();
-  String url = KBaseUrl + "api/user/post/favourite?email=" + userName;
-  String t = await UserState().getToken();
-  http.Response response = await http.get(
-    Uri.parse(url),
-    headers: {'Authorization': t},
-  );
-  if (response.statusCode == 200) {
-    late FavouriteListStruct favouriteListStruct;
-    var decodedUserData = jsonDecode(response.body);
-    favouriteListStruct = new FavouriteListStruct(
-        id: decodedUserData['id'],
-        createdBy: decodedUserData["createdBy"],
-        posts: decodedUserData["posts"]);
+buildLoading(BuildContext context) {
+  return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+          ),
+        );
+      });
+}
 
-    return favouriteListStruct;
-  } else {
-    throw Exception("API Error");
-  }
+
+Future deactivateChat(int id, String token, BuildContext context) async {
+  String userName = await UserState().getUserName();
+  String url = KBaseUrl + "api/user/group/deactivate?email="+userName;
+  bool _isload = false;
+  return Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "Are You sure to Diactivate the chat?",
+    desc:
+    "Your chat will diactivate but all the messages will not be delete",
+    buttons: [
+      DialogButton(
+        color: Kcolor,
+        child: Text(
+          "Yes",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        onPressed: () async {
+          buildLoading(context);
+          var headers = {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+          };
+          var request = http.Request('GET', Uri.parse(url));
+          request.headers.addAll(headers);
+
+          http.StreamedResponse response = await request.send();
+
+          if (response.statusCode == 200) {
+            int count = 0;
+            Navigator.of(context).popUntil((_) => count++ >= 3);
+          }
+          // Navigator.pop(context);
+          // Navigator.of(context).popUntil(ModalRoute.withName(HomePage.id,));
+          // Navigator.pushNamedAndRemoveUntil(context, HomePage.id, (route) => false,arguments: (userName));
+        },
+        // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
+        width: MediaQuery.of(context).size.width * 100 / 360,
+      ),
+      DialogButton(
+        color: Kcolor,
+        child: Text(
+          "No",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        onPressed: () {
+          int count = 0;
+          Navigator.of(context).popUntil((_) => count++ >= 1);
+          // Navigator.pop(context);
+          // Navigator.of(context).popUntil(ModalRoute.withName(HomePage.id,));
+          // Navigator.pushNamedAndRemoveUntil(context, HomePage.id, (route) => false,arguments: (userName));
+        },
+        // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
+        width: MediaQuery.of(context).size.width * 100 / 360,
+      )
+    ],
+  ).show();
 }
 
 Future setReaction(int id, bool reaction,bool remove) async {
