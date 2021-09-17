@@ -40,6 +40,19 @@ class _RemoveFromChatState extends State<RemoveFromChat> {
 
   }
 
+  buildLoading(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
+          );
+        });
+  }
+
   Future<void> removeMembers(List<String> listOfReviewers) async {
     String userName = await UserState().getUserName();
     print(listOfReviewers);
@@ -61,6 +74,7 @@ class _RemoveFromChatState extends State<RemoveFromChat> {
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             onPressed: () async {
+              buildLoading(context);
               var headers = {
               'Authorization': token,
               'Content-Type': 'application/json'
@@ -76,36 +90,9 @@ class _RemoveFromChatState extends State<RemoveFromChat> {
               if (response.statusCode == 201) {
                 print(await response.stream.bytesToString());
 
-                //Alert..
-                setState(() {
-                  widget._isloadingBtn = false;
-                });
-                Alert(
-                  context: context,
-                  type: AlertType.success,
-                  title: "Removed",
-                  buttons: [
-                    DialogButton(
-                      color: Kcolor,
-                      child: Text(
-                        "Okay",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                      onPressed: () {
-                        int count = 0;
-                        Navigator.of(context).popUntil((_) => count++ >= 3);
-                        // Navigator.pop(context);
-                        // Navigator.of(context).popUntil(ModalRoute.withName(HomePage.id,));
-                        // Navigator.pushNamedAndRemoveUntil(context, HomePage.id, (route) => false,arguments: (userName));
-                      },
-                      // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
-                      width: MediaQuery.of(context).size.width * 100 / 360,
-                    )
-                  ],
-                ).show();
               }
               int count = 0;
-              Navigator.of(context).popUntil((_) => count++ >= 2);
+              Navigator.of(context).popUntil((_) => count++ >= 3);
             },
             // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
             width: MediaQuery.of(context).size.width * 100 / 360,
