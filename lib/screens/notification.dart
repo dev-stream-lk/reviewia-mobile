@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/screens/product_view.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/structures/notificationStruct.dart';
+import 'package:reviewia/structures/postView.dart';
+
 import 'package:reviewia/structures/notificationStruct.dart';
 import 'package:reviewia/structures/notificationStruct.dart';
 
@@ -11,6 +14,8 @@ class NotificationList extends StatefulWidget {
 
   const NotificationList({Key? key}) : super(key: key);
 
+
+
   @override
   _NotificationListState createState() => _NotificationListState();
 }
@@ -18,14 +23,17 @@ class NotificationList extends StatefulWidget {
 class _NotificationListState extends State<NotificationList> {
   // List<PostsView> _postView = <PostsView>[];
   bool isLoading = true;
+  late PostsView detail;
+
   List<NotificationStruct> notificationList = [];
   List<NotificationStruct> notificationListDisplay = [];
-  _listItem(index) {
+  _listItem(indexNumber) {
+    int index = notificationListDisplay.length - (indexNumber as int) - 1;
     return Container(
       // margin: EdgeInsets.symmetric(horizontal: 20),
       child: Card(
-        color: notificationListDisplay[index].type == 'REVIEW'
-            ? Color(0xFF374879)
+        color: !notificationListDisplay[index].markAsRead
+            ? Color(0xFF273C6C)
             : Colors.blueGrey.shade300,
         child: Padding(
           padding: EdgeInsets.all(5),
@@ -56,7 +64,17 @@ class _NotificationListState extends State<NotificationList> {
                     color: Colors.white
                   ),
                 ),
-                subtitle: Text(notificationListDisplay[index].type,style: TextStyle(color: Colors.white),),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(notificationListDisplay[index].createdAt.substring(0,10),style: TextStyle(color: Colors.white),),
+                    Text(notificationListDisplay[index].type,style: TextStyle(color: Colors.white),)
+                  ],
+                ),
+                hoverColor: Colors.white,
+                onTap:(){
+                  selectionNotification(notificationListDisplay[index].type,notificationListDisplay[index].targetId.toString());
+                },
               ),
             ],
           ),
@@ -77,6 +95,40 @@ class _NotificationListState extends State<NotificationList> {
     });
   }
 
+  Future loadPost(String id)async{
+    print(id);
+    var data = await fetchPostViewByIdInNotification(id);
+    print(data);
+    setState(() {
+      detail = data;
+    });
+  }
+
+  Future loadReview(String id)async{
+
+  }
+
+
+  selectionNotification(String type,String id) async{
+
+    if(type=='POST'){
+      await loadPost(id);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProductView(todos:detail),
+        ),
+      );
+    }else if(type=='REVIEW'){
+      // await loadReview(id);
+      print('Still not configure');
+    }
+
+
+
+
+  }
+
   @override
   void initState() {
     getNotification();
@@ -94,7 +146,8 @@ class _NotificationListState extends State<NotificationList> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.85,
+          height: MediaQuery.of(context).size.height,
+            padding: EdgeInsets.only(bottom:100),
           child: isLoading? Center(
             child: CircularProgressIndicator(),
           ) :ListView.builder(
@@ -110,4 +163,6 @@ class _NotificationListState extends State<NotificationList> {
       ),
     );
   }
+
+
 }

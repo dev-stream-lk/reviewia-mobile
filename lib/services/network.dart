@@ -79,6 +79,40 @@ Future<PostsView>fetchPostViewById(String id) async {
   }
 }
 
+Future<PostsView>fetchPostViewByIdInNotification(String id) async {
+  String url = KBaseUrl + "api/public/post?id="+id;
+  final response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    late PostsView postsView;
+    late List<ImgURL>imges=[];
+    var decodedUserData = jsonDecode(response.body);
+
+    if(decodedUserData['imgURL']!=null){
+      decodedUserData['imgURL'].forEach((v) {
+        imges.add(new ImgURL.fromJson(v));
+      });
+    }
+    // print(imges[0].url);
+    postsView = new PostsView(
+      title: decodedUserData['title'],
+      createdBy: decodedUserData['createdBy'],
+      reviews: [],
+      viewCount:decodedUserData['viewCount'] ,
+      rate: decodedUserData['rate'],
+      description: decodedUserData['description'],
+      subCategory: decodedUserData['subCategory'],
+      blocked: decodedUserData['blocked'],
+      type: decodedUserData['type'],
+      brand:new Brand.fromJson(decodedUserData['brand']),
+      postId: decodedUserData['postId'],
+      createdAt: decodedUserData['createdAt'],
+      imgURL: imges,
+    );
+    return postsView;
+  } else {
+    throw Exception("API Error");
+  }
+}
 
 
 
