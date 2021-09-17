@@ -84,3 +84,7 @@ List<Widget> KscreenContainer = [
 const Color KDetailColor = Color(0xFF020902);
 const double KOpacityOnDetail = 0.5;
 var kNotificationNumber=0;
+
+const Color KSelectedFeedback = Color(0xFFE3F2FD);
+const Color KNotClickedColor = Color(0xC63D4695);
+const Color KClickedColor=Color(0xC687B3E0);

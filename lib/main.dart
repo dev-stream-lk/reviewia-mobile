@@ -22,6 +22,7 @@ import 'package:reviewia/screens/register_page.dart';
 import 'package:reviewia/screens/screen_selector.dart';
 import 'package:reviewia/screens/service_list.dart';
 import 'package:reviewia/screens/servicesList.dart';
+import 'package:reviewia/screens/notification.dart';
 import 'package:reviewia/services/optionServices.dart';
 import 'package:reviewia/services/userState.dart';
 
@@ -72,6 +73,7 @@ class _MyAppState extends State<MyApp> {
         MyPost.id:(context)=> MyPost(),
         PreviewPost.id:(context)=> PreviewPost(),
         ChatScreen.id:(context)=> ChatScreen(),
+        NotificationList.id:(context)=>NotificationList(),
       },
 
     );

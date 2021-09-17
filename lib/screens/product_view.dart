@@ -19,8 +19,10 @@ import 'home_Page.dart';
 
 class ProductView extends StatefulWidget {
   late PostsView todos;
+  late int reviewId;
 
-  ProductView({required this.todos});
+  ProductView({required this.todos ,required this.reviewId});
+  
   // const ProductView({Key? key,required this.todos}) : super(key: key);
   static String id = "ProductView";
 
@@ -77,7 +79,7 @@ class _ProductViewState extends State<ProductView> {
 
   _listItemViewProductCards(index) {
     index = _reviewCards.length - index - 1;
-    // print("created by " + test[index]);
+    print("created by " + widget.reviewId.toString());
     return Container(
         margin: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.040),
@@ -87,6 +89,7 @@ class _ProductViewState extends State<ProductView> {
           detail: _reviewCards[index].description,
           reviewId: _reviewCards[index].reviewId,
           reviewCardAllDetails:_reviewCards[index],
+          isColored:(_reviewCards[index].reviewId==widget.reviewId)?'yes':'no',
         ));
   }
 
