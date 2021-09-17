@@ -425,3 +425,14 @@ Future<List<NotificationStruct>> fetchNotification() async {
     throw Exception("API Error");
   }
 }
+
+Future setMarkedOfNotification(String nId)async{
+  String url = KBaseUrl+"api/user/notification/edit?id="+nId;
+  String t = await UserState().getToken();
+  http.Response response = await http.get(
+    Uri.parse(url),
+    headers: {'Authorization': t},
+  );
+  print(response.body);
+  return response.body;
+}

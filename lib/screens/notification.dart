@@ -33,6 +33,7 @@ class _NotificationListState extends State<NotificationList> {
   late ReviewStruct reviewStruct;
   late ReviewStruct reviewCards ;
   late ChatListStruct chatListStruct;
+  bool click = false;
 
   List<NotificationStruct> notificationList = [];
   List<NotificationStruct> notificationListDisplay = [];
@@ -41,9 +42,7 @@ class _NotificationListState extends State<NotificationList> {
     return Container(
       // margin: EdgeInsets.symmetric(horizontal: 20),
       child: Card(
-        color: !notificationListDisplay[index].markAsRead
-            ? Color(0xC687B3E0)
-        :Color(0xC63D4695),
+        color: ((!notificationListDisplay[index].markAsRead))?KNotClickedColor:KClickedColor,
         child: Padding(
           padding: EdgeInsets.all(5),
           child: Column(
@@ -82,7 +81,10 @@ class _NotificationListState extends State<NotificationList> {
                 ),
                 hoverColor: Colors.white,
                 onTap:(){
-                  selectionNotification(notificationListDisplay[index].type,notificationListDisplay[index].targetId.toString());
+                  setState(() {
+                    click=true;
+                  });
+                  selectionNotification(notificationListDisplay[index].id,notificationListDisplay[index].type,notificationListDisplay[index].targetId.toString());
                 },
               ),
             ],
@@ -129,9 +131,18 @@ class _NotificationListState extends State<NotificationList> {
     print(data.postId.toString());
     await loadPost(data.postId.toString());
   }
+  Future setMarkedAsNotification(int nId)async{
+    var data = setMarkedOfNotification(nId.toString());
+    print(data);
+  }
 
-  selectionNotification(String type,String id) async{
+  selectionNotification(int nId,String type,String id) async{
     String email =await  UserState().getUserName();
+
+    setState(() {
+      click=true;
+    });
+    await setMarkedAsNotification(nId);
 
     if(type=='POST'){
       await loadPost(id);
@@ -170,6 +181,9 @@ class _NotificationListState extends State<NotificationList> {
   @override
   void initState() {
     getNotification();
+    setState(() {
+      click = false;
+    });
     super.initState();
   }
 
