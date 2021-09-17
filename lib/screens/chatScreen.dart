@@ -6,6 +6,7 @@ import 'package:reviewia/components/chatScreen_post.dart';
 import 'package:reviewia/components/groupCard.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
+import 'package:reviewia/services/chatScreenOption.dart';
 import 'package:reviewia/services/fetchChatList.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/services/userState.dart';
@@ -19,7 +20,8 @@ class ChatScreen extends StatefulWidget {
   late ChatListStruct detail;
   late String userName;
   late  PostsView post;
-  ChatScreen({required this.detail,required this.userName, required this.post});
+  late String creator;
+  ChatScreen({required this.detail,required this.userName, required this.post, required this.creator});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -30,10 +32,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   bool _loadingPost = true;
   List<Messages> message= <Messages>[];
-  List<Users> userList= <Users>[];
-  late List list =[];
-  final inputController = TextEditingController();
 
+  final inputController = TextEditingController();
+  late SlectedGroup GroupData;
   Future <void> _loadChat() async {
     String id = widget.detail.id.toString();
     String token = (await UserState().getToken());
@@ -44,18 +45,20 @@ class _ChatScreenState extends State<ChatScreen> {
         headers: <String, String>{
           'Authorization': token,
         }).then((response) {
-      late SlectedGroup selectedgroup;
+
       var data = json.decode(response.body);
+      late SlectedGroup selectedgroup;
       selectedgroup = new SlectedGroup(
           id: data['id'],
           createdAt: data['createdAt'],
           postId: data['postId'],
           active: data['active'],
           messages: data['messages'],
-          users: data['users']);
-      var members = selectedgroup.users.map((e) => Users.fromJson(e)).toList();
+          users: data['users'],
+      );
+
       setState(() {
-        userList = members;
+        GroupData = selectedgroup;
       });
       if (selectedgroup.messages != null) {
         var messageList = selectedgroup.messages.map((e) => Messages.fromJson(e)).toList();
@@ -65,9 +68,6 @@ class _ChatScreenState extends State<ChatScreen> {
         });
         for (var item in message) {
           print('${item.createdBy} - ${item.content}');
-        }
-        for (var item in userList) {
-          print('${item.firstName} - ${item.lastName}');
         }
       }
       else {
@@ -132,9 +132,10 @@ class _ChatScreenState extends State<ChatScreen> {
           PopupMenuButton(
                 icon: Icon(Icons.more_vert,),
                 onSelected: (item) {
-                 // selectedOption(item.toString(),widget.id,context);
+                  selectedOption(item.toString(),GroupData.id.toString(),widget.post,widget.creator,context);
                   print(item);},
-                itemBuilder: (context) => [
+                itemBuilder: widget.userName == widget.detail.createdBy.email?
+                    (context) => [
                   PopupMenuItem(
                     value: 1,
                     child: Text(
@@ -157,13 +158,24 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   PopupMenuItem(
-                    value: widget.userName == widget.detail.createdBy.email? 4:5,
-                    child: widget.userName == widget.detail.createdBy.email?
-                    Text(
+                    value: 4,
+                    child: Text(
                       "Delete chat",
                       style: TextStyle(color: Colors.black),
-                    ):
-                    Text(
+                    ),
+                  ),
+                ]:
+                    (context) => [
+                  PopupMenuItem(
+                    value: 1,
+                    child: Text(
+                      "Group Info",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 5,
+                    child: Text(
                       "Leave Group",
                       style: TextStyle(color: Colors.black),
                     ),
@@ -305,4 +317,6 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ) );
   }
+
+
 }

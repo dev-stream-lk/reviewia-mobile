@@ -45,7 +45,7 @@ class _ReviewersLoadingState extends State<ReviewersLoading> {
   }
 
   createInstantGroupUser(List<String> listOfReviewers) async {
-    String userName = await UserState().getUserName();
+
     print(listOfReviewers);
     var d = await createInstantGroup(widget.postId, listOfReviewers);
     // Navigator.pop(context);
