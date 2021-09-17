@@ -11,12 +11,13 @@ class ReviewCards extends StatefulWidget {
   late String detail;
   late double rate;
   late ReviewStruct reviewCardAllDetails;
+  late String isColored;
   ReviewCards(
       {required this.reviewId,
       required this.reviewedBy,
       required this.detail,
       required this.rate,
-      required this.reviewCardAllDetails});
+      required this.reviewCardAllDetails,required this.isColored});
 
   @override
   _ReviewCardsState createState() => _ReviewCardsState();
@@ -65,7 +66,14 @@ class _ReviewCardsState extends State<ReviewCards> {
       height: MediaQuery.of(context).size.height * 0.275,
       margin: EdgeInsets.only(bottom: 10, top: 10),
       // padding:EdgeInsets.only(bottom: 10, top: 10, left: 10, right: 10),
-      decoration: KBoxDeco,
+      decoration: BoxDecoration(
+        // color: Colors.cyan,
+        color: widget.isColored=='yes'?KSelectedFeedback:Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+        boxShadow: [
+          KBoxShadow
+        ],
+      ),
       child: Column(
         children: [
           Expanded(

@@ -22,7 +22,7 @@ class _MyPostCompState extends State<MyPostComp> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProductView(todos: widget.detail),
+            builder: (context) => ProductView(todos: widget.detail,reviewId:0),
           ),
         );
         // Navigator.pushNamed(context, ProductView.id);

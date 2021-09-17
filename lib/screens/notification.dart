@@ -99,7 +99,7 @@ class _NotificationListState extends State<NotificationList> {
   }
 
   Future loadPost(String id)async{
-    print(id);
+    print("post id: "+id);
     var data = await fetchPostViewByIdInNotification(id);
     print(data);
     setState(() {
@@ -108,6 +108,7 @@ class _NotificationListState extends State<NotificationList> {
   }
 
   Future loadReview(String id)async{
+    print("Review id: "+id);
     var data = await fetchReviewOfNotification(id);
     print(data.postId.toString());
     await loadPost(data.postId.toString());
@@ -121,16 +122,17 @@ class _NotificationListState extends State<NotificationList> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ProductView(todos:detail),
+          builder: (context) => ProductView(todos:detail,reviewId:0),
         ),
       );
     }else if(type=='REVIEW'){
+      var rID =id;
       await loadReview(id);
       print('Still not configure');
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ProductView(todos:detail),
+          builder: (context) => ProductView(todos:detail,reviewId:int.parse(rID)),
         ),
       );
     }
