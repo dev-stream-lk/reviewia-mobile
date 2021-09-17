@@ -39,10 +39,11 @@ class _GroupCardState extends State<GroupCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        String creator = widget.detail.createdBy.firstName+" "+widget.detail.createdBy.lastName;
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen(detail: widget.detail,userName:widget.email,post:post),
+            builder: (context) => ChatScreen(detail: widget.detail,userName:widget.email,post:post,creator:creator),
           ),
         );
       },

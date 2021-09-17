@@ -7,43 +7,59 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:reviewia/components/loading.dart';
-import 'package:reviewia/components/review_cards.dart';
-import 'package:reviewia/components/reviewers_loading.dart';
-import 'package:reviewia/components/select_reviewer_card.dart';
+import 'package:reviewia/components/reviewers_loading_chat.dart';
+import 'package:reviewia/components/reviews.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
-import 'package:reviewia/screens/favourite_list.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/favouriteListStruct.dart';
 import 'package:reviewia/structures/reviewStruct.dart';
+import 'package:reviewia/structures/selectedGroup.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:reviewia/structures/postView.dart';
 
 import 'network.dart';
 
-selectedOption(String val, int id, context) {
+selectedOption(String val, String id,PostsView post, String creator,context) async {
   print("The Selected Value is :" + val);
+  String token = (await UserState().getToken());
+  String url = KBaseUrl + "api/user/group/"+id;
+  late SlectedGroup selectedgroup;
+  await http.get(
+      Uri.parse(url),
+      headers: <String, String>{
+      'Authorization': token,
+      }).then((response) {
+    var data = json.decode(response.body);
+
+    selectedgroup = new SlectedGroup(
+      id: data['id'],
+      createdAt: data['createdAt'],
+      postId: data['postId'],
+      active: data['active'],
+      messages: data['messages'],
+      users: data['users'],
+    );
+  });
+
   switch (val) {
-    case '2':
-      addToFavList(id.toString(), context);
+    case '1':
+      showDetails(selectedgroup,post,creator, context);
       break;
-    case '3':
-      removeFromFavList(id.toString(), context);
-      print("case--3");
+    case '2':
+      AddMembers(selectedgroup,post,context);
       break;
     case '4':
-      createInstantGroup(id.toString(), context);
+      //createInstantGroup(id.toString(), context);
       print("case--4");
       break;
   }
 }
 
-createInstantGroup(String id, BuildContext context) {
-  List<String> locations = [
-    "1",
-    "2",
-  ];
+showDetails(SlectedGroup selectedgroup,PostsView post, String creator,BuildContext context) {
+  var members = selectedgroup.users.map((e) => Users.fromJson(e)).toList();
+  List<Users> userList= members;
+  
   return showDialog(
     context: context,
     builder: (context) {
@@ -52,17 +68,126 @@ createInstantGroup(String id, BuildContext context) {
         elevation: 100, //16
         child: Container(
           height: MediaQuery.of(context).size.height * (320 / 765),
+          padding: EdgeInsets.all(20),
           child: Column(
             children: [
-              Container(
-                height: MediaQuery.of(context).size.height * (50 / 765),
-                margin: EdgeInsets.only(bottom: 10, top: 10),
-                child: Text(
-                  "Add Reviewers to group \n",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text(
+                      "Group Info",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Kcolor,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              ReviewersLoading(postId: id),
+             SizedBox(
+               height: 10,
+             ),
+
+             Row(
+               children: [
+                 Text("Title: ",
+                   style: TextStyle(
+                     fontSize: 20,
+                     fontWeight: FontWeight.bold
+                   ),
+                 ),
+                 Text(post.title,
+                   style: TextStyle(
+                       fontSize: 20,
+                       //fontWeight: FontWeight.bold
+                   ),
+                 )
+               ],
+             ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Text("Created by: ",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  Text(creator,
+                    style: TextStyle(
+                      fontSize: 20,
+                      //fontWeight: FontWeight.bold
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Text("Message Count: ",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  Text(selectedgroup.messages.length.toString(),
+                    style: TextStyle(
+                      fontSize: 20,
+                      //fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: members.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index){
+                      return Container(
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: CircleAvatar(
+                                    backgroundColor: Color(0xFFC494C4),
+                                    backgroundImage: AssetImage(userList[index].avatar),
+                                    radius:
+                                    MediaQuery.of(context).size.width * 22.58 / 360,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 4,
+                                  child: Text(
+                                      userList[index].firstName+ " " + userList[index].lastName,
+                                    style: TextStyle(
+                                      fontSize: 20
+                                    ),
+                                  ),
+                                ),
+
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    ),
+                
+              )
             ],
           ),
         ),
@@ -71,148 +196,64 @@ createInstantGroup(String id, BuildContext context) {
   );
 }
 
-Future addToFavList(String id, BuildContext context) async {
-  String userName = await UserState().getUserName();
-  String token = await UserState().getToken();
+Future AddMembers(SlectedGroup selectedgroup,PostsView post,BuildContext context) async{
+  print('reviewes'+ post.postId.toString());
 
-  String url =
-      KBaseUrl + "api/user/post/favourite?email=" + userName + "&id=" + id;
-  http.Response response = await post(
-    Uri.parse(url),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': token
+  var members = selectedgroup.users.map((e) => Users.fromJson(e)).toList();
+  //var reviews = fetchReviewStruct(post.postId.toString());
+
+  //get reviewers details...
+  // await fetchReviewStruct(post.postId.toString()).then((value) {
+  //     _reviewCards.addAll(value);
+  // });
+  //make unique set...
+
+
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 100, //16
+        child: Container(
+          height: MediaQuery.of(context).size.height * (320 / 765),
+          padding: EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text(
+                      "Available reviewers",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Kcolor,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              ReviewersLoadingChat(postId:post.postId.toString(), members:members, groupId:selectedgroup.id.toString()),
+            ],
+          ),
+        ),
+      );
     },
   );
-  print(response.statusCode);
-  if (response.statusCode == 200) {
-    Alert(
-      context: context,
-      type: AlertType.success,
-      title: "Favorite list",
-      desc: "Added the post to fav list",
-      buttons: [
-        DialogButton(
-          color: Kcolor,
-          child: Text(
-            "Okay",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () => Navigator.pop(context),
-          width: MediaQuery.of(context).size.width * 100 / 360,
-        )
-      ],
-    ).show();
-  } else if (response.statusCode == 409) {
-    Alert(
-      context: context,
-      type: AlertType.warning,
-      title: "Favorite list",
-      desc: "Already added to fav list",
-      buttons: [
-        DialogButton(
-          color: Kcolor,
-          child: Text(
-            "Okay",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () => Navigator.pop(context),
-          width: MediaQuery.of(context).size.width * 100 / 360,
-        )
-      ],
-    ).show();
-  } else {
-    Alert(
-      context: context,
-      type: AlertType.error,
-      title: "Favorite list",
-      desc: "Internal ERROR",
-      buttons: [
-        DialogButton(
-          color: Kcolor,
-          child: Text(
-            "Okay",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () => Navigator.pop(context),
-          width: MediaQuery.of(context).size.width * 100 / 360,
-        )
-      ],
-    ).show();
-  }
+
 }
 
-Future removeFromFavList(String id, BuildContext context) async {
+Future removeFromGroup(String id, BuildContext context) async {
   String userName = await UserState().getUserName();
   String token = await UserState().getToken();
 
-  String url =
-      KBaseUrl + "api/user/post/favourite?email=" + userName + "&id=" + id;
-  http.Response response = await http.delete(
-    Uri.parse(url),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': token
-    },
-  );
-  print(response.statusCode);
-  if (response.statusCode == 200) {
-    Alert(
-      context: context,
-      type: AlertType.success,
-      title: "Favorite list",
-      desc: "Successfully removed from favourite list",
-      buttons: [
-        DialogButton(
-          color: Kcolor,
-          child: Text(
-            "Okay",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          width: MediaQuery.of(context).size.width * 100 / 360,
-        )
-      ],
-    ).show();
-  } else if (response.statusCode == 409) {
-    Alert(
-      context: context,
-      type: AlertType.warning,
-      title: "Favorite list",
-      desc: "Already added to fav list",
-      buttons: [
-        DialogButton(
-          color: Kcolor,
-          child: Text(
-            "Okay",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () => Navigator.pop(context),
-          width: MediaQuery.of(context).size.width * 100 / 360,
-        )
-      ],
-    ).show();
-  } else {
-    Alert(
-      context: context,
-      type: AlertType.error,
-      title: "Favorite list",
-      desc: "Internal ERROR",
-      buttons: [
-        DialogButton(
-          color: Kcolor,
-          child: Text(
-            "Okay",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () => Navigator.pop(context),
-          width: MediaQuery.of(context).size.width * 100 / 360,
-        )
-      ],
-    ).show();
-  }
+
+
 }
 
 Future<FavouriteListStruct> fetchFavPostView() async {

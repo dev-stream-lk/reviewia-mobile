@@ -16,7 +16,7 @@ class SlectedGroup {
         required this.postId,
         required this.messages,
         required this.active,
-        required this.users
+        required this.users,
       });
 
   SlectedGroup.fromJson(Map<String, dynamic> json) {
@@ -82,18 +82,22 @@ class Users {
   late String firstName;
   late String lastName;
   late String email;
+  late String avatar;
 
   Users(
       {required this.id,
         required this.firstName,
         required this.lastName,
-        required this.email});
+        required this.email,
+        required this.avatar
+      });
 
   Users.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     firstName = json['firstName'];
     lastName = json['lastName'];
     email = json['email'];
+    avatar = json['avatar'];
   }
 
   Map<String, dynamic> toJson() {
@@ -102,6 +106,7 @@ class Users {
     data['firstName'] = this.firstName;
     data['lastName'] = this.lastName;
     data['email'] = this.email;
+    data['avatar'] = this.avatar;
     return data;
   }
 }
