@@ -3,14 +3,20 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:reviewia/components/review_cards.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
+import 'package:reviewia/screens/notification.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/allCategory.dart';
 import 'package:reviewia/structures/categoryView.dart';
 import 'package:reviewia/structures/loadPost.dart';
+import 'package:reviewia/structures/notificationStruct.dart';
 import 'package:reviewia/structures/post.dart';
 import 'package:reviewia/structures/postView.dart';
 import 'package:reviewia/structures/reviewStruct.dart';
 import 'package:reviewia/structures/selectedCatergory.dart';
+
+
+
+//posts
 
 List<Post> parsePost(String responseBody) {
   var list = json.decode(responseBody) as List<dynamic>;
@@ -293,4 +299,42 @@ Future createInstantGroup(String postId,List<String>reviewersList)async{
     return "Already Group is crated";
   }
 
+}
+
+
+
+//get Notifications
+
+Future getNumberOfNotification(String userName)async{
+
+  String url = KBaseUrl+"api/user/notification/count?email="+userName;
+  String t = await UserState().getToken();
+  http.Response response = await http.get(
+    Uri.parse(url),
+    headers: {'Authorization': t},
+  );
+  print(response.body);
+  return response.body;
+}
+
+
+List<NotificationStruct> parseNotifications(String responseBody) {
+  var list = json.decode(responseBody) as List<dynamic>;
+  var notifications = list.map((e) => NotificationStruct.fromJson(e)).toList();
+  return  notifications;
+}
+
+Future<List<NotificationStruct>> fetchNotification() async {
+  String url = KBaseUrl+"api/user/notification?email=d@gmail.com";
+  String t = await UserState().getToken();
+  http.Response response = await http.get(
+    Uri.parse(url),
+    headers: {'Authorization': t},
+  );
+  print(response);
+  if (response.statusCode == 200) {
+    return compute(parseNotifications, response.body);
+  } else {
+    throw Exception("API Error");
+  }
 }

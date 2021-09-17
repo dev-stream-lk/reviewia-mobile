@@ -12,6 +12,7 @@ import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/home_page_top_products.dart';
 import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/register_page.dart';
+import 'package:reviewia/services/network.dart';
 import 'package:reviewia/services/optionServices.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:badges/badges.dart';

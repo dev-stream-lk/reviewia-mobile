@@ -257,14 +257,4 @@ Future setReaction(int id, bool reaction,bool remove) async {
   return response.statusCode;
 }
 
-Future getNumberOfNotification(String userName)async{
 
-  String url = KBaseUrl+"api/user/notification/count?email="+userName;
-  String t = await UserState().getToken();
-  http.Response response = await http.get(
-    Uri.parse(url),
-    headers: {'Authorization': t},
-  );
-  print(response.body);
-  return response.body;
-}
