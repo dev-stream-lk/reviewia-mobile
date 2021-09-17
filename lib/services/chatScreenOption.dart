@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:reviewia/components/removeFromChat.dart';
 import 'package:reviewia/components/reviewers_loading_chat.dart';
 import 'package:reviewia/components/reviews.dart';
 import 'package:reviewia/constrains/constrains.dart';
@@ -48,6 +49,9 @@ selectedOption(String val, String id,PostsView post, String creator,context) asy
       break;
     case '2':
       AddMembers(selectedgroup,post,context);
+      break;
+    case '3':
+      removeFromGroup(selectedgroup,context);
       break;
     case '4':
       //createInstantGroup(id.toString(), context);
@@ -200,14 +204,6 @@ Future AddMembers(SlectedGroup selectedgroup,PostsView post,BuildContext context
   print('reviewes'+ post.postId.toString());
 
   var members = selectedgroup.users.map((e) => Users.fromJson(e)).toList();
-  //var reviews = fetchReviewStruct(post.postId.toString());
-
-  //get reviewers details...
-  // await fetchReviewStruct(post.postId.toString()).then((value) {
-  //     _reviewCards.addAll(value);
-  // });
-  //make unique set...
-
 
   return showDialog(
     context: context,
@@ -248,9 +244,44 @@ Future AddMembers(SlectedGroup selectedgroup,PostsView post,BuildContext context
 
 }
 
-Future removeFromGroup(String id, BuildContext context) async {
-  String userName = await UserState().getUserName();
-  String token = await UserState().getToken();
+Future removeFromGroup(SlectedGroup selectedgroup, BuildContext context) async {
+
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 100, //16
+        child: Container(
+          height: MediaQuery.of(context).size.height * (320 / 765),
+          padding: EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text(
+                      "Remove Members",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Kcolor,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              RemoveFromChat(groupData: selectedgroup),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 
 
 

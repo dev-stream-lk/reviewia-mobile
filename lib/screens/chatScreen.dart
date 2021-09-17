@@ -134,7 +134,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 onSelected: (item) {
                   selectedOption(item.toString(),GroupData.id.toString(),widget.post,widget.creator,context);
                   print(item);},
-                itemBuilder: (context) => [
+                itemBuilder: widget.userName == widget.detail.createdBy.email?
+                    (context) => [
                   PopupMenuItem(
                     value: 1,
                     child: Text(
@@ -157,13 +158,24 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   PopupMenuItem(
-                    value: widget.userName == widget.detail.createdBy.email? 4:5,
-                    child: widget.userName == widget.detail.createdBy.email?
-                    Text(
+                    value: 4,
+                    child: Text(
                       "Delete chat",
                       style: TextStyle(color: Colors.black),
-                    ):
-                    Text(
+                    ),
+                  ),
+                ]:
+                    (context) => [
+                  PopupMenuItem(
+                    value: 1,
+                    child: Text(
+                      "Group Info",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 5,
+                    child: Text(
                       "Leave Group",
                       style: TextStyle(color: Colors.black),
                     ),
