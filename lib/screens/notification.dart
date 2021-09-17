@@ -165,10 +165,11 @@ class _NotificationListState extends State<NotificationList> {
     }else if(type=='GROUP'){
       var gID = id ;
       await loadGroup(id);
+      String creator = chatListStruct.createdBy.firstName+" "+chatListStruct.createdBy.lastName;
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ChatScreen(detail:chatListStruct,userName:email,post:detail),
+          builder: (context) => ChatScreen(detail:chatListStruct,userName:email,post:detail, creator:creator,),
         ),
       );
     }
