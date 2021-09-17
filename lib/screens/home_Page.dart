@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/screens/chatList.dart';
 import 'package:reviewia/screens/contactUs.dart';
 import 'package:reviewia/screens/login_page.dart';
+import 'package:reviewia/screens/notification.dart';
 import 'package:reviewia/screens/search_page.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/home_page_top_products.dart';
@@ -269,7 +270,7 @@ class _NotificationBellState extends State<NotificationBell> {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        Navigator.pushNamed(context, SearchPage.id);
+        Navigator.pushNamed(context, NotificationList.id);
       },
       icon: Badge(
         shape: BadgeShape.circle,
