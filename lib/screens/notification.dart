@@ -8,6 +8,7 @@ import 'package:reviewia/structures/postView.dart';
 
 import 'package:reviewia/structures/notificationStruct.dart';
 import 'package:reviewia/structures/notificationStruct.dart';
+import 'package:reviewia/structures/reviewStruct.dart';
 
 class NotificationList extends StatefulWidget {
   static String id = 'notification_list';
@@ -24,6 +25,8 @@ class _NotificationListState extends State<NotificationList> {
   // List<PostsView> _postView = <PostsView>[];
   bool isLoading = true;
   late PostsView detail;
+  late ReviewStruct reviewStruct;
+  late ReviewStruct reviewCards ;
 
   List<NotificationStruct> notificationList = [];
   List<NotificationStruct> notificationListDisplay = [];
@@ -105,7 +108,9 @@ class _NotificationListState extends State<NotificationList> {
   }
 
   Future loadReview(String id)async{
-
+    var data = await fetchReviewOfNotification(id);
+    print(data.postId.toString());
+    await loadPost(data.postId.toString());
   }
 
 
@@ -120,8 +125,14 @@ class _NotificationListState extends State<NotificationList> {
         ),
       );
     }else if(type=='REVIEW'){
-      // await loadReview(id);
+      await loadReview(id);
       print('Still not configure');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProductView(todos:detail),
+        ),
+      );
     }
 
 
