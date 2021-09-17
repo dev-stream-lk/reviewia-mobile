@@ -3,12 +3,17 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/product_view.dart';
 import 'package:reviewia/services/network.dart';
+import 'package:reviewia/services/userState.dart';
+import 'package:reviewia/structures/chatListStruct.dart';
 import 'package:reviewia/structures/notificationStruct.dart';
 import 'package:reviewia/structures/postView.dart';
 
 import 'package:reviewia/structures/notificationStruct.dart';
 import 'package:reviewia/structures/notificationStruct.dart';
 import 'package:reviewia/structures/reviewStruct.dart';
+import 'package:reviewia/structures/selectedGroup.dart';
+
+import 'chatScreen.dart';
 
 class NotificationList extends StatefulWidget {
   static String id = 'notification_list';
@@ -27,6 +32,7 @@ class _NotificationListState extends State<NotificationList> {
   late PostsView detail;
   late ReviewStruct reviewStruct;
   late ReviewStruct reviewCards ;
+  late ChatListStruct chatListStruct;
 
   List<NotificationStruct> notificationList = [];
   List<NotificationStruct> notificationListDisplay = [];
@@ -36,8 +42,8 @@ class _NotificationListState extends State<NotificationList> {
       // margin: EdgeInsets.symmetric(horizontal: 20),
       child: Card(
         color: !notificationListDisplay[index].markAsRead
-            ? Color(0xFF273C6C)
-            : Colors.blueGrey.shade300,
+            ? Color(0xC687B3E0)
+        :Color(0xC63D4695),
         child: Padding(
           padding: EdgeInsets.all(5),
           child: Column(
@@ -52,7 +58,7 @@ class _NotificationListState extends State<NotificationList> {
                     ? FontAwesomeIcons.solidThumbsDown
                     : notificationListDisplay[index].content ==
                     'A user created a chat group with you'
-                    ? FontAwesomeIcons.comments
+                    ? FontAwesomeIcons.users
                     : notificationListDisplay[index].content ==
                     'You have a new message'
                     ? FontAwesomeIcons.comment
@@ -114,8 +120,18 @@ class _NotificationListState extends State<NotificationList> {
     await loadPost(data.postId.toString());
   }
 
+  Future loadGroup(String id)async{
+    print("Group id: "+id);
+    var data =await getInstantGroupforNotification(id) as ChatListStruct ;
+    setState(() {
+      chatListStruct =data;
+    });
+    print(data.postId.toString());
+    await loadPost(data.postId.toString());
+  }
 
   selectionNotification(String type,String id) async{
+    String email =await  UserState().getUserName();
 
     if(type=='POST'){
       await loadPost(id);
@@ -133,6 +149,15 @@ class _NotificationListState extends State<NotificationList> {
         context,
         MaterialPageRoute(
           builder: (context) => ProductView(todos:detail,reviewId:int.parse(rID)),
+        ),
+      );
+    }else if(type=='GROUP'){
+      var gID = id ;
+      await loadGroup(id);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChatScreen(detail:chatListStruct,userName:email,post:detail),
         ),
       );
     }

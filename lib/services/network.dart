@@ -7,12 +7,14 @@ import 'package:reviewia/screens/notification.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/allCategory.dart';
 import 'package:reviewia/structures/categoryView.dart';
+import 'package:reviewia/structures/chatListStruct.dart';
 import 'package:reviewia/structures/loadPost.dart';
 import 'package:reviewia/structures/notificationStruct.dart';
 import 'package:reviewia/structures/post.dart';
 import 'package:reviewia/structures/postView.dart';
 import 'package:reviewia/structures/reviewStruct.dart';
 import 'package:reviewia/structures/selectedCatergory.dart';
+import 'package:reviewia/structures/selectedGroup.dart';
 
 //posts
 
@@ -306,7 +308,7 @@ Future postReview(String userName, String t, String createdUser, int postId,
 
 Future<ReviewStruct> fetchReviewOfNotification(String id) async {
   String token = await UserState().getToken();
-  String url = KBaseUrl + 'api/user/review/'+id;
+  String url = KBaseUrl + 'api/user/review/' + id;
   http.Response response = await http.get(
     Uri.parse(url),
     headers: {'Authorization': token},
@@ -358,6 +360,34 @@ Future createInstantGroup(String postId, List<String> reviewersList) async {
     return "Instant Group is Created";
   } else if (response.statusCode == 412) {
     return "Already Group is crated";
+  }
+}
+
+Future getInstantGroupforNotification(String id) async {
+  String t = await UserState().getToken();
+  String url = KBaseUrl + 'api/user/group/'+id;
+  ChatListStruct chatListStruct;
+  http.Response response = await http.get(
+    Uri.parse(url),
+    headers: {'Authorization': t},
+  );
+  if (response.statusCode == 200) {
+    // return compute(parsePostViewStep, response.body);
+    // print(response.body);
+
+    var data = jsonDecode(response.body);
+    chatListStruct = new ChatListStruct(
+        id: data['id'],
+        createdAt: data['createdAt'],
+        postId: data['postId'],
+        active: data['active'],
+        createdBy: new CreatedBy.fromJson(data['createdBy']));
+
+
+    print("Chat id is :"+chatListStruct.id.toString());
+    return chatListStruct;
+  } else {
+    throw Exception("API Error");
   }
 }
 
