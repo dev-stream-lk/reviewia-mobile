@@ -5,6 +5,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
+import 'package:reviewia/screens/filterResultsScreen.dart';
 import 'package:reviewia/services/getBrands.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/structures/categoryView.dart';
@@ -38,12 +39,11 @@ class _SearchPageState extends State<SearchPage> {
   List<String> itemListBrand = <String>[];
   SingingCharacter? _character = SingingCharacter.product;
 
-  String type ='p';
+  String type = 'p';
   String categoryName = 'All';
   String subCategoryName = 'All';
   String brandName = 'All';
   double ratingValue = 3.0;
-
 
   String state = 'All';
   bool isLoading = true;
@@ -61,34 +61,31 @@ class _SearchPageState extends State<SearchPage> {
     'Pineapple'
   ];
 
-  resetValues(int type){
+  resetValues(int type) {
     switch (type) {
       case 1:
         setState(() {
-          categoryName='All';
-          subCategoryName="All";
-          brandName='All';
-          ratingValue=3;
+          categoryName = 'All';
+          subCategoryName = "All";
+          brandName = 'All';
+          ratingValue = 3;
         });
         break;
       case 2:
         setState(() {
-          subCategoryName="All";
-          brandName='All';
-          ratingValue=3;
+          subCategoryName = "All";
+          brandName = 'All';
+          ratingValue = 3;
         });
         break;
       case 3:
         setState(() {
-          brandName='All';
-          ratingValue=3;
+          brandName = 'All';
+          ratingValue = 3;
         });
         break;
-
     }
-
   }
-
 
   getTheCategoryOptions(String type) async {
     print(type);
@@ -99,8 +96,8 @@ class _SearchPageState extends State<SearchPage> {
         _catDisplayView = <CategoryView>[];
         _subCate = [];
         itemListSubCategory = [];
-        itemListBrand=[];
-        _brandList=[];
+        itemListBrand = [];
+        _brandList = [];
         resetValues(1);
         _catView.addAll(val);
         print(_catView);
@@ -122,7 +119,7 @@ class _SearchPageState extends State<SearchPage> {
         }
         loading = false;
         isLoadingSubCat = false;
-        isLoadingBrand=false;
+        isLoadingBrand = false;
       });
     });
     return itemList;
@@ -160,8 +157,8 @@ class _SearchPageState extends State<SearchPage> {
         itemListSubCategory = [];
         _subCate = [];
         itemListSubCategory.add("All");
-        itemListBrand=[];
-        _brandList=[];
+        itemListBrand = [];
+        _brandList = [];
         itemListBrand.add("All");
         if (dd.subCategoryList.length != 0) {
           print("category is " + dd.subCategoryList.length.toString());
@@ -178,7 +175,7 @@ class _SearchPageState extends State<SearchPage> {
           _subCate = [];
         }
         isLoadingSubCat = false;
-        isLoadingBrand=false;
+        isLoadingBrand = false;
         // print(_subCate[0].subCategoryName.toString());
       });
     } else if (data == "All") {
@@ -187,11 +184,11 @@ class _SearchPageState extends State<SearchPage> {
           itemListSubCategory = [];
           _subCate = [];
           itemListSubCategory.add("All");
-          itemListBrand=[];
-          _brandList=[];
+          itemListBrand = [];
+          _brandList = [];
           itemListBrand.add("All");
           isLoadingSubCat = false;
-          isLoadingBrand=false;
+          isLoadingBrand = false;
           resetValues(2);
         });
         // Do something
@@ -202,50 +199,68 @@ class _SearchPageState extends State<SearchPage> {
   selectTheSubCategory(String data) async {
     if (data != 'All') {
       setState(() {
-        itemListBrand=[];
+        itemListBrand = [];
         _brandList = [];
         for (int i = 0; i < _catView.length; i++) {
           if (_subCate[i].subCategoryName == data) {
-              subCatId = _subCate[i].subCategoryId;
-              // fetchSelectedCatergory(catId.toString());
+            subCatId = _subCate[i].subCategoryId;
+            // fetchSelectedCatergory(catId.toString());
             break;
           }
         }
         print("sub category id is:" + subCatId.toString());
         getBrandList(subCatId.toString()).then((value) {
-            _brandList.addAll(value);
-            if (_brandList.isNotEmpty) {
-              itemListBrand.add("All");
-              for (int i = 0; i < _brandList.length; i++) {
-                itemListBrand.add(_brandList[i].name);
-              }
-            }else{
-              itemListBrand.add("All");
-              _brandList=[];
+          _brandList.addAll(value);
+          if (_brandList.isNotEmpty) {
+            itemListBrand.add("All");
+            for (int i = 0; i < _brandList.length; i++) {
+              itemListBrand.add(_brandList[i].name);
             }
-            print("BrandList is"+_brandList.toString());
-            print("Item BrandList is"+itemListBrand.toString());
-            setState(() {
-              isLoadingBrand=false;
-
-            });
+          } else {
+            itemListBrand.add("All");
+            _brandList = [];
+          }
+          print("BrandList is" + _brandList.toString());
+          print("Item BrandList is" + itemListBrand.toString());
+          setState(() {
+            isLoadingBrand = false;
+          });
         });
       });
-
-    }else if(data=='All'){
+    } else if (data == 'All') {
       Future.delayed(Duration(milliseconds: 100), () {
         setState(() {
-          itemListBrand=[];
-          _brandList=[];
+          itemListBrand = [];
+          _brandList = [];
           itemListBrand.add("All");
-          isLoadingBrand=false;
+          isLoadingBrand = false;
           resetValues(3);
         });
       });
     }
   }
-  applyFilters(){
-    print("type is:"+type+"\n"+"categoryName is:"+categoryName+"\n"+"brandName is:"+brandName+"\n"+"subCategoryName is:"+subCategoryName+"\n"+"rate is:"+ratingValue.toString());
+
+  applyFilters() {
+    print("type is:" +
+        type +
+        "\n" +
+        "categoryName is:" +
+        categoryName +
+        "\n" +
+        "brandName is:" +
+        brandName +
+        "\n" +
+        "subCategoryName is:" +
+        subCategoryName +
+        "\n" +
+        "rate is:" +
+        ratingValue.toString());
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FilterResultScreen(type: type, category: categoryName, subCategory: subCategoryName, brand: brandName, rating: ratingValue),
+      ),
+    );
   }
 
   @override
@@ -256,20 +271,16 @@ class _SearchPageState extends State<SearchPage> {
     selectTheOption(1);
     setState(() {
       isLoadingSubCat = false;
-      isLoadingBrand=false;
+      isLoadingBrand = false;
       itemList.add('All');
       itemListSubCategory.add("All");
       itemListBrand.add("All");
 
-
-      type ='p';
+      type = 'p';
       categoryName = 'All';
       subCategoryName = 'All';
       brandName = 'All';
       ratingValue = 3.0;
-
-
-
     });
     super.initState();
   }
@@ -355,11 +366,11 @@ class _SearchPageState extends State<SearchPage> {
                           setState(() {
                             loading = true;
                             isLoadingSubCat = true;
-                            isLoadingBrand=true;
+                            isLoadingBrand = true;
 
                             _character = value;
 
-                            type='p';
+                            type = 'p';
                             // var s = selectTheOption(1);
                             //         print(s.toString());
                           });
@@ -378,9 +389,9 @@ class _SearchPageState extends State<SearchPage> {
                           setState(() {
                             loading = true;
                             isLoadingSubCat = true;
-                            isLoadingBrand=true;
+                            isLoadingBrand = true;
                             _character = value;
-                            type='s';
+                            type = 's';
                           });
                           var s = await selectTheOption(0);
                           print(s.toString());
@@ -430,8 +441,8 @@ class _SearchPageState extends State<SearchPage> {
                         onChanged: (data) {
                           setState(() {
                             isLoadingSubCat = true;
-                            isLoadingBrand=true;
-                            categoryName=data!;
+                            isLoadingBrand = true;
+                            categoryName = data!;
                           });
                           selectTheCategory(data!);
                         },
@@ -474,10 +485,10 @@ class _SearchPageState extends State<SearchPage> {
                         hint: "Sub Category List",
                         // popupItemDisabled: (String s) => s.startsWith('I'),
                         // onChanged: (data){chengeTheValues(data!);},
-                        onChanged: (data)async {
+                        onChanged: (data) async {
                           setState(() {
-                            isLoadingBrand=true;
-                            subCategoryName=data!;
+                            isLoadingBrand = true;
+                            subCategoryName = data!;
                           });
                           selectTheSubCategory(data!);
                         },
@@ -503,31 +514,31 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ],
               ),
-              isLoadingBrand?
-              Container(
-                  height: MediaQuery.of(context).size.height * 0.085,
-                child: CupertinoActivityIndicator())
+              isLoadingBrand
+                  ? Container(
+                      height: MediaQuery.of(context).size.height * 0.085,
+                      child: CupertinoActivityIndicator())
                   : Container(
-                margin:
-                    EdgeInsets.all(MediaQuery.of(context).size.width * 0.046),
-                       child: DropdownSearch<String>(
-                    mode: Mode.MENU,
-                    showSelectedItem: true,
-                    items: itemListBrand.isNotEmpty
-                        ? itemListBrand
-                      : ["No Sub Categories"],
-                  label: "Brand List",
-                  hint: "Brand List",
-                  // popupItemDisabled: (String s) => s.startsWith('I'),
-                  // onChanged: (data){chengeTheValues(data!);},
-                  onChanged: (data) {
-                      setState(() {
-                        brandName=data!;
-                      });
-                  },
-                  selectedItem:itemListBrand[0],
-                ),
-              ),
+                      margin: EdgeInsets.all(
+                          MediaQuery.of(context).size.width * 0.046),
+                      child: DropdownSearch<String>(
+                        mode: Mode.MENU,
+                        showSelectedItem: true,
+                        items: itemListBrand.isNotEmpty
+                            ? itemListBrand
+                            : ["No Sub Categories"],
+                        label: "Brand List",
+                        hint: "Brand List",
+                        // popupItemDisabled: (String s) => s.startsWith('I'),
+                        // onChanged: (data){chengeTheValues(data!);},
+                        onChanged: (data) {
+                          setState(() {
+                            brandName = data!;
+                          });
+                        },
+                        selectedItem: itemListBrand[0],
+                      ),
+                    ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -600,7 +611,7 @@ class _SearchPageState extends State<SearchPage> {
                       color: Colors.yellow.shade700,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
-                      onPressed: (){
+                      onPressed: () {
                         applyFilters();
                       },
                       child: Text(
