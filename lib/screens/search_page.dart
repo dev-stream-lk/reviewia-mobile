@@ -61,6 +61,35 @@ class _SearchPageState extends State<SearchPage> {
     'Pineapple'
   ];
 
+  resetValues(int type){
+    switch (type) {
+      case 1:
+        setState(() {
+          categoryName='All';
+          subCategoryName="All";
+          brandName='All';
+          ratingValue=3;
+        });
+        break;
+      case 2:
+        setState(() {
+          subCategoryName="All";
+          brandName='All';
+          ratingValue=3;
+        });
+        break;
+      case 3:
+        setState(() {
+          brandName='All';
+          ratingValue=3;
+        });
+        break;
+
+    }
+
+  }
+
+
   getTheCategoryOptions(String type) async {
     print(type);
     fetchCategoryView().then((val) {
@@ -72,6 +101,7 @@ class _SearchPageState extends State<SearchPage> {
         itemListSubCategory = [];
         itemListBrand=[];
         _brandList=[];
+        resetValues(1);
         _catView.addAll(val);
         print(_catView);
         _catDisplayView = _catView.where((element) {
@@ -162,6 +192,7 @@ class _SearchPageState extends State<SearchPage> {
           itemListBrand.add("All");
           isLoadingSubCat = false;
           isLoadingBrand=false;
+          resetValues(2);
         });
         // Do something
       });
@@ -208,9 +239,13 @@ class _SearchPageState extends State<SearchPage> {
           _brandList=[];
           itemListBrand.add("All");
           isLoadingBrand=false;
+          resetValues(3);
         });
       });
     }
+  }
+  applyFilters(){
+    print("type is:"+type+"\n"+"categoryName is:"+categoryName+"\n"+"brandName is:"+brandName+"\n"+"subCategoryName is:"+subCategoryName+"\n"+"rate is:"+ratingValue.toString());
   }
 
   @override
@@ -308,6 +343,7 @@ class _SearchPageState extends State<SearchPage> {
                     vertical: MediaQuery.of(context).size.height * 0.005),
                 // height: MediaQuery.of(context).size.height*0.095,
                 child: Column(
+                  //-------------------------------Option menu------------------------------------------
                   children: <Widget>[
                     ListTile(
                       title: const Text('Prodcut'),
@@ -322,6 +358,8 @@ class _SearchPageState extends State<SearchPage> {
                             isLoadingBrand=true;
 
                             _character = value;
+
+                            type='p';
                             // var s = selectTheOption(1);
                             //         print(s.toString());
                           });
@@ -342,6 +380,7 @@ class _SearchPageState extends State<SearchPage> {
                             isLoadingSubCat = true;
                             isLoadingBrand=true;
                             _character = value;
+                            type='s';
                           });
                           var s = await selectTheOption(0);
                           print(s.toString());
@@ -392,6 +431,7 @@ class _SearchPageState extends State<SearchPage> {
                           setState(() {
                             isLoadingSubCat = true;
                             isLoadingBrand=true;
+                            categoryName=data!;
                           });
                           selectTheCategory(data!);
                         },
@@ -437,6 +477,7 @@ class _SearchPageState extends State<SearchPage> {
                         onChanged: (data)async {
                           setState(() {
                             isLoadingBrand=true;
+                            subCategoryName=data!;
                           });
                           selectTheSubCategory(data!);
                         },
@@ -479,7 +520,11 @@ class _SearchPageState extends State<SearchPage> {
                   hint: "Brand List",
                   // popupItemDisabled: (String s) => s.startsWith('I'),
                   // onChanged: (data){chengeTheValues(data!);},
-                  onChanged: (data) => {print(data)},
+                  onChanged: (data) {
+                      setState(() {
+                        brandName=data!;
+                      });
+                  },
                   selectedItem:itemListBrand[0],
                 ),
               ),
@@ -508,7 +553,7 @@ class _SearchPageState extends State<SearchPage> {
                 child: Row(
                   children: [
                     RatingBar.builder(
-                      initialRating: rate,
+                      initialRating: ratingValue,
                       minRating: 1,
                       direction: Axis.horizontal,
                       allowHalfRating: true,
@@ -521,14 +566,14 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       onRatingUpdate: (rating) {
                         setState(() {
-                          rate = rating;
+                          ratingValue = rating;
                         });
                       },
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.05,
                     ),
-                    Text(rate.toString()),
+                    Text(ratingValue.toString()),
                   ],
                 ),
               ),
@@ -555,7 +600,9 @@ class _SearchPageState extends State<SearchPage> {
                       color: Colors.yellow.shade700,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
-                      onPressed: () => {print('Hello')},
+                      onPressed: (){
+                        applyFilters();
+                      },
                       child: Text(
                         'Apply Filters',
                         style: TextStyle(color: Colors.white),
