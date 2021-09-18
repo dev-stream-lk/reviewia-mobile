@@ -35,7 +35,6 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
   late int currentPage;
   late int _nOfPost = _postView.length;
 
-
   _searchBar() {
     return Padding(
       padding: EdgeInsets.all(8),
@@ -93,7 +92,7 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
         "\n" +
         "rate is:" +
         widget.rating.toString());
-    var d = await fetchPostViewStep("0", "3");
+    // var d = await fetchPostViewStep("0", "3");
     var dd = await fetchPostFilter(widget.type,widget.category,widget.subCategory,widget.brand,widget.rating,"0","3");
     setState(() {
       _postView = [];
@@ -113,12 +112,37 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
     // });
   }
 
-
+  Future getMoreBuildingData() async {
+    print(currentPage.toString() +
+        ":is current page" +
+        "total pages:" +
+        totalPages.toString());
+    if (currentPage <= totalPages - 1) {
+      var dd = await fetchPostFilter(widget.type,widget.category,widget.subCategory,widget.brand,widget.rating,(currentPage + 1).toString(), "3");
+      // var dd = await fetchPostViewStep((currentPage + 1).toString(), "3");
+      setState(() {
+        var posts = dd.posts.map((e) => PostsView.fromJson(e)).toList();
+        _postView.addAll(posts);
+        _postDisplayView.addAll(posts);
+        _isLoading = false;
+        currentPage++;
+        print(posts);
+      });
+    }
+  }
 
   @override
   void initState() {
     getBuildingData();
     super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        print('Hello');
+        // getMoreData();
+        getMoreBuildingData();
+      }
+    });
   }
 
   @override
@@ -135,7 +159,7 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
               children: [
                 SingleChildScrollView(
                   child: Container(
-                    height: MediaQuery.of(context).size.height,
+                    height: MediaQuery.of(context).size.height*0.85,
                     child: ListView.builder(
                       physics: BouncingScrollPhysics(),
                       scrollDirection: Axis.vertical,
