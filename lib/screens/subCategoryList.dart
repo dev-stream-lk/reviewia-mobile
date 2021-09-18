@@ -171,6 +171,7 @@ class _SubCatergoryListtState extends State<SubCatergoryList> {
         _postView.addAll(val);
         _postViewDisplay = _postView;
       });
+      print(_postViewDisplay.toString());
     }, onError: setFunction());
   }
 

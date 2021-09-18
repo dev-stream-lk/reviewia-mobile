@@ -36,6 +36,9 @@ selectedOption(String val, int id, context) {
       createInstantGroup(id.toString(), context);
       print("case--4");
       break;
+    case '5':
+      deletePost(id.toString(),context);
+      print("case--5");
   }
 }
 
@@ -257,4 +260,79 @@ Future setReaction(int id, bool reaction,bool remove) async {
   return response.statusCode;
 }
 
+deletePost(String id,BuildContext context)async{
+  print("Post ID:"+id);
+  String token = await UserState().getToken();
+  String url = KBaseUrl+"api/user/post?id="+id;
+  // http.Response response = await http.delete(Uri.parse(url));
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Delete the post",
+      desc: "Do you want to delete the Post",
+      buttons: [
+        DialogButton(
+          color: Kcolor,
+          child: Text(
+            "Yes",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: (){
+              deletePostSure(url,context);
+
+
+          },
+          width: MediaQuery.of(context).size.width * 100 / 360,
+        ),
+        DialogButton(
+          color: Kcolor,
+          child: Text(
+            "No",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          width: MediaQuery.of(context).size.width * 100 / 360,
+        )
+      ],
+    ).show();
+
+}
+
+Future deletePostSure(String url,BuildContext context)async {
+  String token = await UserState().getToken();
+  http.Response response = await http.delete(
+    Uri.parse(url),
+    headers: <String,String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': token},
+  );
+  print(response.statusCode);
+  if (response.statusCode == 200) {
+    int count = 0;
+    Alert(
+      context: context,
+      type: AlertType.success,
+      title: "Delete the post",
+      desc: "SuccessFully Deleted the post",
+      buttons: [
+        DialogButton(
+          color: Kcolor,
+          child: Text(
+            "Okey",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.of(context).popUntil((_) => count++ >= 2);
+          },
+          width: MediaQuery
+              .of(context)
+              .size
+              .width * 100 / 360,
+        ),
+      ],
+    ).show();
+  }
+}
 
