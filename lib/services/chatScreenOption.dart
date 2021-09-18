@@ -54,15 +54,29 @@ selectedOption(String val, String id,PostsView post, String creator,context) asy
       removeFromGroup(selectedgroup,context);
       break;
     case '4':
-      //createInstantGroup(id.toString(), context);
+      deactivateChat(selectedgroup.id,token, context);
       print("case--4");
       break;
+    case '5':
+      LeaveGroup(selectedgroup.id,token, context);
+      break;
   }
+}
+int daysBetween(DateTime create, DateTime now) {
+  create = DateTime(create.year, create.month, create.day);
+  now = DateTime(now.year, now.month, now.day);
+  return now.difference(create).inHours;
 }
 
 showDetails(SlectedGroup selectedgroup,PostsView post, String creator,BuildContext context) {
   var members = selectedgroup.users.map((e) => Users.fromJson(e)).toList();
   List<Users> userList= members;
+  DateTime createdDate = DateTime.parse(selectedgroup.createdAt);
+  DateTime now = DateTime.now();
+  int different = 168 -daysBetween(createdDate, now);
+  int hours = different%24;
+  int days = (different/24).round();
+
   
   return showDialog(
     context: context,
@@ -71,7 +85,7 @@ showDetails(SlectedGroup selectedgroup,PostsView post, String creator,BuildConte
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 100, //16
         child: Container(
-          height: MediaQuery.of(context).size.height * (320 / 765),
+          height: MediaQuery.of(context).size.height * (330 / 765),
           padding: EdgeInsets.all(20),
           child: Column(
             children: [
@@ -134,6 +148,29 @@ showDetails(SlectedGroup selectedgroup,PostsView post, String creator,BuildConte
               ),
               Row(
                 children: [
+                  Text("Remaining Time: ",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  hours!=0?Text(days.toString()+" Days and "+ hours.toString()+" hours",
+                    style: TextStyle(
+                      fontSize: 20,
+                      //fontWeight: FontWeight.bold
+                    ),
+                  ):Text(days.toString()+" Days",
+                    style: TextStyle(
+                      fontSize: 20
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
                   Text("Message Count: ",
                     style: TextStyle(
                         fontSize: 20,
@@ -144,6 +181,19 @@ showDetails(SlectedGroup selectedgroup,PostsView post, String creator,BuildConte
                     style: TextStyle(
                       fontSize: 20,
                       //fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Text("Members : ",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
                     ),
                   ),
                 ],
@@ -287,46 +337,135 @@ Future removeFromGroup(SlectedGroup selectedgroup, BuildContext context) async {
 
 }
 
-Future<FavouriteListStruct> fetchFavPostView() async {
-  String userName = await UserState().getUserName();
-  String url = KBaseUrl + "api/user/post/favourite?email=" + userName;
-  String t = await UserState().getToken();
-  http.Response response = await http.get(
-    Uri.parse(url),
-    headers: {'Authorization': t},
-  );
-  if (response.statusCode == 200) {
-    late FavouriteListStruct favouriteListStruct;
-    var decodedUserData = jsonDecode(response.body);
-    favouriteListStruct = new FavouriteListStruct(
-        id: decodedUserData['id'],
-        createdBy: decodedUserData["createdBy"],
-        posts: decodedUserData["posts"]);
-
-    return favouriteListStruct;
-  } else {
-    throw Exception("API Error");
-  }
+buildLoading(BuildContext context) {
+  return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+          ),
+        );
+      });
 }
 
-Future setReaction(int id, bool reaction,bool remove) async {
+
+Future deactivateChat(int id, String token, BuildContext context) async {
   String userName = await UserState().getUserName();
-  print("review id is:" + id.toString());
-  // String url = KBaseUrl +
-  //     "api/public/review/react?id=" +
-  //     id.toString() +
-  //     "&like=" +
-  //     reaction.toString()+"&remove="+false.toString();
-  String url = KBaseUrl +
-      "api/public/review/react?email=" +
-      userName +
-      "&id=" +
-      id.toString() +
-      "&like=" +
-      reaction.toString() +
-      "&remove="+remove.toString();
-  http.Response response = await http.get(Uri.parse(url));
-  return response.statusCode;
+  String url = KBaseUrl + "api/user/group/deactivate?email="+userName;
+  bool _isload = false;
+  return Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "Are You sure to Diactivate the chat?",
+    desc:
+    "Your chat will diactivate but all the messages will not be delete",
+    buttons: [
+      DialogButton(
+        color: Kcolor,
+        child: Text(
+          "Yes",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        onPressed: () async {
+          buildLoading(context);
+          var headers = {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+          };
+          var request = http.Request('GET', Uri.parse(url));
+          request.headers.addAll(headers);
+
+          http.StreamedResponse response = await request.send();
+
+          if (response.statusCode == 200) {
+            int count = 0;
+            Navigator.of(context).popUntil((_) => count++ >= 3);
+          }
+          // Navigator.pop(context);
+          // Navigator.of(context).popUntil(ModalRoute.withName(HomePage.id,));
+          // Navigator.pushNamedAndRemoveUntil(context, HomePage.id, (route) => false,arguments: (userName));
+        },
+        // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
+        width: MediaQuery.of(context).size.width * 100 / 360,
+      ),
+      DialogButton(
+        color: Kcolor,
+        child: Text(
+          "No",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        onPressed: () {
+          int count = 0;
+          Navigator.of(context).popUntil((_) => count++ >= 1);
+          // Navigator.pop(context);
+          // Navigator.of(context).popUntil(ModalRoute.withName(HomePage.id,));
+          // Navigator.pushNamedAndRemoveUntil(context, HomePage.id, (route) => false,arguments: (userName));
+        },
+        // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
+        width: MediaQuery.of(context).size.width * 100 / 360,
+      )
+    ],
+  ).show();
+}
+
+Future LeaveGroup(int id, String token, BuildContext context) async {
+  String userName = await UserState().getUserName();
+  List selectedList = [];
+  selectedList.add(userName);
+  String url = KBaseUrl + 'api/user/group/remove?id='+id.toString();
+
+  Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "Are you sure do you want to leave from group?",
+    buttons: [
+      DialogButton(
+        color: Kcolor,
+        child: Text(
+          "yes",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        onPressed: () async {
+          buildLoading(context);
+          var headers = {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+          };
+          var request = http.Request('POST', Uri.parse(url));
+          request.body = json.encode({
+            "emails": selectedList
+          });
+          request.headers.addAll(headers);
+
+          http.StreamedResponse response = await request.send();
+
+          if (response.statusCode == 201) {
+            print(await response.stream.bytesToString());
+
+          }
+          int count = 0;
+          Navigator.of(context).popUntil((_) => count++ >= 2);
+        },
+        // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
+        width: MediaQuery.of(context).size.width * 100 / 360,
+      ),
+      DialogButton(
+        color: Kcolor,
+        child: Text(
+          "No",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        onPressed: () async {
+          int count = 0;
+          Navigator.of(context).popUntil((_) => count++ >= 1);
+        },
+        // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
+        width: MediaQuery.of(context).size.width * 100 / 360,
+      )
+    ],
+  ).show();
 }
 
 Future getNumberOfNotification(String userName)async{
