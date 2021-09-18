@@ -144,6 +144,100 @@ Future<LoadPost> fetchPostViewStep(String page, String size) async {
   }
 }
 
+Future<LoadPost> fetchPostFilter(
+    String type,
+    String category,
+    String subCategory,
+    String brand,
+    double rating,
+    String page,
+    String size) async {
+  String url;
+  if (category == 'All' && subCategory == "All" && brand == 'All') {
+    url = KBaseUrl +
+        "api/public/posts?search=type:" +
+        type +
+        ",rate>" +
+        rating.toString() +
+        "&page=" +
+        page +
+        "&size=" +
+        size +
+        "&sort=createdAt&order=asc";
+  }else if (subCategory == "All" && brand == 'All' && category != 'All') {
+    url = KBaseUrl +
+        "api/public/posts?search=type:" +
+        type +
+        ",category:" +
+        category +
+        ",rate>" +
+        rating.toString() +
+        "&page=" +
+        page +
+        "&size=" +
+        size +
+        "&sort=createdAt&order=asc";
+  }
+  else if (subCategory != "All" && brand == 'All' && category != 'All') {
+    url = KBaseUrl +
+        "api/public/posts?search=type:" +
+        type +
+        ",category:" +
+        category +
+        ",subCategory:" +
+        subCategory +
+        ",rate>" +
+        rating.toString() +
+        "&page=" +
+        page +
+        "&size=" +
+        size +
+        "&sort=createdAt&order=asc";
+  }else if (subCategory != "All" && brand != 'All' && category != 'All') {
+    url = KBaseUrl +
+        "api/public/posts?search=type:" +
+        type +
+        ",category:" +
+        category +
+        ",subCategory:" +
+        subCategory +
+        ",brand:" +
+        brand +
+        ",rate>" +
+        rating.toString() +
+        "&page=" +
+        page +
+        "&size=" +
+        size +
+        "&sort=createdAt&order=asc";
+  }
+  else {
+    url = KBaseUrl +
+        "api/public/posts?search=category:electronics,type:p,brand:Apple&page=" +
+        page +
+        "&size=" +
+        size +
+        "&sort=updatedAt";
+  }
+
+  final response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    // return compute(parsePostViewStep, response.body);
+    // print(response.body);
+    late LoadPost loadPost;
+    var decodedUserData = jsonDecode(response.body);
+    loadPost = new LoadPost(
+        totalItems: decodedUserData['totalItems'],
+        totalPages: decodedUserData['totalPages'],
+        currentPage: decodedUserData['currentPage'],
+        posts: decodedUserData['posts']);
+
+    return loadPost;
+  } else {
+    throw Exception("API Error");
+  }
+}
+
 Future<LoadPost> fetchPostViewSearch(String title) async {
   String url = KBaseUrl + "api/public/posts??title=" + title;
   final response = await http.get(Uri.parse(url));
@@ -252,9 +346,6 @@ Future getAllCategoryPosts(String catId) async {
   }
 }
 
-
-
-
 Future getAllSubCategoryPosts(String subCategoryId) async {
   String url = KBaseUrl + "api/public/post/category/sub?id=" + subCategoryId;
   final response = await http.get(
@@ -270,8 +361,6 @@ Future getAllSubCategoryPosts(String subCategoryId) async {
   }
 }
 
-
-
 List<GetBrands> parseGetBrandList(String responseBody) {
   var list = json.decode(responseBody) as List<dynamic>;
   print(list.toString());
@@ -280,8 +369,8 @@ List<GetBrands> parseGetBrandList(String responseBody) {
   return brandList;
 }
 
-Future getBrandList(String subCategoryId)async{
-  String url = KBaseUrl + "api/public/subcategory/"+subCategoryId+"/brands";
+Future getBrandList(String subCategoryId) async {
+  String url = KBaseUrl + "api/public/subcategory/" + subCategoryId + "/brands";
   GetBrands getBrands;
   final response = await http.get(
     Uri.parse(url),
@@ -397,7 +486,7 @@ Future createInstantGroup(String postId, List<String> reviewersList) async {
 
 Future getInstantGroupforNotification(String id) async {
   String t = await UserState().getToken();
-  String url = KBaseUrl + 'api/user/group/'+id;
+  String url = KBaseUrl + 'api/user/group/' + id;
   ChatListStruct chatListStruct;
   http.Response response = await http.get(
     Uri.parse(url),
@@ -415,8 +504,7 @@ Future getInstantGroupforNotification(String id) async {
         active: data['active'],
         createdBy: new CreatedBy.fromJson(data['createdBy']));
 
-
-    print("Chat id is :"+chatListStruct.id.toString());
+    print("Chat id is :" + chatListStruct.id.toString());
     return chatListStruct;
   } else {
     throw Exception("API Error");
@@ -458,8 +546,8 @@ Future<List<NotificationStruct>> fetchNotification() async {
   }
 }
 
-Future setMarkedOfNotification(String nId)async{
-  String url = KBaseUrl+"api/user/notification/edit?id="+nId;
+Future setMarkedOfNotification(String nId) async {
+  String url = KBaseUrl + "api/user/notification/edit?id=" + nId;
   String t = await UserState().getToken();
   http.Response response = await http.get(
     Uri.parse(url),
