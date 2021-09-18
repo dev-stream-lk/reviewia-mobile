@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:reviewia/components/product_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/services/network.dart';
+import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/postView.dart';
-
 
 class FilterResultScreen extends StatefulWidget {
   late String type;
@@ -34,7 +34,7 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
   late int totalPages;
   late int currentPage;
   late int _nOfPost = _postView.length;
-
+  late String userName;
   _searchBar() {
     return Padding(
       padding: EdgeInsets.all(8),
@@ -59,6 +59,7 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
       ),
     );
   }
+
   _listItemViewProductCards(index) {
     // Brand brand = new Brand(id: _postDisplayView[index].brand.id, name: _postDisplayView[index].brand.name);
     // index = _postDisplayView.length - index - 1;
@@ -68,13 +69,14 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
 
     return Container(
         child: ProductCard(
-          title: _postDisplayView[index].title,
-          detail: _postDisplayView[index],
-          photoUrl1: _postDisplayView[index].imgURL.isNotEmpty
-              ? _postDisplayView[index].imgURL[0].url.toString()
-              : "https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
-          id: _postDisplayView[index].postId,
-        ));
+      title: _postDisplayView[index].title,
+      detail: _postDisplayView[index],
+      photoUrl1: _postDisplayView[index].imgURL.isNotEmpty
+          ? _postDisplayView[index].imgURL[0].url.toString()
+          : "https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
+      id: _postDisplayView[index].postId,
+      userName: userName,
+    ));
   }
 
   Future getBuildingData() async {
@@ -93,7 +95,8 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
         "rate is:" +
         widget.rating.toString());
     // var d = await fetchPostViewStep("0", "3");
-    var dd = await fetchPostFilter(widget.type,widget.category,widget.subCategory,widget.brand,widget.rating,"0","3");
+    var dd = await fetchPostFilter(widget.type, widget.category,
+        widget.subCategory, widget.brand, widget.rating, "0", "3");
     setState(() {
       _postView = [];
       _postDisplayView = [];
@@ -118,7 +121,14 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
         "total pages:" +
         totalPages.toString());
     if (currentPage <= totalPages - 1) {
-      var dd = await fetchPostFilter(widget.type,widget.category,widget.subCategory,widget.brand,widget.rating,(currentPage + 1).toString(), "3");
+      var dd = await fetchPostFilter(
+          widget.type,
+          widget.category,
+          widget.subCategory,
+          widget.brand,
+          widget.rating,
+          (currentPage + 1).toString(),
+          "3");
       // var dd = await fetchPostViewStep((currentPage + 1).toString(), "3");
       setState(() {
         var posts = dd.posts.map((e) => PostsView.fromJson(e)).toList();
@@ -131,8 +141,16 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
     }
   }
 
+  Future getUserDate() async {
+    var dd = await UserState().getUserName();
+    setState(() {
+      userName = dd;
+    });
+  }
+
   @override
   void initState() {
+    getUserDate();
     getBuildingData();
     super.initState();
     _scrollController.addListener(() {
@@ -159,7 +177,7 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
               children: [
                 SingleChildScrollView(
                   child: Container(
-                    height: MediaQuery.of(context).size.height*0.85,
+                    height: MediaQuery.of(context).size.height * 0.85,
                     child: ListView.builder(
                       physics: BouncingScrollPhysics(),
                       scrollDirection: Axis.vertical,
@@ -186,6 +204,4 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
           ),
         ));
   }
-
-
 }

@@ -5,20 +5,20 @@ import 'package:reviewia/components/product_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/subCategoryList.dart';
 import 'package:reviewia/services/network.dart';
+import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/categoryView.dart';
 import 'package:reviewia/structures/post.dart';
 import 'package:reviewia/structures/postView.dart';
+
 class ServiceList extends StatefulWidget {
   static String id = 'service_list';
   const ServiceList({Key? key}) : super(key: key);
-
 
   @override
   _ServiceListState createState() => _ServiceListState();
 }
 
 class _ServiceListState extends State<ServiceList> {
-
   List<Post> _post = <Post>[];
   List<Post> _postDisplay = <Post>[];
 
@@ -28,6 +28,7 @@ class _ServiceListState extends State<ServiceList> {
   List<CategoryView> _catView = <CategoryView>[];
   List<CategoryView> _catDisplayView = <CategoryView>[];
 
+  late String userName;
   bool _isLoading = true;
 
   bool _isLoadingCat = true;
@@ -95,6 +96,7 @@ class _ServiceListState extends State<ServiceList> {
           photoUrl1: _postDisplayView[index].imgURL.isNotEmpty
               ? _postDisplayView[index].imgURL[0].url.toString()
               : "https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
+          userName: userName,
         ));
   }
 
@@ -140,6 +142,13 @@ class _ServiceListState extends State<ServiceList> {
     );
   }
 
+  Future getUserDate() async {
+    var dd = await UserState().getUserName();
+    setState(() {
+      userName = dd;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -150,6 +159,7 @@ class _ServiceListState extends State<ServiceList> {
     //    _postDisplay = _post;
     //  });
     // });
+    getUserDate();
     fetchCategoryView().then((val) {
       setState(() {
         _isLoadingCat = false;
@@ -189,16 +199,16 @@ class _ServiceListState extends State<ServiceList> {
             flex: 2,
             child: (!_isLoadingCat)
                 ? ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: _catDisplayView.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _listCategoryView(index);
-              },
-            )
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _catDisplayView.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _listCategoryView(index);
+                    },
+                  )
                 : Center(
-              child: CircularProgressIndicator(),
-            ),
+                    child: CircularProgressIndicator(),
+                  ),
           ),
           Expanded(
             flex: 12,
@@ -223,7 +233,6 @@ class _ServiceListState extends State<ServiceList> {
       ),
     );
   }
-
 }
 
 class topBarButon extends StatefulWidget {
@@ -245,10 +254,9 @@ class _topBarButonState extends State<topBarButon> {
       k = FontAwesomeIcons.mobile;
     } else if (l.toLowerCase() == "education") {
       k = FontAwesomeIcons.book;
-    }
-    else if (l.toLowerCase() == "bank") {
+    } else if (l.toLowerCase() == "bank") {
       k = FontAwesomeIcons.university;
-    }else {
+    } else {
       k = FontAwesomeIcons.circle;
     }
   }
@@ -273,26 +281,26 @@ class _topBarButonState extends State<topBarButon> {
         );
       },
       child: Container(
-        // decoration: BoxDecoration(
-        //     borderRadius: BorderRadius.all(
-        //         Radius.circular(30),
-        //     )
-        // ),
+          // decoration: BoxDecoration(
+          //     borderRadius: BorderRadius.all(
+          //         Radius.circular(30),
+          //     )
+          // ),
           child: Column(
-            children: [
-              Expanded(
-                  flex: 3,
-                  child: Container(
-                      child: Icon(
-                        k,
-                        color: Kcolor,
-                      ))),
-              Expanded(
-                flex: 2,
-                child: Container(child: Text(widget.t)),
-              )
-            ],
-          )),
+        children: [
+          Expanded(
+              flex: 3,
+              child: Container(
+                  child: Icon(
+                k,
+                color: Kcolor,
+              ))),
+          Expanded(
+            flex: 2,
+            child: Container(child: Text(widget.t)),
+          )
+        ],
+      )),
     );
   }
 }

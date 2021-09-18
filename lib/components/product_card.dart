@@ -21,7 +21,8 @@ class ProductCard extends StatefulWidget {
   final String title;
   late PostsView detail;
   late String photoUrl1;
-  ProductCard({required this.id,required this.title, required this.detail,required this.photoUrl1});
+  late String userName;
+  ProductCard({required this.id,required this.title, required this.detail,required this.photoUrl1,required this.userName});
 
 
 
@@ -30,6 +31,11 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
+  late DateTime createTime = DateTime.parse(widget.detail.createdAt).add(new Duration(hours: 5,minutes: 30)) ;
+  late var ct = DateTime.utc(createTime.year,createTime.month,createTime.hour,createTime.minute,createTime.second);
+  late DateTime timeNow = DateTime.now();
+  late var tn = DateTime(timeNow.year,timeNow.month,timeNow.hour,timeNow.minute,timeNow.second);
+  late Duration differenceTime = tn.difference(ct);
   final List<String> imgList = [
     'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGhvbmV8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80',
     'https://cdn.vox-cdn.com/thumbor/0vkUlE9CGelZsRZlY1XZZGqsZVQ=/1400x0/filters:no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/22015272/cgartenberg_201105_4276_004.0.jpg',
@@ -128,21 +134,14 @@ class _ProductCardState extends State<ProductCard> {
                               children: [
                                 Text(widget.detail.createdBy, style: KPostCard),
                                 Text("Created Date: " +
-                                    widget.detail.createdAt.substring(0, 10),style:  TextStyle(
+                                    createTime.toString().substring(0,11),style:  TextStyle(
                                   fontWeight: FontWeight.w100,
                                   color: KDetailColor.withOpacity(KOpacityOnDetail),
                                 ),),
-                                Text(int.parse(widget.detail.createdAt
-                                    .substring(11, 13)) >
-                                    12
-                                    ?
-                                widget.detail.createdAt.substring(11, 16) +
-                                    "pm"
-                                    :
-                                widget.detail.createdAt.substring(11, 16)+"am",style:  TextStyle(
+                                Text(createTime.toString().substring(11,16),style:  TextStyle(
                                   fontWeight: FontWeight.w100,
                                   color: KDetailColor.withOpacity(KOpacityOnDetail),
-                                ),)
+                                ),),
 
                               ],
                             ),
@@ -176,6 +175,13 @@ class _ProductCardState extends State<ProductCard> {
                                   style: TextStyle(color: Colors.black),
                                 ),
                               ),
+                              PopupMenuItem(
+                                value: 5,
+                                child: Text(
+                                  widget.userName,
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              )
                             ],
                           ))
                     ],
