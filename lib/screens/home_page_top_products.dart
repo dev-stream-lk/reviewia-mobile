@@ -12,6 +12,7 @@ import 'package:reviewia/screens/profile_page.dart';
 import 'package:reviewia/screens/service_list.dart';
 import 'package:reviewia/screens/servicesList.dart';
 import 'package:reviewia/services/network.dart';
+import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/loadPost.dart';
 import 'package:reviewia/structures/post.dart';
 import 'package:reviewia/structures/postView.dart';
@@ -44,6 +45,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
   late int totalPages;
   late int currentPage;
   late int _nOfPost = _postView.length;
+  late String userName;
   _listItem(index) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
@@ -84,6 +86,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
           ? _postDisplayView[index].imgURL[0].url.toString()
           : "https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
       id: _postDisplayView[index].postId,
+      userName: userName,
     ));
   }
 
@@ -192,6 +195,13 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
     });
   }
 
+  Future getUserDate() async {
+    var dd = await UserState().getUserName();
+    setState(() {
+      userName = dd;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -204,6 +214,7 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
     // });
     super.initState();
     // getData();
+    getUserDate();
     getBuildingData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -259,7 +270,8 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                   // margin: EdgeInsets.symmetric(horizontal:MediaQuery.of(context).size.height * 0.020),
                   height: MediaQuery.of(context).size.height * 0.1485,
                   child: ListView(
-                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+                    padding: EdgeInsets.all(
+                        MediaQuery.of(context).size.width * 0.02),
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
                       // GestureDetector(
@@ -267,20 +279,18 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                       //   onTap: () =>
                       //       {Navigator.pushNamed(context, ProductList.id)},
                       // ),
-                      Column(
-                          children: [
-                            IconButton(
-                              iconSize: 30.0,
-                              icon: const Icon(Icons.devices_other, color: Kcolor),
-                              tooltip: 'Products',
-                              color: Colors.blueGrey,
-                              onPressed: () {Navigator.pushNamed(context, ProductList.id);},
-                            ),
-                            Text('Products',
-                                style: TextStyle(color: Kcolor)
-                            )
-                          ]
-                      ),
+                      Column(children: [
+                        IconButton(
+                          iconSize: 30.0,
+                          icon: const Icon(Icons.devices_other, color: Kcolor),
+                          tooltip: 'Products',
+                          color: Colors.blueGrey,
+                          onPressed: () {
+                            Navigator.pushNamed(context, ProductList.id);
+                          },
+                        ),
+                        Text('Products', style: TextStyle(color: Kcolor))
+                      ]),
                       Divider(
                         indent: 30,
                         thickness: 25,
@@ -291,20 +301,18 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                       //       {Navigator.pushNamed(context, ServiceList.id)},
                       // ),
 
-                      Column(
-                          children: [
-                            IconButton(
-                              iconSize: 30.0,
-
-                              icon: const FaIcon(FontAwesomeIcons.userCog ,  color: Kcolor),
-                              tooltip: 'Services',
-                              onPressed: () {Navigator.pushNamed(context, ServiceList.id);},
-                            ),
-                            Text('Services',
-                                style: TextStyle(color: Kcolor)
-                            )
-                          ]
-                      ),
+                      Column(children: [
+                        IconButton(
+                          iconSize: 30.0,
+                          icon: const FaIcon(FontAwesomeIcons.userCog,
+                              color: Kcolor),
+                          tooltip: 'Services',
+                          onPressed: () {
+                            Navigator.pushNamed(context, ServiceList.id);
+                          },
+                        ),
+                        Text('Services', style: TextStyle(color: Kcolor))
+                      ]),
                       Divider(
                         indent: 30,
                         thickness: 25,
@@ -314,37 +322,34 @@ class _HomePageTopProductsState extends State<HomePageTopProducts> {
                       //   onTap: () =>
                       //       {Navigator.pushNamed(context, FavouriteList.id)},
                       // ),
-                      Column(
-                          children: [
-                            IconButton(
-                              iconSize: 30.0,
-                              icon: const Icon( Icons.favorite,  color: Kcolor),
-                              tooltip: 'Favorites',
-                              onPressed: () {Navigator.pushNamed(context, FavouriteList.id);},
-                            ),
-                            Text('Favorites',
-                                style: TextStyle(color: Kcolor)
-                            )
-                          ]
-                      ),
+                      Column(children: [
+                        IconButton(
+                          iconSize: 30.0,
+                          icon: const Icon(Icons.favorite, color: Kcolor),
+                          tooltip: 'Favorites',
+                          onPressed: () {
+                            Navigator.pushNamed(context, FavouriteList.id);
+                          },
+                        ),
+                        Text('Favorites', style: TextStyle(color: Kcolor))
+                      ]),
                       Divider(
                         indent: 30,
                         thickness: 25,
                       ),
                       // SelectionCard(title: "My posts"),
-                      Column(
-                          children: [
-                            IconButton(
-                              iconSize: 30.0,
-                              icon: const FaIcon(FontAwesomeIcons.userTag ,  color: Kcolor),
-                              tooltip: 'My Posts',
-                                onPressed: () {Navigator.pushNamed(context, MyPost.id);},
-                            ),
-                            Text('My Posts',
-                                style: TextStyle(color: Kcolor)
-                            )
-                          ]
-                      ),
+                      Column(children: [
+                        IconButton(
+                          iconSize: 30.0,
+                          icon: const FaIcon(FontAwesomeIcons.userTag,
+                              color: Kcolor),
+                          tooltip: 'My Posts',
+                          onPressed: () {
+                            Navigator.pushNamed(context, MyPost.id);
+                          },
+                        ),
+                        Text('My Posts', style: TextStyle(color: Kcolor))
+                      ]),
                       // Divider(
                       //   indent: 30,
                       //   thickness: 25,

@@ -36,6 +36,13 @@ selectedOption(String val, int id, context) {
       createInstantGroup(id.toString(), context);
       print("case--4");
       break;
+    case '5':
+      deletePost(id.toString(),context);
+      print("case--5");
+      break;
+    case '6':
+      reportThePost(id.toString(),context);
+      print("case--6");
   }
 }
 
@@ -257,4 +264,114 @@ Future setReaction(int id, bool reaction,bool remove) async {
   return response.statusCode;
 }
 
+deletePost(String id,BuildContext context)async{
+  print("Post ID:"+id);
+  String token = await UserState().getToken();
+  String url = KBaseUrl+"api/user/post?id="+id;
+  // http.Response response = await http.delete(Uri.parse(url));
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Delete the post",
+      desc: "Do you want to delete the Post",
+      buttons: [
+        DialogButton(
+          color: Kcolor,
+          child: Text(
+            "Yes",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: (){
+              deletePostSure(url,context);
 
+
+          },
+          width: MediaQuery.of(context).size.width * 100 / 360,
+        ),
+        DialogButton(
+          color: Kcolor,
+          child: Text(
+            "No",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          width: MediaQuery.of(context).size.width * 100 / 360,
+        )
+      ],
+    ).show();
+
+}
+
+Future deletePostSure(String url,BuildContext context)async {
+  String token = await UserState().getToken();
+  http.Response response = await http.delete(
+    Uri.parse(url),
+    headers: <String,String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': token},
+  );
+  print(response.statusCode);
+  if (response.statusCode == 200) {
+    int count = 0;
+    Alert(
+      context: context,
+      type: AlertType.success,
+      title: "Delete the post",
+      desc: "SuccessFully Deleted the post",
+      buttons: [
+        DialogButton(
+          color: Kcolor,
+          child: Text(
+            "Okey",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.of(context).popUntil((_) => count++ >= 2);
+          },
+          width: MediaQuery
+              .of(context)
+              .size
+              .width * 100 / 360,
+        ),
+      ],
+    ).show();
+  }
+}
+
+reportThePost(String id, BuildContext context) {
+  List<String> locations = [
+    "1",
+    "2",
+  ];
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 100, //16
+        child: Container(
+          height: MediaQuery.of(context).size.height * (320 / 765),
+          child: Column(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * (50 / 765),
+                margin: EdgeInsets.only(bottom: 10, top: 10),
+                child: Text(
+                  "Report the group \n",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+              ),
+              Container(
+                child: Text(
+                  'Hello'
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}

@@ -3,13 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/components/product_card.dart';
+import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/allCategory.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/structures/postView.dart';
 import 'package:reviewia/structures/selectedCatergory.dart';
 import 'package:reviewia/structures/subCate.dart';
-
-
 
 class SubCatergoryList extends StatefulWidget {
   String catId;
@@ -23,21 +22,29 @@ class SubCatergoryList extends StatefulWidget {
 class _SubCatergoryListtState extends State<SubCatergoryList> {
   List<SubCategoryList> _subCate = <SubCategoryList>[];
   List<SelectedCatergory> _postDisplay = <SelectedCatergory>[];
-  List <PostsView> _postView = <PostsView>[];
-  List <PostsView> _postViewDisplay = <PostsView>[];
+  List<PostsView> _postView = <PostsView>[];
+  List<PostsView> _postViewDisplay = <PostsView>[];
 
-  List<String>itemList= <String>[];
+  List<String> itemList = <String>[];
   String dropdownvalue = 'mobile';
-  late String subCatergoryId ;
-  var items =  ['Apple','Banana','Grapes','Orange','watermelon','Pineapple'];
+  late String subCatergoryId;
+  late String userName;
+  var items = [
+    'Apple',
+    'Banana',
+    'Grapes',
+    'Orange',
+    'watermelon',
+    'Pineapple'
+  ];
 
-  bool _isLoading =true;
+  bool _isLoading = true;
 
   _listItem(index) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: GestureDetector(
-        onTap: (){
+        onTap: () {
           // subCateFind(_postDisplay[index].subCategoryList);
         },
         child: Card(
@@ -59,6 +66,7 @@ class _SubCatergoryListtState extends State<SubCatergoryList> {
       ),
     );
   }
+
   _listItemViewProductCards(index) {
     // index = _postDisplayView.length - index - 1;
     print("created by " + _postViewDisplay[index].createdBy);
@@ -72,6 +80,7 @@ class _SubCatergoryListtState extends State<SubCatergoryList> {
           photoUrl1: _postViewDisplay[index].imgURL.isNotEmpty
               ? _postViewDisplay[index].imgURL[0].url.toString()
               : "https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
+          userName: userName,
         ));
   }
 
@@ -100,33 +109,34 @@ class _SubCatergoryListtState extends State<SubCatergoryList> {
     );
   }
 
-
-  getValue()async{
+  getValue() async {
     var dd = await fetchSelectedCatergory(widget.catId);
     setState(() {
-      if(dd.subCategoryList.length!=0){
-        print("category is "+ dd.subCategoryList.length.toString());
-        var posts =  dd.subCategoryList.map((e) => SubCategoryList.fromJson(e)).toList();
+      if (dd.subCategoryList.length != 0) {
+        print("category is " + dd.subCategoryList.length.toString());
+        var posts =
+            dd.subCategoryList.map((e) => SubCategoryList.fromJson(e)).toList();
         _subCate.addAll(posts);
-        for(int i = 0 ; i < _subCate.length;i++){
+        for (int i = 0; i < _subCate.length; i++) {
           itemList.add(_subCate[i].subCategoryName);
           print(itemList[i]);
         }
-      }else{
-        _subCate =[];
+      } else {
+        _subCate = [];
       }
 
       // print(_subCate[0].subCategoryName.toString());
     });
   }
-  chengeTheValues(String data){
+
+  chengeTheValues(String data) {
     setState(() {
-      _isLoading=true;
+      _isLoading = true;
     });
-    for(int i=0;i<_subCate.length;i++){
-      if(_subCate[i].subCategoryName==data){
+    for (int i = 0; i < _subCate.length; i++) {
+      if (_subCate[i].subCategoryName == data) {
         setState(() {
-          subCatergoryId =_subCate[i].subCategoryId.toString();
+          subCatergoryId = _subCate[i].subCategoryId.toString();
         });
       }
     }
@@ -137,38 +147,43 @@ class _SubCatergoryListtState extends State<SubCatergoryList> {
         _postViewDisplay = <PostsView>[];
         _isLoading = false;
         _postView.addAll(val);
-        _postViewDisplay =_postView;
+        _postViewDisplay = _postView;
       });
     });
   }
 
-  setFunction(){
+  setFunction() {
     Future.delayed(Duration(milliseconds: 500), () {
       setState(() {
         _isLoading = false;
         _postView = [];
-        _postViewDisplay =[];
+        _postViewDisplay = [];
         print("hee");
       });
     });
-
   }
 
-  getPosts(){
+  getPosts() {
     getAllCategoryPosts(widget.catId).then((val) {
       print(val);
       setState(() {
-          _isLoading = false;
-          _postView.addAll(val);
-          _postViewDisplay =_postView;
-        });
-      },onError: setFunction());
+        _isLoading = false;
+        _postView.addAll(val);
+        _postViewDisplay = _postView;
+      });
+      print(_postViewDisplay.toString());
+    }, onError: setFunction());
   }
 
+  Future getUserDate() async {
+    var dd = await UserState().getUserName();
+    setState(() {
+      userName = dd;
+    });
+  }
 
   @override
   void initState() {
-
     // fetchSelectedCatergory().then((val) {
     //   setState(() {
     //     _isLoading = false;
@@ -176,20 +191,24 @@ class _SubCatergoryListtState extends State<SubCatergoryList> {
     //     _postDisplay =_post;
     //   });
     // });
+    getUserDate();
     setState(() {
-      _isLoading=true;
+      _isLoading = true;
     });
     getValue();
     getPosts();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Kcolor,
+      appBar: AppBar(
+        backgroundColor: Kcolor,
         title: Text(
           widget.catName,
-        ),),
+        ),
+      ),
       // body:ListView.builder(
       //   itemBuilder: (context, index) {
       //     return _listItem(index);
@@ -213,24 +232,24 @@ class _SubCatergoryListtState extends State<SubCatergoryList> {
           Expanded(
             flex: 2,
             child: Container(
-                margin:EdgeInsets.symmetric(vertical: 12,horizontal: 20),
+              margin: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
               child: DropdownSearch<String>(
                   mode: Mode.MENU,
                   showSelectedItem: true,
-                  items: itemList.isNotEmpty?itemList:["No Sub Categories"],
+                  items: itemList.isNotEmpty ? itemList : ["No Sub Categories"],
                   label: "Sub Category List",
                   hint: "Sub Category List",
                   // popupItemDisabled: (String s) => s.startsWith('I'),
-                  onChanged: (data){chengeTheValues(data!);},
-                  selectedItem: "All"
-              ),
+                  onChanged: (data) {
+                    chengeTheValues(data!);
+                  },
+                  selectedItem: "All"),
             ),
           ),
           Expanded(
-            flex: 12,
+              flex: 12,
               child: Container(
-
-                child:ListView.builder(
+                child: ListView.builder(
                   itemBuilder: (context, index) {
                     if (!_isLoading) {
                       return index == 0
@@ -245,7 +264,7 @@ class _SubCatergoryListtState extends State<SubCatergoryList> {
                   },
                   itemCount: _postViewDisplay.length + 1,
                 ),
-          ))
+              ))
         ],
       ),
     );

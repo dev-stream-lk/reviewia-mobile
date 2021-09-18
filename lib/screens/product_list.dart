@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/components/product_card.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/screens/subCategoryList.dart';
+import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/categoryView.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/structures/post.dart';
@@ -30,7 +31,7 @@ class _ProductListState extends State<ProductList> {
 
   List<CategoryView> _catView = <CategoryView>[];
   List<CategoryView> _catDisplayView = <CategoryView>[];
-
+  late String userName;
   bool _isLoading = true;
 
   bool _isLoadingCat = true;
@@ -86,6 +87,13 @@ class _ProductListState extends State<ProductList> {
     );
   }
 
+  Future getUserDate() async {
+    var dd = await UserState().getUserName();
+    setState(() {
+      userName = dd;
+    });
+  }
+
   _listItemViewProductCards(index) {
     print("created by " + _postDisplayView[index].createdBy);
     return Container(
@@ -98,6 +106,7 @@ class _ProductListState extends State<ProductList> {
           photoUrl1: _postDisplayView[index].imgURL.isNotEmpty
               ? _postDisplayView[index].imgURL[0].url.toString()
               : "https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
+          userName: userName,
         ));
   }
 
@@ -153,6 +162,7 @@ class _ProductListState extends State<ProductList> {
     //    _postDisplay = _post;
     //  });
     // });
+    getUserDate();
     fetchCategoryView().then((val) {
       setState(() {
         _isLoadingCat = false;
@@ -249,13 +259,11 @@ class _topBarButonState extends State<topBarButon> {
       k = FontAwesomeIcons.book;
     } else if (l.toLowerCase() == "food") {
       k = Icons.lunch_dining;
-    }else if (l.toLowerCase() == "beauty culture") {
+    } else if (l.toLowerCase() == "beauty culture") {
       k = Icons.face_retouching_natural;
-    }
-    else if (l.toLowerCase() == "bank") {
+    } else if (l.toLowerCase() == "bank") {
       k = FontAwesomeIcons.university;
-    }
-    else {
+    } else {
       k = FontAwesomeIcons.circle;
     }
   }
