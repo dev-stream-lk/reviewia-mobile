@@ -39,6 +39,10 @@ selectedOption(String val, int id, context) {
     case '5':
       deletePost(id.toString(),context);
       print("case--5");
+      break;
+    case '6':
+      reportThePost(id.toString(),context);
+      print("case--6");
   }
 }
 
@@ -336,3 +340,38 @@ Future deletePostSure(String url,BuildContext context)async {
   }
 }
 
+reportThePost(String id, BuildContext context) {
+  List<String> locations = [
+    "1",
+    "2",
+  ];
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 100, //16
+        child: Container(
+          height: MediaQuery.of(context).size.height * (320 / 765),
+          child: Column(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * (50 / 765),
+                margin: EdgeInsets.only(bottom: 10, top: 10),
+                child: Text(
+                  "Report the group \n",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+              ),
+              Container(
+                child: Text(
+                  'Hello'
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}

@@ -187,6 +187,13 @@ class _ProductCardState extends State<ProductCard> {
                                   style: TextStyle(color: Colors.black),
                                 ),
                               ),
+                              PopupMenuItem(
+                                value: 6,
+                                child: Text(
+                                  "Report the post",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
                               isEnableDelete?PopupMenuItem(
                                 enabled:isEnableDelete,
                                 value: 5,
