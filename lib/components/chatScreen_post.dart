@@ -33,10 +33,12 @@ class _ChatScreenPostCardState extends State<ChatScreenPostCard> {
         //     builder: (context) => ChatScreen(detail: widget.detail,userName:widget.email),
         //   ),
         // );
+        print( widget.detail.createdBy);
       },
       child: Container(
        padding: EdgeInsets.only(left: 16,right: 16,top: 10,bottom: 10),
         height: MediaQuery.of(context).size.height * 105 / 659,
+        width: MediaQuery.of(context).size.width * (700 / 765),
         decoration: BoxDecoration(
           color: Colors.blue[50],
           borderRadius: BorderRadius.only(

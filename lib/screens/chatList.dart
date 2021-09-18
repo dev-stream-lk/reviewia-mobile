@@ -29,6 +29,7 @@ class _ChatListState extends State<ChatList> {
        //_allData = data;
       for (var item in _allData) {
         print('${item.postId} - ${item.id}-${item.createdBy.id}-${item.active}');
+
       }
       print("Lenght of array::"+ _allData.length.toString());
       _isLoading = false;
@@ -47,7 +48,7 @@ class _ChatListState extends State<ChatList> {
   _listItemViewGroups(int index){
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
-      child: Card(
+      child: Container(
         child: Padding(
           padding: EdgeInsets.all(05),
           child: GroupCard(detail: _allData[index],email:email),
@@ -73,20 +74,25 @@ class _ChatListState extends State<ChatList> {
 
         body: RefreshIndicator(
           onRefresh: getBuildingData,
-          child: Column(
+          child: !_isLoading?Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SizedBox(
                 height: 10,
               ),
-              Text(
-                  "My Chats",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold
-                ),
+              Row(
+                children: [
+                  SizedBox(width: 10,),
+                  Text(
+                      "My Chats",
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ],
               ),
-              Expanded(
+              _allData.isNotEmpty?Expanded(
                 flex: 12,
                 // height: MediaQuery.of(context).size.height*0.8,
                 child: ListView.builder(
@@ -102,9 +108,15 @@ class _ChatListState extends State<ChatList> {
                   },
                   itemCount: _allData.length,
                 ),
+              ):Center(
+                child: Text("No groups available..",
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
               ),
             ],
-          ),
+          ): Center(child: CircularProgressIndicator()),
         ),
     );
   }
