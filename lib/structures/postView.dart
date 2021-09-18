@@ -8,6 +8,7 @@ class PostsView {
   late String description;
   late String createdAt;
   late String type;
+  late String email;
   late String createdBy;
   late bool blocked;
   late String subCategory;
@@ -23,6 +24,7 @@ class PostsView {
         required this.description,
         required this.createdAt,
         required this.type,
+        required this.email,
         required this.createdBy,
         required this.blocked,
         required this.subCategory,
@@ -44,6 +46,7 @@ class PostsView {
     createdAt = json['createdAt'];
     createdBy = json['createdBy'];
     type = json['type'];
+    email=json['email'];
     blocked = json['blocked'];
     subCategory = json['subCategory'];
      if (json['brand'] != null){
@@ -72,6 +75,7 @@ class PostsView {
     data['description'] = this.description;
     data['createdAt'] = this.createdAt;
     data['createdBy'] = this.createdBy;
+    data['email']=this.email;
     data['blocked'] = this.blocked;
     data['subCategory'] = this.subCategory;
     if (this.brand != null) {

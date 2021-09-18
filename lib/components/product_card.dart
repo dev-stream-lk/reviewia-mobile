@@ -36,6 +36,7 @@ class _ProductCardState extends State<ProductCard> {
   late DateTime timeNow = DateTime.now();
   late var tn = DateTime(timeNow.year,timeNow.month,timeNow.hour,timeNow.minute,timeNow.second);
   late Duration differenceTime = tn.difference(ct);
+  bool isEnableDelete=false;
   final List<String> imgList = [
     'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGhvbmV8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80',
     'https://cdn.vox-cdn.com/thumbor/0vkUlE9CGelZsRZlY1XZZGqsZVQ=/1400x0/filters:no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/22015272/cgartenberg_201105_4276_004.0.jpg',
@@ -45,8 +46,18 @@ class _ProductCardState extends State<ProductCard> {
   // double rate = widget.detail.rate;
   var t;
 
+  void isEnable(){
+    // print(differenceTime.inDays.toString()+widget.detail.createdBy+widget.userName);
+    if(differenceTime.inDays<=30 && widget.detail.email==widget.userName){
+      setState(() {
+        isEnableDelete=true;
+      });
+    }
+  }
+
   @override
   void initState() {
+    isEnable();
     super.initState();
   }
 
@@ -72,6 +83,7 @@ class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
 
+    print("is Enable to delete:"+isEnableDelete.toString());
     return Container(
       child: GestureDetector(
         onTap: () {
@@ -175,12 +187,15 @@ class _ProductCardState extends State<ProductCard> {
                                   style: TextStyle(color: Colors.black),
                                 ),
                               ),
-                              PopupMenuItem(
+                              isEnableDelete?PopupMenuItem(
+                                enabled:isEnableDelete,
                                 value: 5,
                                 child: Text(
                                   widget.userName,
                                   style: TextStyle(color: Colors.black),
                                 ),
+                              ):PopupMenuItem(
+                                child: null,
                               )
                             ],
                           ))
