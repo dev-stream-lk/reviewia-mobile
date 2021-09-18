@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:reviewia/components/review_cards.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/screens/notification.dart';
+import 'package:reviewia/services/getBrands.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/allCategory.dart';
 import 'package:reviewia/structures/categoryView.dart';
@@ -264,6 +265,34 @@ Future getAllSubCategoryPosts(String subCategoryId) async {
   );
   if (response.statusCode == 200) {
     return compute(parsePostView, response.body);
+  } else {
+    throw Exception("API Error");
+  }
+}
+
+
+
+List<GetBrands> parseGetBrandList(String responseBody) {
+  var list = json.decode(responseBody) as List<dynamic>;
+  print(list.toString());
+  // var posts = SelectedCatergory.fromJson(list);
+  var brandList = list.map((e) => GetBrands.fromJson(e)).toList();
+  return brandList;
+}
+
+Future getBrandList(String subCategoryId)async{
+  String url = KBaseUrl + "api/public/subcategory/"+subCategoryId+"/brands";
+  GetBrands getBrands;
+  final response = await http.get(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+  print(response.body);
+  if (response.statusCode == 200) {
+    // var decodedUserData = jsonDecode(response.body);
+    return compute(parseGetBrandList, response.body);
   } else {
     throw Exception("API Error");
   }

@@ -5,6 +5,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
+import 'package:reviewia/services/getBrands.dart';
 import 'package:reviewia/services/network.dart';
 import 'package:reviewia/structures/categoryView.dart';
 import 'package:reviewia/structures/selectedCatergory.dart';
@@ -29,15 +30,27 @@ class _SearchPageState extends State<SearchPage> {
   String selectedBrand = "";
   List<CategoryView> _catView = <CategoryView>[];
   List<CategoryView> _catDisplayView = <CategoryView>[];
+  List<SubCategoryList> _subCate = <SubCategoryList>[];
+  List<GetBrands> _brandList = <GetBrands>[];
   List<String> itemList = <String>[];
   List<String> itemListCategory = <String>[];
   List<String> itemListSubCategory = <String>[];
+  List<String> itemListBrand = <String>[];
   SingingCharacter? _character = SingingCharacter.product;
-  List<SubCategoryList> _subCate = <SubCategoryList>[];
+
+  String type ='p';
+  String categoryName = 'All';
+  String subCategoryName = 'All';
+  String brandName = 'All';
+  double ratingValue = 3.0;
+
+
   String state = 'All';
   bool isLoading = true;
   bool isLoadingSubCat = false;
+  bool isLoadingBrand = false;
   late int catId;
+  late int subCatId;
 
   var items = [
     'Apple',
@@ -55,8 +68,10 @@ class _SearchPageState extends State<SearchPage> {
         itemList = <String>[];
         _catView = <CategoryView>[];
         _catDisplayView = <CategoryView>[];
-        _subCate=[];
-        itemListSubCategory=[];
+        _subCate = [];
+        itemListSubCategory = [];
+        itemListBrand=[];
+        _brandList=[];
         _catView.addAll(val);
         print(_catView);
         _catDisplayView = _catView.where((element) {
@@ -66,15 +81,18 @@ class _SearchPageState extends State<SearchPage> {
         if (_catDisplayView.isNotEmpty) {
           itemList.add("All");
           itemListSubCategory.add("All");
+          itemListBrand.add("All");
           for (int i = 0; i < _catDisplayView.length; i++) {
             itemList.add(_catDisplayView[i].categoryName);
           }
         } else {
           itemList.add("All");
           itemListSubCategory.add("All");
+          itemListBrand.add("All");
         }
         loading = false;
-        isLoadingSubCat=false;
+        isLoadingSubCat = false;
+        isLoadingBrand=false;
       });
     });
     return itemList;
@@ -110,8 +128,11 @@ class _SearchPageState extends State<SearchPage> {
       var dd = await fetchSelectedCatergory(catId.toString());
       setState(() {
         itemListSubCategory = [];
-        _subCate=[];
+        _subCate = [];
         itemListSubCategory.add("All");
+        itemListBrand=[];
+        _brandList=[];
+        itemListBrand.add("All");
         if (dd.subCategoryList.length != 0) {
           print("category is " + dd.subCategoryList.length.toString());
           var posts = dd.subCategoryList
@@ -127,19 +148,68 @@ class _SearchPageState extends State<SearchPage> {
           _subCate = [];
         }
         isLoadingSubCat = false;
+        isLoadingBrand=false;
         // print(_subCate[0].subCategoryName.toString());
       });
-    }else if(data=="All"){
+    } else if (data == "All") {
       Future.delayed(Duration(milliseconds: 1000), () {
         setState(() {
           itemListSubCategory = [];
-          _subCate=[];
-          isLoadingSubCat = false;
+          _subCate = [];
           itemListSubCategory.add("All");
+          itemListBrand=[];
+          _brandList=[];
+          itemListBrand.add("All");
+          isLoadingSubCat = false;
+          isLoadingBrand=false;
         });
         // Do something
       });
+    }
+  }
 
+  selectTheSubCategory(String data) async {
+    if (data != 'All') {
+      setState(() {
+        itemListBrand=[];
+        _brandList = [];
+        for (int i = 0; i < _catView.length; i++) {
+          if (_subCate[i].subCategoryName == data) {
+              subCatId = _subCate[i].subCategoryId;
+              // fetchSelectedCatergory(catId.toString());
+            break;
+          }
+        }
+        print("sub category id is:" + subCatId.toString());
+        getBrandList(subCatId.toString()).then((value) {
+            _brandList.addAll(value);
+            if (_brandList.isNotEmpty) {
+              itemListBrand.add("All");
+              for (int i = 0; i < _brandList.length; i++) {
+                itemListBrand.add(_brandList[i].name);
+              }
+            }else{
+              itemListBrand.add("All");
+              _brandList=[];
+            }
+            print("BrandList is"+_brandList.toString());
+            print("Item BrandList is"+itemListBrand.toString());
+            setState(() {
+              isLoadingBrand=false;
+
+            });
+        });
+      });
+
+    }else if(data=='All'){
+      Future.delayed(Duration(milliseconds: 100), () {
+        setState(() {
+          itemListBrand=[];
+          _brandList=[];
+          itemListBrand.add("All");
+          isLoadingBrand=false;
+        });
+      });
     }
   }
 
@@ -151,8 +221,20 @@ class _SearchPageState extends State<SearchPage> {
     selectTheOption(1);
     setState(() {
       isLoadingSubCat = false;
+      isLoadingBrand=false;
       itemList.add('All');
       itemListSubCategory.add("All");
+      itemListBrand.add("All");
+
+
+      type ='p';
+      categoryName = 'All';
+      subCategoryName = 'All';
+      brandName = 'All';
+      ratingValue = 3.0;
+
+
+
     });
     super.initState();
   }
@@ -236,7 +318,9 @@ class _SearchPageState extends State<SearchPage> {
                           print('sss');
                           setState(() {
                             loading = true;
-                            isLoadingSubCat=true;
+                            isLoadingSubCat = true;
+                            isLoadingBrand=true;
+
                             _character = value;
                             // var s = selectTheOption(1);
                             //         print(s.toString());
@@ -255,7 +339,8 @@ class _SearchPageState extends State<SearchPage> {
                           print('sss-2');
                           setState(() {
                             loading = true;
-                            isLoadingSubCat=true;
+                            isLoadingSubCat = true;
+                            isLoadingBrand=true;
                             _character = value;
                           });
                           var s = await selectTheOption(0);
@@ -306,6 +391,7 @@ class _SearchPageState extends State<SearchPage> {
                         onChanged: (data) {
                           setState(() {
                             isLoadingSubCat = true;
+                            isLoadingBrand=true;
                           });
                           selectTheCategory(data!);
                         },
@@ -348,7 +434,12 @@ class _SearchPageState extends State<SearchPage> {
                         hint: "Sub Category List",
                         // popupItemDisabled: (String s) => s.startsWith('I'),
                         // onChanged: (data){chengeTheValues(data!);},
-                        onChanged: (data) => {print(data)},
+                        onChanged: (data)async {
+                          setState(() {
+                            isLoadingBrand=true;
+                          });
+                          selectTheSubCategory(data!);
+                        },
                         selectedItem: itemListSubCategory[0],
                       ),
                     ),
@@ -371,19 +462,25 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ],
               ),
+              isLoadingBrand?
               Container(
+                  height: MediaQuery.of(context).size.height * 0.085,
+                child: CupertinoActivityIndicator())
+                  : Container(
                 margin:
                     EdgeInsets.all(MediaQuery.of(context).size.width * 0.046),
-                child: DropdownSearch<String>(
-                  mode: Mode.MENU,
-                  showSelectedItem: true,
-                  items: items.isNotEmpty ? items : ["No Sub Categories"],
+                       child: DropdownSearch<String>(
+                    mode: Mode.MENU,
+                    showSelectedItem: true,
+                    items: itemListBrand.isNotEmpty
+                        ? itemListBrand
+                      : ["No Sub Categories"],
                   label: "Brand List",
                   hint: "Brand List",
                   // popupItemDisabled: (String s) => s.startsWith('I'),
                   // onChanged: (data){chengeTheValues(data!);},
                   onChanged: (data) => {print(data)},
-                  selectedItem: "All",
+                  selectedItem:itemListBrand[0],
                 ),
               ),
               Column(
