@@ -191,7 +191,7 @@ class _ProductCardState extends State<ProductCard> {
                                 enabled:isEnableDelete,
                                 value: 5,
                                 child: Text(
-                                  widget.userName,
+                                  "Delete post",
                                   style: TextStyle(color: Colors.black),
                                 ),
                               ):PopupMenuItem(
