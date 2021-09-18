@@ -31,6 +31,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
 
   bool _loadingPost = true;
+  bool _isload = true;
   List<Messages> message= <Messages>[];
 
   final inputController = TextEditingController();
@@ -59,6 +60,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
       setState(() {
         GroupData = selectedgroup;
+        _isload = false;
       });
       if (selectedgroup.messages != null) {
         var messageList = selectedgroup.messages.map((e) => Messages.fromJson(e)).toList();
@@ -108,6 +110,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
   @override
   void initState() {
+    _isload = true;
     _loadChat();
     super.initState();
     //connectToSocket();
@@ -187,7 +190,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
       body: RefreshIndicator(
         onRefresh: getRefreshData,
-        child: Container(
+        child: !_isload?Container(
             alignment: Alignment.center,
             padding: EdgeInsets.only(left: 30,right: 30, top: 10),
             child: Column(
@@ -271,7 +274,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 _bottomChatArea()
               ],
             ),
-          ),
+          ): Center(child: CircularProgressIndicator()),
       ),
     );
   }

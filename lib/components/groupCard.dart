@@ -22,11 +22,12 @@ class _GroupCardState extends State<GroupCard> {
   String PostTitle = "";
   Future _fetchPost() async {
     String id = widget.detail.postId.toString();
-    var postData = await fetchPostViewById(id);
+    var postData = await fetchPostViewByIdInNotification(id);
     setState(() {
       post = postData;
       PostTitle = post.title;
     });
+
   }
 
   @override
@@ -50,6 +51,14 @@ class _GroupCardState extends State<GroupCard> {
       child: Container(
         padding: EdgeInsets.only(left: 16,right: 16,top: 10,bottom: 10),
         decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                spreadRadius: 2,
+                blurRadius: 3,
+                offset: Offset(0, 6),
+                color: Colors.black38
+            )
+          ],
           color: widget.email == widget.detail.createdBy.email?
           Colors.blue[50]:Colors.white,
           borderRadius: BorderRadius.only(
