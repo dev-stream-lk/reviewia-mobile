@@ -12,12 +12,13 @@ class ReviewCards extends StatefulWidget {
   late double rate;
   late ReviewStruct reviewCardAllDetails;
   late String isColored;
+  late BuildContext context;
   ReviewCards(
       {required this.reviewId,
       required this.reviewedBy,
       required this.detail,
       required this.rate,
-      required this.reviewCardAllDetails,required this.isColored});
+      required this.reviewCardAllDetails,required this.isColored, required this.context});
 
   @override
   _ReviewCardsState createState() => _ReviewCardsState();
@@ -25,6 +26,9 @@ class ReviewCards extends StatefulWidget {
 
 class _ReviewCardsState extends State<ReviewCards> {
   late String status = "still not assign";
+  String email="";
+  final inputController = TextEditingController();
+  late double newRate;
 
   putReaction(String state, bool removeStatus) async {
     bool s = state == "like" ? true : false;
@@ -34,6 +38,12 @@ class _ReviewCardsState extends State<ReviewCards> {
 
   userReaction() async {
     var userName = await UserState().getUserName();
+
+    setState(() {
+      inputController.text = widget.detail;
+          email = userName;
+          //newRate = widget.rate;
+    });
     for (int i = 0; i < widget.reviewCardAllDetails.likedList.length; i++) {
       if (userName.toString() ==
           widget.reviewCardAllDetails.likedList[i].email.toString()) {
@@ -57,6 +67,9 @@ class _ReviewCardsState extends State<ReviewCards> {
   @override
   void initState() {
     userReaction();
+    setState(() {
+
+    });
     super.initState();
   }
 
@@ -123,12 +136,31 @@ class _ReviewCardsState extends State<ReviewCards> {
                     ),
                   ),
                 ),
-                Expanded(
+                email != ""?Expanded(
                     flex: 1,
                     child: PopupMenuButton(
                       icon: Icon(Icons.more_vert),
-                      onSelected: (item) => {print(item)},
-                      itemBuilder: (context) => [
+                      onSelected: (item) => {
+                        if(item == 2){
+                          _bootomPage( widget.context)
+                        }
+                      },
+                      itemBuilder: email == widget.reviewCardAllDetails.email?(context) => [
+                        PopupMenuItem<int>(
+                          value: 0,
+                          child: Text(
+                            "Report",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                        PopupMenuItem<int>(
+                          value: 2,
+                          child: Text(
+                            "Edit",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ]:(context) => [
                         PopupMenuItem<int>(
                           value: 0,
                           child: Text(
@@ -137,7 +169,7 @@ class _ReviewCardsState extends State<ReviewCards> {
                           ),
                         ),
                       ],
-                    ))
+                    )): CircularProgressIndicator(),
               ],
             ),
           ),
@@ -297,5 +329,159 @@ class _ReviewCardsState extends State<ReviewCards> {
         ],
       ),
     );
+  }
+  void _bootomPage(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+              top: Radius.circular(
+                  MediaQuery.of(context).size.width * 25 / 360)),
+        ),
+        builder: (BuildContext bc) {
+          return Scrollbar(
+            isAlwaysShown: false,
+            thickness: 5,
+            radius: Radius.circular(15),
+            child: SingleChildScrollView(
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.72,
+                padding: EdgeInsets.only(left: 15, right: 15),
+                color: Colors.transparent,
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        // color:Colors.red,
+
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Write a Review",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w700),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: Icon(Icons.close),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 15,
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(top: 20),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.black,
+                                ),
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: TextFormField(
+                                controller: inputController,
+                                maxLines: 4,
+                                onChanged: (val) {
+                                  setState(() {
+                                    //reviewDetail = val.toString();
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'Enter a Your Review'),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Rate it: ",
+                                  style: KPostReviewCard,
+                                ),
+                                RatingBar.builder(
+                                  wrapAlignment: WrapAlignment.spaceBetween,
+                                  initialRating: widget.rate,
+                                  minRating: 1,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  itemSize: 35,
+                                  itemPadding:
+                                  EdgeInsets.symmetric(horizontal: 4.0),
+                                  itemBuilder: (context, _) => Icon(
+                                    Icons.star,
+                                    color: Kcolor,
+                                  ),
+                                  onRatingUpdate: (rating) {
+                                    setState(() {
+                                      // rate = rating;
+                                      // print(rate);
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            alignment: Alignment.centerRight,
+                            child: FlatButton(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: MediaQuery.of(context).size.height *
+                                      (12.5 / 692),
+                                  horizontal:
+                                  MediaQuery.of(context).size.width *
+                                      (40 / 360)),
+                              color: Kcolor,
+                              onPressed: () {
+                                //createAReview();
+                              },
+                              child: Text(
+                                'Add a review',
+                                style: KbuttonSignin,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      color: Colors.blue,
+                                      width: 1,
+                                      style: BorderStyle.solid),
+                                  borderRadius: BorderRadius.circular(8)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 }
