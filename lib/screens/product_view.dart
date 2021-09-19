@@ -77,7 +77,7 @@ class _ProductViewState extends State<ProductView> {
     super.initState();
   }
 
-  _listItemViewProductCards(index) {
+  _listItemViewProductCards(index,BuildContext context) {
     index = _reviewCards.length - index - 1;
     print("created by " + widget.reviewId.toString());
     return Container(
@@ -90,6 +90,7 @@ class _ProductViewState extends State<ProductView> {
           reviewId: _reviewCards[index].reviewId,
           reviewCardAllDetails:_reviewCards[index],
           isColored:(_reviewCards[index].reviewId==widget.reviewId)?'yes':'no',
+          context: context
         ));
   }
 
@@ -147,17 +148,17 @@ class _ProductViewState extends State<ProductView> {
       appBar: AppBar(
         backgroundColor: Kcolor,
         title: Text("Product View"),
-        actions: [
-          IconButton(
-            onPressed: () {
-              _bootomPage(context);
-              ;
-            },
-            icon: Icon(
-              Icons.rate_review_rounded,
-            ),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       _bootomPage(context);
+        //       ;
+        //     },
+        //     icon: Icon(
+        //       Icons.rate_review_rounded,
+        //     ),
+        //   ),
+        // ],
       ),
       body: SafeArea(
         child: Scrollbar(
@@ -181,22 +182,37 @@ class _ProductViewState extends State<ProductView> {
                     // widget.todos.imgURL[0],
                   ),
                 ),
-                SingleChildScrollView(
-                  child: Container(
+                  Container(
                     margin: EdgeInsets.only(bottom: 10, right: 10),
                     child: (!_isLoading)
                         ? ListView.builder(
                             shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
                             scrollDirection: Axis.vertical,
                             itemBuilder: (context, index) {
-                              return _listItemViewProductCards(index);
+                              return _listItemViewProductCards(index,context);
                               // return _listItem(index);
                             },
                             itemCount: _reviewCards.length,
                           )
                         : CircularProgressIndicator(),
                   ),
-                ),
+                // SingleChildScrollView(
+                //   child: Container(
+                //     margin: EdgeInsets.only(bottom: 10, right: 10),
+                //     child: (!_isLoading)
+                //         ? ListView.builder(
+                //             shrinkWrap: true,
+                //             scrollDirection: Axis.vertical,
+                //             itemBuilder: (context, index) {
+                //               return _listItemViewProductCards(index);
+                //               // return _listItem(index);
+                //             },
+                //             itemCount: _reviewCards.length,
+                //           )
+                //         : CircularProgressIndicator(),
+                //   ),
+                // ),
                 // ReviewCards(),
                 // ReviewCards(),
                 // ReviewCards(),
@@ -205,6 +221,14 @@ class _ProductViewState extends State<ProductView> {
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: "Add Review",
+        onPressed: () {
+          _bootomPage(context);
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: Kcolor,
       ),
     );
   }

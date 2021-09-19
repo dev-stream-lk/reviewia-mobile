@@ -24,11 +24,16 @@ import 'package:reviewia/services/userState.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:http/http.dart' as http;
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import '../home_data.dart';
 
 class TestAddPost extends StatefulWidget {
-  const TestAddPost({Key? key}) : super(key: key);
+
+  //const TestAddPost({Key? key}) : super(key: key);
+
+
+
 
   @override
   _TestAddPostState createState() => _TestAddPostState();
@@ -88,6 +93,8 @@ class _TestAddPostState extends State<TestAddPost> {
   var selected_subCategory;
   var selected_brand;
   final titleText = TextEditingController();
+  final TextEditingController _typeAheadController = TextEditingController();
+
 
   List<AddPost_category> _categories=[];
   List _type = [
@@ -163,17 +170,19 @@ class _TestAddPostState extends State<TestAddPost> {
   }
 
   //************** get Brands for dropdown *******
-  late List brandsList=[];
-  Future<dynamic> _getBrands(String id)async{
-    String url = KBaseUrl+"api/public/subcategory/"+ id +"/brands";
+  late List brandsList= [];
+  Future <dynamic> _getBrands(String subCategory)async{
+    //print("pattern+++" + pattern);
+    String url = KBaseUrl+"api/public/subcategory/"+ subCategory +"/brands";
+    print(url);
     await http.get(Uri.parse(url)).then((response)
     {
       var data = json.decode(response.body);
-      var _brandList = data.map((e) => GetBrands.fromJson(e)).toList();
+      var _brandList = data.map((json) => GetBrands.fromJson(json)).toList();
       setState(() {
         brandsList = _brandList;
         for (var item in brandsList) {
-          print('${item.id} - ${item.name}');
+          print('List items --${item.id} - ${item.name}');
         }
       });
     }
@@ -410,7 +419,7 @@ class _TestAddPostState extends State<TestAddPost> {
                             print("Subcategory empty");
                             subCategory_warning = "Sub category is a required field";
                           }
-                          if(selectedBrand.isEmpty){
+                          if(_typeAheadController.text.isEmpty){
                             flag = false;
                             print("Brand empty");
                             brand_warning = "brand is a required field";
@@ -633,17 +642,10 @@ class _TestAddPostState extends State<TestAddPost> {
                                   color: Colors.red
                               ),
                             ),
-
-                            //Brand...
                             Container(
-                              margin: EdgeInsets.only(top: 20 ,left: 2, right: 2) ,
-                              height: MediaQuery.of(context).size.height * 0.09,
-                              padding: EdgeInsets.all(0.0),
-                              child: CustomSearchableDropDown(
-                                initialIndex: selectedBrandIndex,
-                                items: brandsList,
-                                label: 'Select Brand',
-                                labelStyle:  TextStyle(fontSize: 17),
+                                margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 2) ,
+                                height: MediaQuery.of(context).size.height * 0.07,
+                                padding: EdgeInsets.all(10.0),
                                 decoration: BoxDecoration(
                                   color: Colors.blue[50],
                                   borderRadius: BorderRadius.only(
@@ -653,26 +655,31 @@ class _TestAddPostState extends State<TestAddPost> {
                                       bottomRight: Radius.circular(10)
                                   ),
                                 ),
+                                child: TypeAheadFormField(
+                                  textFieldConfiguration: TextFieldConfiguration(
+                                    onTap: (){
+                                      setState(() {
+                                        brand_warning = "";
+                                      });
+                                    },
+                                      controller: this._typeAheadController,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: "Type a Brand",
+                                      )
+                                  ),
+                                  onSuggestionSelected: (dynamic suggestion) {
+                                    this._typeAheadController.text = suggestion.name;
+                                  },
+                                  itemBuilder: (_, dynamic suggetion) =>ListTile(
+                                    title: Text(suggetion.name,
+                                      style: TextStyle(fontSize: 17),
+                                  ),),
+                                  suggestionsCallback: (pattern)=> brandsList.where((element) => 
+                                  element.name.toLowerCase().contains(pattern.toLowerCase())
+                                  ),
+                                )),
 
-                                dropDownMenuItems: brandsList?.map((item) {
-                                  return item.name;
-                                })?.toList() ??
-                                    [],
-                                onChanged: (value){
-                                  brand_warning="";
-                                  if(value!=null)
-                                  {
-                                    selectedBrand = '${value.name}';
-                                    selectedBrandIndex = brandsList.indexOf(value);
-
-                                  }
-                                  else{
-                                    selected_categoryId=null;
-                                  }
-                                },
-                              ),
-
-                            ),
                             Text(
                               brand_warning,
                               style: TextStyle(
@@ -862,9 +869,12 @@ class _TestAddPostState extends State<TestAddPost> {
                                 margin: EdgeInsets.only(top: 20 ,left: 2, right: 2, bottom: 10),
 
                                 child: RaisedButton(
-                                  onPressed: (){
+                                  onPressed: ()  {
+                                    setState(() {
+                                      activeStep = 0;
+                                    });
                                     if(buttonColour == Kcolor){
-                                      Navigator.pushNamed(
+                                       Navigator.pushNamed(
                                         context,
                                         PreviewPost.id,
                                           arguments: AddPost(
@@ -872,11 +882,12 @@ class _TestAddPostState extends State<TestAddPost> {
                                           title: title,
                                           Category: SelectedCategoryName,
                                           type: SelectedType,
-                                          brand: selectedBrand,
+                                          brand: _typeAheadController.text,
                                           SubCategory: SelectedSubCategoryName,
                                           subId: selected_subCategory.toString(),
                                           description: description)
                                       );
+
                                     }
 
                                       // setState(() {
