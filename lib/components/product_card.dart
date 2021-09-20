@@ -31,7 +31,8 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  late DateTime createTime = DateTime.parse(widget.detail.createdAt).add(new Duration(hours: 5,minutes: 30)) ;
+  // late DateTime createTime = DateTime.parse(widget.detail.createdAt).add(new Duration(hours: 5,minutes: 30)) ;
+  late DateTime createTime = DateTime.parse(widget.detail.createdAt);
   late var ct = DateTime.utc(createTime.year,createTime.month,createTime.hour,createTime.minute,createTime.second);
   late DateTime timeNow = DateTime.now();
   late var tn = DateTime(timeNow.year,timeNow.month,timeNow.hour,timeNow.minute,timeNow.second);
