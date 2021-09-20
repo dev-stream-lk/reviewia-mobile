@@ -582,3 +582,23 @@ Future UpdateReviewById(String reviewId, String userName, String t, String creat
   return response;
   // if(response.)
 }
+
+Future ReprotItem( String email,String token, String id, String type, String reason) async {
+  // print("review Id-"+ reviewId.toString());
+  // print("UserName-"+ userName.toString());
+  // print("creator-"+ createdUser.toString());
+  // print("review-"+ des.toString());
+
+  String url = KBaseUrl + "api/user/report?email="+email +"&subjectId="+id+"&type="+type;
+  http.Response response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token,
+      },
+      body: jsonEncode(<String, dynamic>{
+        "reason": reason
+      }));
+  print(response.statusCode);
+  return response;
+
+}

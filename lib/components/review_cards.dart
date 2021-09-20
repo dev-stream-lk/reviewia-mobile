@@ -6,6 +6,8 @@ import 'package:reviewia/services/optionServices.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/reviewStruct.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:select_dialog/select_dialog.dart';
+import 'package:multiselect_formfield/multiselect_formfield.dart';
 
 class ReviewCards extends StatefulWidget {
   late int reviewId;
@@ -74,6 +76,141 @@ class _ReviewCardsState extends State<ReviewCards> {
 
     });
     super.initState();
+  }
+
+
+  List<dynamic> reason = <dynamic>[];
+
+  buildLoading(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
+          );
+        });
+  }
+
+  _reportAlart(String reason) async{
+    buildLoading(context);
+    var tk = await UserState().getToken();
+    var uN = await UserState().getUserName();
+    var n = await ReprotItem( uN,tk, widget.reviewId.toString(), "r", reason);
+    var response = int.parse(n.statusCode.toString());
+    assert(response is int);
+    int count = 0;
+    if(response == 201){
+      print("Reported");
+      //Navigator.pop(context);
+      Alert(
+        context: context,
+        type: AlertType.success,
+        title: "Reported the Review",
+        buttons: [
+          DialogButton(
+            color: Kcolor,
+            child: Text(
+              "Okey",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () {
+              Navigator.of(context).popUntil((_) => count++ >= 3);
+            },
+            width: MediaQuery.of(context).size.width * 100 / 360,
+          ),
+        ],
+      ).show();
+    }
+  }
+
+  _ReportReview() async {
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          elevation: 100, //16
+          child: Container(
+            height: MediaQuery.of(context).size.height * (320 / 765),
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(16),
+                  child: MultiSelectFormField(
+                    autovalidate: false,
+                    chipBackGroundColor: Colors.blue,
+                    chipLabelStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                    dialogTextStyle: TextStyle(fontWeight: FontWeight.bold),
+                    checkBoxActiveColor: Colors.blue,
+                    checkBoxCheckColor: Colors.white,
+                    dialogShapeBorder: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                    title: Text(
+                      "Report Options",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.length == 0) {
+                        return 'Please select one or more options';
+                      }
+                      return null;
+                    },
+                    dataSource: [
+                      {
+                        "display": "Inappropriate Review",
+                        "value": "Inappropriate Review",
+                      },
+                      {
+                        "display": "Abusive Content",
+                        "value": "Abusive Content",
+                      },
+                      {
+                        "display": "Its a spam",
+                        "value": "Its a spam",
+                      },
+                    ],
+                    textField: 'display',
+                    valueField: 'value',
+                    okButtonLabel: 'OK',
+                    cancelButtonLabel: 'CANCEL',
+                    hintWidget: Text('Please choose one or more'),
+                    onSaved: (value) {
+                      if (value == null) return;
+                      setState(() {
+                        reason = value;
+                      });
+                    },
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  child: ElevatedButton(
+                    child: Text('Report'),
+                    onPressed: (){
+                      print("report");
+                      setState(() {
+                        String Newreason ="";
+                        for(var item in reason){
+                          Newreason = Newreason + '${item}, ';
+                        }
+                        _reportAlart(Newreason);
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
   }
 
   UpdateReview() async {
@@ -214,6 +351,9 @@ class _ReviewCardsState extends State<ReviewCards> {
                       onSelected: (item) => {
                         if(item == 2){
                           _bootomPage( widget.context)
+                        }
+                        else{
+                          _ReportReview()
                         }
                       },
                       itemBuilder: email == widget.reviewCardAllDetails.email?(context) => [

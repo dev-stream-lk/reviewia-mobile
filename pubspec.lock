@@ -324,6 +324,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.02"
+  multiselect_formfield:
+    dependency: "direct main"
+    description:
+      name: multiselect_formfield
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.6"
   path:
     dependency: transitive
     description:
@@ -423,7 +430,7 @@ packages:
     source: hosted
     version: "2.0.12"
   select_dialog:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: select_dialog
       url: "https://pub.dartlang.org"

@@ -58,6 +58,7 @@ class _ProductCardState extends State<ProductCard> {
 
   @override
   void initState() {
+    print(widget.userName+" - "+ widget.detail.email);
     isEnable();
     super.initState();
   }
@@ -166,14 +167,7 @@ class _ProductCardState extends State<ProductCard> {
                             onSelected: (item) {
                               selectedOption(item.toString(),widget.id,context);
                               print(item);},
-                            itemBuilder: (context) => [
-                              PopupMenuItem(
-                                value: 1,
-                                child: Text(
-                                  "Report",
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
+                            itemBuilder: widget.userName != widget.detail.email? (context) => [
                               PopupMenuItem(
                                 value: 2,
                                 child: Text(
@@ -192,6 +186,21 @@ class _ProductCardState extends State<ProductCard> {
                                 value: 6,
                                 child: Text(
                                   "Report the post",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              )
+                            ]:(context) => [
+                              PopupMenuItem(
+                                value: 2,
+                                child: Text(
+                                  "Add Favorite",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: 4,
+                                child: Text(
+                                  "Create a group",
                                   style: TextStyle(color: Colors.black),
                                 ),
                               ),

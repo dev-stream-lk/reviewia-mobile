@@ -8,6 +8,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:reviewia/components/loading.dart';
 import 'package:reviewia/components/review_cards.dart';
 import 'package:reviewia/components/reviewers_loading.dart';
@@ -339,12 +340,59 @@ Future deletePostSure(String url, BuildContext context) async {
   }
 }
 
+buildLoading(BuildContext context) {
+  return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+          ),
+        );
+      });
+}
+_reportAlart(String reason,String id, BuildContext context) async{
+   buildLoading(context);
+  var tk = await UserState().getToken();
+  var uN = await UserState().getUserName();
+  var n = await ReprotItem( uN,tk, id, "p", reason);
+  var response = int.parse(n.statusCode.toString());
+  assert(response is int);
+  int count = 0;
+
+  if(response == 201){
+    print("Reported");
+    Alert(
+      context: context,
+      type: AlertType.success,
+      title: "Reported the post",
+      buttons: [
+        DialogButton(
+          color: Kcolor,
+          child: Text(
+            "Okey",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.of(context).popUntil((_) => count++ >= 3);
+          },
+          width: MediaQuery.of(context).size.width * 100 / 360,
+        ),
+      ],
+    ).show();
+
+  }
+}
+
 reportThePost(String id, BuildContext context) {
   SingingCharacter? _character = SingingCharacter.fakepost;
   List<String> locations = [
     "1",
     "2",
   ];
+  List<dynamic> reason = <dynamic>[];
+
   return showDialog(
     context: context,
     builder: (context) {
@@ -352,24 +400,108 @@ reportThePost(String id, BuildContext context) {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 100, //16
         child: Container(
-          height: MediaQuery.of(context).size.height * (450 / 765),
+          height: MediaQuery.of(context).size.height * (320 / 765),
+          padding: EdgeInsets.all(20),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                height: MediaQuery.of(context).size.height * (50 / 765),
-                margin: EdgeInsets.only(bottom: 10, top: 10),
-                child: Text(
-                  "Report the group \n",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                padding: EdgeInsets.all(16),
+                child: MultiSelectFormField(
+                  autovalidate: false,
+                  chipBackGroundColor: Colors.blue,
+                  chipLabelStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                  dialogTextStyle: TextStyle(fontWeight: FontWeight.bold),
+                  checkBoxActiveColor: Colors.blue,
+                  checkBoxCheckColor: Colors.white,
+                  dialogShapeBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                  title: Text(
+                    "Report Options",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.length == 0) {
+                      return 'Please select one or more options';
+                    }
+                    return null;
+                  },
+                  dataSource: [
+                    {
+                      "display": "Inappropriate Review",
+                      "value": "Inappropriate Review",
+                    },
+                    {
+                      "display": "Abusive Content",
+                      "value": "Abusive Content",
+                    },
+                    {
+                      "display": "Its a spam",
+                      "value": "Its a spam",
+                    },
+                  ],
+                  textField: 'display',
+                  valueField: 'value',
+                  okButtonLabel: 'OK',
+                  cancelButtonLabel: 'CANCEL',
+                  hintWidget: Text('Please choose one or more'),
+                  onSaved: (value) {
+                    if (value == null) return;
+
+                      reason = value;
+                  },
                 ),
               ),
-              ReportList(),
+              Container(
+                padding: EdgeInsets.all(8),
+                child: ElevatedButton(
+                  child: Text('Report'),
+                  onPressed: (){
+                    print("report");
+                      String Newreason ="";
+                      for(var item in reason){
+                        Newreason = Newreason + '${item}, ';
+                      }
+                      print(Newreason);
+                     _reportAlart(Newreason,id,context);
+                     // Navigator.pop(context);
+                  },
+                ),
+              ),
             ],
           ),
         ),
       );
     },
   );
+
+  // return showDialog(
+  //   context: context,
+  //   builder: (context) {
+  //
+  //
+  //     // return Dialog(
+  //     //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+  //     //   elevation: 100, //16
+  //     //   child: Container(
+  //     //     height: MediaQuery.of(context).size.height * (450 / 765),
+  //     //     child: Column(
+  //     //       children: [
+  //     //         Container(
+  //     //           height: MediaQuery.of(context).size.height * (50 / 765),
+  //     //           margin: EdgeInsets.only(bottom: 10, top: 10),
+  //     //           child: Text(
+  //     //             "Report the group \n",
+  //     //             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+  //     //           ),
+  //     //         ),
+  //     //         ReportList(),
+  //     //       ],
+  //     //     ),
+  //     //   ),
+  //     // );
+  //   },
+  // );
 }
 
 class ReportList extends StatefulWidget {
