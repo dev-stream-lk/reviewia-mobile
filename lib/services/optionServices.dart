@@ -386,11 +386,7 @@ _reportAlart(String reason,String id, BuildContext context) async{
 }
 
 reportThePost(String id, BuildContext context) {
-  SingingCharacter? _character = SingingCharacter.fakepost;
-  List<String> locations = [
-    "1",
-    "2",
-  ];
+
   List<dynamic> reason = <dynamic>[];
 
   return showDialog(

@@ -131,6 +131,24 @@ class UserServices {
 
   }
 
+  Future passwordReset() async {
+    http.Response response = await post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String,String>{
+          "email": email,
+          "password": password,
+        })
+    );
+    print(response.statusCode);
+    if (response.statusCode==500){
+      print("Done");
+      return response.statusCode;
+    }
+  }
+
 
 
 }
