@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/services/network.dart';
+import 'package:reviewia/services/optionServices.dart';
+import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/postView.dart';
 
 class ProductViewCard extends StatefulWidget {
@@ -18,7 +20,8 @@ class ProductViewCard extends StatefulWidget {
       required this.description,
       required this.rating,
       required this.photoUrl1,
-      required this.todos});
+      required this.todos,
+      });
 
   @override
   _ProductViewCardState createState() => _ProductViewCardState();
@@ -32,6 +35,20 @@ class _ProductViewCardState extends State<ProductViewCard> {
     'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
     'https://cdn.tmobile.com/content/dam/t-mobile/en-p/cell-phones/apple/Apple-iPhone-12/Blue/Apple-iPhone-12-Blue-backimage.png'
   ];
+
+  late String userName;
+  Future getUserDate() async {
+    var dd = await UserState().getUserName();
+    setState(() {
+      userName = dd;
+    });
+  }
+
+  @override
+  void initState() {
+    getUserDate();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,20 +120,44 @@ class _ProductViewCardState extends State<ProductViewCard> {
                   Expanded(
                       flex: 1,
                       child: PopupMenuButton(
-                        icon: Icon(Icons.more_vert),
-                        onSelected: (item) => {print(item)},
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 1,
-                            child: Text(
-                              "Report",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
+                        icon: Icon(Icons.more_vert,),
+                        onSelected: (item) {
+                          selectedOption(item.toString(),widget.todos.postId,context);
+                          print(item);},
+                        itemBuilder: userName != widget.todos.email? (context) => [
                           PopupMenuItem(
                             value: 2,
                             child: Text(
                               "Add Favorite",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: 4,
+                            child: Text(
+                              "Create a group",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: 6,
+                            child: Text(
+                              "Report the post",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          )
+                        ]:(context) => [
+                          PopupMenuItem(
+                            value: 2,
+                            child: Text(
+                              "Add Favorite",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: 4,
+                            child: Text(
+                              "Create a group",
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
