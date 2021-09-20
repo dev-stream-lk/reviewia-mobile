@@ -36,8 +36,7 @@ class PreviewPost extends StatefulWidget {
 
 class _PreviewPostState extends State<PreviewPost> {
 
-  // print("rcvd fdata ${rcvdData['name']}");
-  // print("rcvd fdata ${rcvdData}");
+  bool _isLoading = false;
 
 
 
@@ -68,6 +67,24 @@ class _PreviewPostState extends State<PreviewPost> {
     );
   }
 
+  buildLoading(BuildContext context) {
+    if(_isLoading) {
+      return showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+              ),
+            );
+          });
+    }
+    else{
+      Navigator.pop(context);
+    }
+  }
+
   Future<void> _saveImage(String subId, String brand, String title, String description, String type)async {
     String email= (await UserState().getUserName());
     String url = KBaseUrl+"api/user/post/create?email="+ email +"&subcategory="+ subId +"&brand="+ brand;
@@ -92,7 +109,10 @@ class _PreviewPostState extends State<PreviewPost> {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
+      setState(() {
+        _isLoading = false;
+      });
       print(await response.stream.bytesToString());
       Alert(
         context: context,
@@ -107,7 +127,8 @@ class _PreviewPostState extends State<PreviewPost> {
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             onPressed: () {
-              Navigator.pushNamed(context, HomePage.id,arguments:HomeData(email));
+
+               Navigator.pushNamedAndRemoveUntil(context, HomePage.id,(route) => false, arguments:HomeData(email));
             },
             width: MediaQuery.of(context).size.width*100/360,
           )
@@ -311,9 +332,10 @@ class _PreviewPostState extends State<PreviewPost> {
                   ),
                   RaisedButton(
                     onPressed: (){
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                         setState(() {
-
+                            _isLoading = true;
+                            buildLoading(context);
                           _saveImage(
                               arguments.subId,
                               arguments.brand,
@@ -342,6 +364,9 @@ class _PreviewPostState extends State<PreviewPost> {
                       ],
                     ) ,
 
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   RaisedButton(
                     onPressed: (){

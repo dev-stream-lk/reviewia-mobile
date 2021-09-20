@@ -48,8 +48,8 @@ class _ProductCardState extends State<ProductCard> {
   var t;
 
   void isEnable(){
-     print(((-1)*differenceTime.inDays).toString()+widget.detail.email+widget.userName);
-    if(((-1)*differenceTime.inDays)<=30 && ((widget.detail.email).toLowerCase()==(widget.userName).toLowerCase())){
+    print(differenceTime.inDays.toString()+widget.detail.createdBy+widget.userName);
+    if(differenceTime.inDays<=3 && widget.detail.email==widget.userName){
       setState(() {
         isEnableDelete=true;
       });
