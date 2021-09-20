@@ -39,6 +39,7 @@ class _NotificationListState extends State<NotificationList> {
   List<NotificationStruct> notificationListDisplay = [];
   _listItem(indexNumber) {
     int index = notificationListDisplay.length - (indexNumber as int) - 1;
+    // int index = indexNumber;
     return Container(
       // margin: EdgeInsets.symmetric(horizontal: 20),
       child: Card(

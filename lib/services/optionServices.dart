@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:reviewia/components/loading.dart';
@@ -22,6 +23,8 @@ import 'package:reviewia/structures/postView.dart';
 
 import 'network.dart';
 
+enum SingingCharacter { fakepost, notRelevent,other }
+
 selectedOption(String val, int id, context) {
   print("The Selected Value is :" + val);
   switch (val) {
@@ -37,11 +40,11 @@ selectedOption(String val, int id, context) {
       print("case--4");
       break;
     case '5':
-      deletePost(id.toString(),context);
+      deletePost(id.toString(), context);
       print("case--5");
       break;
     case '6':
-      reportThePost(id.toString(),context);
+      reportThePost(id.toString(), context);
       print("case--6");
   }
 }
@@ -244,7 +247,7 @@ Future<FavouriteListStruct> fetchFavPostView() async {
   }
 }
 
-Future setReaction(int id, bool reaction,bool remove) async {
+Future setReaction(int id, bool reaction, bool remove) async {
   String userName = await UserState().getUserName();
   print("review id is:" + id.toString());
   // String url = KBaseUrl +
@@ -259,58 +262,57 @@ Future setReaction(int id, bool reaction,bool remove) async {
       id.toString() +
       "&like=" +
       reaction.toString() +
-      "&remove="+remove.toString();
+      "&remove=" +
+      remove.toString();
   http.Response response = await http.get(Uri.parse(url));
   return response.statusCode;
 }
 
-deletePost(String id,BuildContext context)async{
-  print("Post ID:"+id);
+deletePost(String id, BuildContext context) async {
+  print("Post ID:" + id);
   String token = await UserState().getToken();
-  String url = KBaseUrl+"api/user/post?id="+id;
+  String url = KBaseUrl + "api/user/post?id=" + id;
   // http.Response response = await http.delete(Uri.parse(url));
-    Alert(
-      context: context,
-      type: AlertType.warning,
-      title: "Delete the post",
-      desc: "Do you want to delete the Post",
-      buttons: [
-        DialogButton(
-          color: Kcolor,
-          child: Text(
-            "Yes",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: (){
-              deletePostSure(url,context);
-
-
-          },
-          width: MediaQuery.of(context).size.width * 100 / 360,
+  Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "Delete the post",
+    desc: "Do you want to delete the Post",
+    buttons: [
+      DialogButton(
+        color: Kcolor,
+        child: Text(
+          "Yes",
+          style: TextStyle(color: Colors.white, fontSize: 20),
         ),
-        DialogButton(
-          color: Kcolor,
-          child: Text(
-            "No",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          width: MediaQuery.of(context).size.width * 100 / 360,
-        )
-      ],
-    ).show();
-
+        onPressed: () {
+          deletePostSure(url, context);
+        },
+        width: MediaQuery.of(context).size.width * 100 / 360,
+      ),
+      DialogButton(
+        color: Kcolor,
+        child: Text(
+          "No",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        width: MediaQuery.of(context).size.width * 100 / 360,
+      )
+    ],
+  ).show();
 }
 
-Future deletePostSure(String url,BuildContext context)async {
+Future deletePostSure(String url, BuildContext context) async {
   String token = await UserState().getToken();
   http.Response response = await http.delete(
     Uri.parse(url),
-    headers: <String,String>{
+    headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': token},
+      'Authorization': token
+    },
   );
   print(response.statusCode);
   if (response.statusCode == 200) {
@@ -330,10 +332,7 @@ Future deletePostSure(String url,BuildContext context)async {
           onPressed: () {
             Navigator.of(context).popUntil((_) => count++ >= 2);
           },
-          width: MediaQuery
-              .of(context)
-              .size
-              .width * 100 / 360,
+          width: MediaQuery.of(context).size.width * 100 / 360,
         ),
       ],
     ).show();
@@ -341,6 +340,7 @@ Future deletePostSure(String url,BuildContext context)async {
 }
 
 reportThePost(String id, BuildContext context) {
+  SingingCharacter? _character = SingingCharacter.fakepost;
   List<String> locations = [
     "1",
     "2",
@@ -352,7 +352,7 @@ reportThePost(String id, BuildContext context) {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 100, //16
         child: Container(
-          height: MediaQuery.of(context).size.height * (320 / 765),
+          height: MediaQuery.of(context).size.height * (450 / 765),
           child: Column(
             children: [
               Container(
@@ -363,15 +363,77 @@ reportThePost(String id, BuildContext context) {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
-              Container(
-                child: Text(
-                  'Hello'
-                ),
-              ),
+              ReportList(),
             ],
           ),
         ),
       );
     },
   );
+}
+
+class ReportList extends StatefulWidget {
+
+
+  SingingCharacter? _character = SingingCharacter.fakepost;
+  late bool isEnable=false;
+
+
+  @override
+  _ReportListState createState() => _ReportListState();
+}
+
+class _ReportListState extends State<ReportList> {
+  @override
+  void initState() {
+    
+    // TODO: implement initState
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    print('hell');
+    return Container(
+      child: Column(
+        //-------------------------------Option menu------------------------------------------
+        children: <Widget>[
+          // ListTile(
+          //   title: const Text('FakePost'),
+          //   leading: Radio<SingingCharacter>(
+          //     value: SingingCharacter.fakepost,
+          //     groupValue: widget._character,
+          //     onChanged: (SingingCharacter? value) {
+          //       setState(() {
+          //         widget._character = value;
+          //       });
+          //       print('sss');
+          //     },
+          //   ),
+          // ),
+          // ListTile(
+          //   title: const Text('other'),
+          //   leading: Radio<SingingCharacter>(
+          //     value: SingingCharacter.other,
+          //     groupValue: widget._character,
+          //     onChanged: (SingingCharacter? value)  {
+          //       setState(() {
+          //         widget.isEnable=true;
+          //         widget._character=value;
+          //       });
+          //       print('sss-2');
+          //     },
+          //   ),
+          // ),
+          !widget.isEnable?Container(
+            margin: EdgeInsets.all(10),
+            child: TextFormField(
+              enabled:true ,
+            ),
+          ):Divider(
+            height: 5,
+          ),
+        ],
+      ),
+    );
+  }
 }

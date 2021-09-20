@@ -31,7 +31,8 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  late DateTime createTime = DateTime.parse(widget.detail.createdAt).add(new Duration(hours: 5,minutes: 30)) ;
+  // late DateTime createTime = DateTime.parse(widget.detail.createdAt).add(new Duration(hours: 5,minutes: 30)) ;
+  late DateTime createTime = DateTime.parse(widget.detail.createdAt);
   late var ct = DateTime.utc(createTime.year,createTime.month,createTime.hour,createTime.minute,createTime.second);
   late DateTime timeNow = DateTime.now();
   late var tn = DateTime(timeNow.year,timeNow.month,timeNow.hour,timeNow.minute,timeNow.second);
@@ -47,8 +48,8 @@ class _ProductCardState extends State<ProductCard> {
   var t;
 
   void isEnable(){
-    // print(differenceTime.inDays.toString()+widget.detail.createdBy+widget.userName);
-    if(differenceTime.inDays<=30 && widget.detail.email==widget.userName){
+     print(((-1)*differenceTime.inDays).toString()+widget.detail.email+widget.userName);
+    if(((-1)*differenceTime.inDays)<=30 && ((widget.detail.email).toLowerCase()==(widget.userName).toLowerCase())){
       setState(() {
         isEnableDelete=true;
       });
