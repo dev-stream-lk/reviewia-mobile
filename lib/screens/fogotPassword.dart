@@ -5,12 +5,23 @@ import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/components/blue_painter.dart';
 import 'package:reviewia/components/button_logon.dart';
 import 'package:reviewia/components/image_box.dart';
+import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/screens/home_Page.dart';
 import 'package:reviewia/screens/login_system_page.dart';
 import 'package:reviewia/screens/register_page.dart';
+import 'package:reviewia/services/user.dart';
+import 'package:reviewia/services/userState.dart';
+import 'package:reviewia/constrains/validation.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class ForgotPassword extends StatefulWidget {
   static String id = 'ForgotPassword';
+  Color buttonPressed = Kcolor;
+  bool _checkBox = false;
+  bool _secureText = false;
+  IconData icon = Icons.password;
+  bool _secureTextConfirm = false;
+  IconData iconConfirm = Icons.password;
   @override
   _ForgotPasswordState createState() => _ForgotPasswordState();
 }
@@ -18,13 +29,68 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
   double h = 0;
   double w = 0;
+  String password = "";
+
   @override
   void initState() {
     // TODO: implement initState
     // h = MediaQuery.of(context).size.height;
     // w = MediaQuery.of(context).size.width;
+    if (widget._secureText == false) {
+      widget._secureText = true;
+      widget.icon = Icons.password;
+    }
+    if (widget._secureTextConfirm == false) {
+      widget._secureTextConfirm = true;
+      widget.iconConfirm = Icons.password;
+    }
 
     print(h);
+  }
+  Validation validateResetPassword = new Validation();
+
+  buildLoading(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
+          );
+        });
+  }
+
+  _resetPassword() async {
+    buildLoading(context);
+    String uN = await UserState().getUserName();
+    String url = KBaseUrl + "api/registration/reset";
+    var userDetails =await UserServices(url, uN.toString() ,password, "firstName", "lastName").passwordReset();
+    print(userDetails.toString());
+    if(userDetails == 500){
+      int count = 0;
+      Alert(
+        context: context,
+        type: AlertType.success,
+        title: "Password Rest Success",
+        desc: "Please Check your emails and confirm the password.",
+        buttons: [
+          DialogButton(
+            color: Kcolor,
+            child: Text(
+              "Okey",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () {
+              Navigator.of(context).popUntil((_) => count++ >= 3);
+            },
+            width: MediaQuery.of(context).size.width * 100 / 360,
+          ),
+        ],
+      ).show();
+    }
+
   }
 
   @override
@@ -102,10 +168,38 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     height: MediaQuery.of(context).size.height *
                                         (15 / 692),
                                   ),
-                                  TextField(
+                                  // TextField(
+                                  //   decoration: InputDecoration(
+                                  //     hintText: "Email",
+                                  //     labelText: "Email",
+                                  //     labelStyle: TextStyle(
+                                  //       fontSize: 12,
+                                  //       color: Colors.black,
+                                  //     ),
+                                  //     hintStyle: TextStyle(
+                                  //       fontSize: 15,
+                                  //       color: Colors.black,
+                                  //     ),
+                                  //     border: OutlineInputBorder(),
+                                  //     suffixIcon: Icon(
+                                  //       FontAwesomeIcons.envelope,
+                                  //       color: Colors.black,
+                                  //     ),
+                                  //   ),
+                                  //   obscureText: false,
+                                  //   onChanged: (val) {
+                                  //     print(val);
+                                  //   },
+                                  // ),
+
+                                  TextFormField(
                                     decoration: InputDecoration(
-                                      hintText: "Email",
-                                      labelText: "Email",
+                                      hintText: "Type Your New Password to Reset",
+                                      helperStyle: TextStyle(
+                                        fontWeight: FontWeight.w100,
+                                        color: Colors.grey[100],
+                                      ),
+                                      labelText: "Reset Password",
                                       labelStyle: TextStyle(
                                         fontSize: 12,
                                         color: Colors.black,
@@ -115,14 +209,34 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                         color: Colors.black,
                                       ),
                                       border: OutlineInputBorder(),
-                                      suffixIcon: Icon(
-                                        FontAwesomeIcons.envelope,
-                                        color: Colors.black,
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          widget.icon,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            widget._secureText =
+                                            !widget._secureText;
+                                            if (widget._secureText == false) {
+                                              widget.icon =
+                                                  Icons.remove_red_eye_outlined;
+                                            } else {
+                                              widget.icon = Icons.password;
+                                            }
+                                          });
+                                        },
                                       ),
                                     ),
-                                    obscureText: false,
+                                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                                    validator: validateResetPassword.validPasswordReg,
+                                    obscureText: widget._secureText,
                                     onChanged: (val) {
-                                      print(val);
+                                      print("before "+ password);
+                                      setState(() {
+                                        password=val;
+                                      });
+                                      // print(val);
                                     },
                                   ),
                                   SizedBox(
@@ -157,13 +271,17 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                           (40 / 360)),
                                   color: Kcolor,
                                   onPressed: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                          return LoginSystem();
-                                        }));
+                                    var result = validateResetPassword.validPasswordReg(password);
+                                    if(result == null){
+                                      _resetPassword();
+                                    }
+                                    // Navigator.push(context,
+                                    //     MaterialPageRoute(builder: (context) {
+                                    //       return LoginSystem();
+                                    //     }));
                                   },
                                   child: Text(
-                                    'SEND RESET LINK',
+                                    'RESET PASSWORD',
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,
