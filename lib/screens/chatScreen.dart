@@ -271,7 +271,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
                   )
                 ),
-                _bottomChatArea()
+                widget.detail.active?_bottomChatArea():SizedBox(),
               ],
             ),
           ): Center(child: CircularProgressIndicator()),

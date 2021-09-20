@@ -218,13 +218,6 @@ class _ReviewCardsState extends State<ReviewCards> {
                       },
                       itemBuilder: email == widget.reviewCardAllDetails.email?(context) => [
                         PopupMenuItem<int>(
-                          value: 0,
-                          child: Text(
-                            "Report",
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        PopupMenuItem<int>(
                           value: 2,
                           child: Text(
                             "Edit",
