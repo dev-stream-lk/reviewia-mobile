@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reviewia/constrains/constrains.dart';
+import 'package:reviewia/services/network.dart';
 import 'package:reviewia/services/optionServices.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/reviewStruct.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class ReviewCards extends StatefulWidget {
   late int reviewId;
@@ -28,7 +30,8 @@ class _ReviewCardsState extends State<ReviewCards> {
   late String status = "still not assign";
   String email="";
   final inputController = TextEditingController();
-  late double newRate;
+  //late double newRate;
+  bool _isLoading = false;
 
   putReaction(String state, bool removeStatus) async {
     bool s = state == "like" ? true : false;
@@ -71,6 +74,74 @@ class _ReviewCardsState extends State<ReviewCards> {
 
     });
     super.initState();
+  }
+
+  UpdateReview() async {
+    var dp = await UserState().getDisplayName();
+    var tk = await UserState().getToken();
+    var uN = await UserState().getUserName();
+    setState(() {
+      _isLoading = true;
+    });
+    //await getDisplayName();
+    // print("Name is " + displayName.toString());
+    // print("token is " + token.toString());
+    // print("userName is " + userName.toString());
+    var n = await UpdateReviewById(widget.reviewId.toString(),uN.toString(), tk.toString(),
+        dp.toString(), widget.reviewCardAllDetails.postId, widget.rate, inputController.text);
+    print("My response : "+ n.statusCode.toString());
+
+    var response = int.parse(n.statusCode.toString());
+    assert(response is int);
+
+    if(response == 201){
+      Navigator.pop(context);
+      // loadPost();
+      // getReviews();
+    }
+    else if(response == 412){
+      return Alert(
+        context: context,
+        type: AlertType.error,
+        title: "Review And Rate Missed Match Error",
+        buttons: [
+          DialogButton(
+            color: Kcolor,
+            child: Text(
+              "Okay",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: ()  {
+              Navigator.pop(context);
+            },
+            // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
+            width: MediaQuery.of(context).size.width * 100 / 360,
+          ),
+        ],
+      ).show();
+    }
+    else{
+      return Alert(
+        context: context,
+        type: AlertType.error,
+        title: "Api Error",
+        buttons: [
+          DialogButton(
+            color: Kcolor,
+            child: Text(
+              "Okay",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: ()  {
+              Navigator.pop(context);
+            },
+            // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
+            width: MediaQuery.of(context).size.width * 100 / 360,
+          ),
+        ],
+      ).show();
+    }
+
   }
 
   @override
@@ -429,8 +500,7 @@ class _ReviewCardsState extends State<ReviewCards> {
                                   ),
                                   onRatingUpdate: (rating) {
                                     setState(() {
-                                      // rate = rating;
-                                      // print(rate);
+                                       widget.rate = rating;
                                     });
                                   },
                                 ),
@@ -451,7 +521,8 @@ class _ReviewCardsState extends State<ReviewCards> {
                                       (40 / 360)),
                               color: Kcolor,
                               onPressed: () {
-                                //createAReview();
+                                UpdateReview();
+                                print(inputController.text);
                               },
                               child: Text(
                                 'Add a review',

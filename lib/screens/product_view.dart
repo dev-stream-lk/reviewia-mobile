@@ -14,6 +14,7 @@ import 'package:reviewia/services/network.dart';
 import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/postView.dart';
 import 'package:reviewia/structures/reviewStruct.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'home_Page.dart';
 
@@ -33,7 +34,7 @@ class ProductView extends StatefulWidget {
 class _ProductViewState extends State<ProductView> {
   int _currentIndex = 0;
   late double rate;
-  late String reviewDetail;
+  late String reviewDetail="";
   List<String> test = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
   List<ReviewStruct> _reviewCards = <ReviewStruct>[];
   bool _isLoading = false;
@@ -66,6 +67,9 @@ class _ProductViewState extends State<ProductView> {
         _reviewCards.addAll(value);
       });
     });
+  }
+  Future getRefreshData() async {
+    getReviews();
   }
 
   @override
@@ -117,10 +121,59 @@ class _ProductViewState extends State<ProductView> {
     // print("userName is " + userName.toString());
     var n = await postReview(userName.toString(), token.toString(),
         displayName.toString(), widget.todos.postId, rate, reviewDetail);
-    print(n.toString());
-    Navigator.pop(context);
-    loadPost();
-    getReviews();
+    print("My response : "+ n.statusCode.toString());
+
+    var response = int.parse(n.statusCode.toString());
+    assert(response is int);
+
+    if(response == 201){
+      Navigator.pop(context);
+      loadPost();
+      getReviews();
+    }
+    else if(response == 412){
+      return Alert(
+        context: context,
+        type: AlertType.error,
+        title: "Review And Rate Missed Match Error",
+        buttons: [
+          DialogButton(
+            color: Kcolor,
+            child: Text(
+              "Okay",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: ()  {
+              Navigator.pop(context);
+              },
+            // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
+            width: MediaQuery.of(context).size.width * 100 / 360,
+          ),
+        ],
+      ).show();
+    }
+    else{
+      return Alert(
+        context: context,
+        type: AlertType.error,
+        title: "Api Error",
+        buttons: [
+          DialogButton(
+            color: Kcolor,
+            child: Text(
+              "Okay",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: ()  {
+              Navigator.pop(context);
+            },
+            // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
+            width: MediaQuery.of(context).size.width * 100 / 360,
+          ),
+        ],
+      ).show();
+    }
+
   }
 
   _searchBar() {
@@ -160,64 +213,67 @@ class _ProductViewState extends State<ProductView> {
         //   ),
         // ],
       ),
-      body: SafeArea(
-        child: Scrollbar(
-          isAlwaysShown: true,
-          thickness: 10,
-          child: SingleChildScrollView(
-            physics: ScrollPhysics(),
-            child: Column(
-              children: [
-                Container(
-                  child: ProductViewCard(
-                    title: widget.todos.title.toString(),
-                    description: widget.todos.description,
-                    rating: widget.todos.rate,
-                    photoUrl1: widget.todos.imgURL.isNotEmpty
-                        ? widget.todos.imgURL[0].url.toString()
-                        : "https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
-                    createdBy: widget.todos.createdBy,
-                    todos: widget.todos,
-                    // photoUrl1:widget.todos.imgURL,
-                    // widget.todos.imgURL[0],
-                  ),
-                ),
+      body: RefreshIndicator(
+        onRefresh: getRefreshData,
+        child: SafeArea(
+          child: Scrollbar(
+            isAlwaysShown: true,
+            thickness: 10,
+            child: SingleChildScrollView(
+              physics: ScrollPhysics(),
+              child: Column(
+                children: [
                   Container(
-                    margin: EdgeInsets.only(bottom: 10, right: 10),
-                    child: (!_isLoading)
-                        ? ListView.builder(
-                            shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (context, index) {
-                              return _listItemViewProductCards(index,context);
-                              // return _listItem(index);
-                            },
-                            itemCount: _reviewCards.length,
-                          )
-                        : CircularProgressIndicator(),
+                    child: ProductViewCard(
+                      title: widget.todos.title.toString(),
+                      description: widget.todos.description,
+                      rating: widget.todos.rate,
+                      photoUrl1: widget.todos.imgURL.isNotEmpty
+                          ? widget.todos.imgURL[0].url.toString()
+                          : "https://cdn.abplive.com/onecms/images/product/fb29564520ae25da9418d044f23db734.jpg?impolicy=abp_cdn&imwidth=300",
+                      createdBy: widget.todos.createdBy,
+                      todos: widget.todos,
+                      // photoUrl1:widget.todos.imgURL,
+                      // widget.todos.imgURL[0],
+                    ),
                   ),
-                // SingleChildScrollView(
-                //   child: Container(
-                //     margin: EdgeInsets.only(bottom: 10, right: 10),
-                //     child: (!_isLoading)
-                //         ? ListView.builder(
-                //             shrinkWrap: true,
-                //             scrollDirection: Axis.vertical,
-                //             itemBuilder: (context, index) {
-                //               return _listItemViewProductCards(index);
-                //               // return _listItem(index);
-                //             },
-                //             itemCount: _reviewCards.length,
-                //           )
-                //         : CircularProgressIndicator(),
-                //   ),
-                // ),
-                // ReviewCards(),
-                // ReviewCards(),
-                // ReviewCards(),
-                // ReviewCards(),
-              ],
+                    Container(
+                      margin: EdgeInsets.only(bottom: 10, right: 10),
+                      child: (!_isLoading)
+                          ? ListView.builder(
+                              shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              itemBuilder: (context, index) {
+                                return _listItemViewProductCards(index,context);
+                                // return _listItem(index);
+                              },
+                              itemCount: _reviewCards.length,
+                            )
+                          : CircularProgressIndicator(),
+                    ),
+                  // SingleChildScrollView(
+                  //   child: Container(
+                  //     margin: EdgeInsets.only(bottom: 10, right: 10),
+                  //     child: (!_isLoading)
+                  //         ? ListView.builder(
+                  //             shrinkWrap: true,
+                  //             scrollDirection: Axis.vertical,
+                  //             itemBuilder: (context, index) {
+                  //               return _listItemViewProductCards(index);
+                  //               // return _listItem(index);
+                  //             },
+                  //             itemCount: _reviewCards.length,
+                  //           )
+                  //         : CircularProgressIndicator(),
+                  //   ),
+                  // ),
+                  // ReviewCards(),
+                  // ReviewCards(),
+                  // ReviewCards(),
+                  // ReviewCards(),
+                ],
+              ),
             ),
           ),
         ),
@@ -232,7 +288,6 @@ class _ProductViewState extends State<ProductView> {
       ),
     );
   }
-
   void _bootomPage(BuildContext context) {
     showModalBottomSheet(
         context: context,
@@ -292,16 +347,16 @@ class _ProductViewState extends State<ProductView> {
                             child: Padding(
                               padding: const EdgeInsets.all(12.0),
                               child: TextFormField(
-                                maxLines: 4,
-                                onChanged: (val) {
-                                  setState(() {
-                                    reviewDetail = val.toString();
-                                  });
-                                },
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'Enter a Your Review'),
-                              ),
+                                    maxLines: 4,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        reviewDetail = val.toString();
+                                      });
+                                    },
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: "Enter a Your Review" ),
+                                  ),
                             ),
                           ),
                           SizedBox(
@@ -354,6 +409,7 @@ class _ProductViewState extends State<ProductView> {
                               color: Kcolor,
                               onPressed: () {
                                 createAReview();
+
                               },
                               child: Text(
                                 'Add a review',
@@ -377,27 +433,6 @@ class _ProductViewState extends State<ProductView> {
                       flex: 3,
                       child: Container(
                         alignment: Alignment.centerRight,
-                        // child: FlatButton(
-                        //   padding: EdgeInsets.symmetric(
-                        //       vertical:
-                        //           MediaQuery.of(context).size.height * (12.5 / 692),
-                        //       horizontal:
-                        //           MediaQuery.of(context).size.width * (40 / 360)),
-                        //   color: Kcolor,
-                        //   onPressed: () {
-                        //     createAReview();
-                        //   },
-                        //   child: Text(
-                        //     'Add a review',
-                        //     style: KbuttonSignin,
-                        //   ),
-                        //   shape: RoundedRectangleBorder(
-                        //       side: BorderSide(
-                        //           color: Colors.blue,
-                        //           width: 1,
-                        //           style: BorderStyle.solid),
-                        //       borderRadius: BorderRadius.circular(8)),
-                        // ),
                       ),
                     ),
                   ],
