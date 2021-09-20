@@ -48,7 +48,7 @@ class _GroupCardState extends State<GroupCard> {
           ),
         );
       },
-      child: Container(
+      child:widget.detail.active? Container(
         padding: EdgeInsets.only(left: 16,right: 16,top: 10,bottom: 10),
         decoration: BoxDecoration(
           boxShadow: [
@@ -98,6 +98,71 @@ class _GroupCardState extends State<GroupCard> {
                           SizedBox(height: 6,),
                           Text("Created date: "+widget.detail.createdAt.substring(0, 10),
                             style: TextStyle(fontSize: 13,color: Colors.grey.shade600, fontWeight:FontWeight.normal),),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            //Text(widget.time,style: TextStyle(fontSize: 12,fontWeight: widget.isMessageRead?FontWeight.bold:FontWeight.normal),),
+          ],
+        ),
+      ):Container(
+        padding: EdgeInsets.only(left: 16,right: 16,top: 10,bottom: 10),
+        decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  spreadRadius: 2,
+                  blurRadius: 3,
+                  offset: Offset(0, 6),
+                  color: Colors.black38
+              )
+            ],
+            color: Colors.grey,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20))),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Row(
+                children: <Widget>[
+                  // CircleAvatar(
+                  //   backgroundImage: NetworkImage(widget.imageUrl),
+                  //   maxRadius: 30,
+                  // ),
+                  Icon(
+                    Icons.group_rounded,
+                    color: Kcolor,
+                    size: 50,
+                  ),
+                  SizedBox(width: 16,),
+                  Expanded(
+                    child: Container(
+                      color: Colors.transparent,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(PostTitle,
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold
+                            ),),
+                          Text("Creator: "+
+                              widget.detail.createdBy.firstName+" "+widget.detail.createdBy.lastName,
+                            style: TextStyle(fontSize: 13,color: Colors.grey.shade600, fontWeight:FontWeight.normal),),
+                          SizedBox(height: 6,),
+                          Row(
+                            children: [
+                              Text("Created date: "+widget.detail.createdAt.substring(0, 10),
+                                style: TextStyle(fontSize: 13,color: Colors.grey.shade600, fontWeight:FontWeight.normal),),
+                              Text("(Deactivated)", style: TextStyle(color: Colors.red, fontSize:13 ),)
+                            ],
+                          ),
+                          
                         ],
                       ),
                     ),

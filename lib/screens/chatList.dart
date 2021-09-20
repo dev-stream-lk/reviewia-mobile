@@ -15,6 +15,7 @@ class ChatList extends StatefulWidget {
 class _ChatListState extends State<ChatList> {
   bool _isLoading = true;
   List<dynamic> _allData = <dynamic>[];
+  List<dynamic> _deactivated = <dynamic>[];
   late String email;
 
 
@@ -26,6 +27,12 @@ class _ChatListState extends State<ChatList> {
         String isActive = '${element.active}';
         return isActive== "true";
       }).toList();
+      _deactivated = data.where((element) {
+        String isActive = '${element.active}';
+        String creator = '${element.createdBy.email}';
+        return isActive== "false" && creator == email;
+      }).toList();
+      _allData.addAll(_deactivated);
        //_allData = data;
       for (var item in _allData) {
         print('${item.postId} - ${item.id}-${item.createdBy.id}-${item.active}');
