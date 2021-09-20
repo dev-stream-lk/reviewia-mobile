@@ -423,9 +423,7 @@ Future postReview(String userName, String t, String createdUser, int postId,
         "userRate": rate
       }));
   print(response.statusCode);
-  if (response.statusCode == 200) {
-    return "Review is set";
-  }
+    return response;
   // if(response.)
 }
 
@@ -557,4 +555,30 @@ Future setMarkedOfNotification(String nId) async {
   );
   print(response.body);
   return response.body;
+}
+
+
+Future UpdateReviewById(String reviewId, String userName, String t, String createdUser, int postId,
+    double rate, String des) async {
+    print("review Id-"+ reviewId.toString());
+    print("UserName-"+ userName.toString());
+    print("creator-"+ createdUser.toString());
+    print("review-"+ des.toString());
+
+
+  String url = KBaseUrl + "api/user/review?email=" + userName+"&id="+ reviewId.toString() ;
+  http.Response response = await http.put(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': t,
+      },
+      body: jsonEncode(<String, dynamic>{
+        "reviewedBy": createdUser,
+        "postId": postId,
+        "description": des,
+        "userRate": rate
+      }));
+  print(response.statusCode);
+  return response;
+  // if(response.)
 }
