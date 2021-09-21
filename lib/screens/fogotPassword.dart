@@ -68,8 +68,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     buildLoading(context);
     String url = KBaseUrl + "api/registration/reset";
     var userDetails =await UserServices(url, email ,password, "firstName", "lastName", "").passwordReset();
-    print(userDetails.toString());
-    if(userDetails == 201){
+    print("result"+userDetails.toString());
+    if(userDetails.toString() == "200"){
       int count = 0;
       Alert(
         context: context,
@@ -303,7 +303,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     validator: validatePasswordSame ,
                                     obscureText: widget._secureTextConfirm,
                                     onChanged: (val) {
-                                      print("before "+ password);
+                                      confirmPassword=val;
                                       print(val);
                                     },
                                   ),

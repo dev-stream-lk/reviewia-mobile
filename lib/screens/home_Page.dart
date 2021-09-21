@@ -111,8 +111,8 @@ class _HomePageState extends State<HomePage> {
               Container(
                 height: MediaQuery.of(context).size.height * 0.25,
                 child: UserAccountsDrawerHeader(
-                  accountName: Text(displayname, style: TextStyle(fontSize: 20),),
-                  accountEmail: Text(userName),
+                  accountName: Text(""),
+                  accountEmail: Text(userName,style: TextStyle(fontSize: 20),),
                   currentAccountPicture: CircleAvatar(
                     backgroundColor:
                     Theme.of(context).platform == TargetPlatform.iOS

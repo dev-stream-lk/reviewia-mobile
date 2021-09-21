@@ -283,8 +283,8 @@ class _ProfilePageState extends State<ProfilePage> {
               Container(
                 height: MediaQuery.of(context).size.height * 0.25,
                 child: UserAccountsDrawerHeader(
-                  accountName: Text(firstName+ " "+lasteName, style: TextStyle(fontSize: 20),),
-                  accountEmail: Text(email),
+                  accountName: Text(""),
+                  accountEmail: Text(email,style: TextStyle(fontSize: 20),),
                   currentAccountPicture: CircleAvatar(
                     backgroundColor:
                     Theme.of(context).platform == TargetPlatform.iOS

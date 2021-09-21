@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reviewia/components/blue_painter.dart';
+import 'package:reviewia/components/loading.dart';
 import 'package:reviewia/constrains/constrains.dart';
 import 'package:reviewia/constrains/urlConstrain.dart';
 import 'package:reviewia/constrains/validation.dart';
@@ -33,6 +34,7 @@ class _RegisterState extends State<Register> {
   String lastName="";
   String password ='';
   String email = '';
+  bool loading = false;
 
   String mobileEmu = "http://10.0.2.2:8080/api/registration";
   String url = KBaseUrl+"api/registration";
@@ -72,7 +74,11 @@ class _RegisterState extends State<Register> {
     // print("your user name is ="+ userName);
     // print("your user password is ="+ passWord);
     print(userLogin);
+
     if(userLogin == "Account is Created"){
+      setState(() {
+        loading = false;
+      });
       Alert(
         context: context,
         type: AlertType.success,
@@ -462,7 +468,7 @@ class _RegisterState extends State<Register> {
                                 height: MediaQuery.of(context).size.height *
                                     (15 / 692),
                               ),
-                              Center(
+                              loading ? Loading():Center(
                                 child: Container(
                                   width: MediaQuery.of(context).size.width * .5,
                                   child: FlatButton(
@@ -475,7 +481,9 @@ class _RegisterState extends State<Register> {
                                                 (40 / 360)),
                                     color: Kcolor,
                                     onPressed: () {
-
+                                      setState(() {
+                                        loading = true;
+                                      });
                                       validate();
                                       // if(formKey.currentState!.validate()){
                                       //   if(widget._checkBox==true){

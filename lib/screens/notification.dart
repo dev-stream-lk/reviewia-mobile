@@ -51,19 +51,19 @@ class _NotificationListState extends State<NotificationList> {
             children: [
               ListTile(
                 leading:Icon(notificationListDisplay[index].content ==
-                    'Someone liked your review'
+                    'Someone liked your review.'
                     ? FontAwesomeIcons.solidThumbsUp
                     : notificationListDisplay[index].content ==
-                    'Someone disliked your review'
+                    'Someone disliked your review.'
                     ? FontAwesomeIcons.solidThumbsDown
                     : notificationListDisplay[index].content ==
-                    'A user created a chat group with you'
+                    'A user created a chat group with you.'
                     ? FontAwesomeIcons.users
                     : notificationListDisplay[index].content ==
-                    'You have a new message'
+                    'You have a new message.'
                     ? FontAwesomeIcons.comment
                     : notificationListDisplay[index].content ==
-                    'Someone added a new review for your post'
+                    'Someone added a new review for your post.'
                     ? FontAwesomeIcons.commentAlt
                     : FontAwesomeIcons.fileCsv , color: Colors.white,),
                 title:Text(
