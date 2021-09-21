@@ -8,7 +8,7 @@ import 'package:reviewia/services/userState.dart';
 
 class UserServices {
 
-  UserServices(this.url,this.email,this.password, this.firstName,this.lastName);
+  UserServices(this.url,this.email,this.password, this.firstName,this.lastName, this.avatar);
 
   UserState userState = new UserState();
   final String url;
@@ -16,6 +16,7 @@ class UserServices {
   final String password;
   final String firstName;
   final String lastName;
+  final String avatar;
 
    //add your own ip
   Future getLogin() async {

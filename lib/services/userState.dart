@@ -23,6 +23,15 @@ class UserState{
     }
     return 'set-Display Name';
   }
+
+  Future<String>setStateAvatar(String avatar) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(prefs.getString('avatar').toString()!=avatar){
+      await prefs.setString('avatar', avatar);
+    }
+    return 'set-avatar';
+  }
+
   Future<String>setNumberOfNotification(String noOfNotification) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if(prefs.getString('noOfNotification').toString()!=noOfNotification){
@@ -51,6 +60,11 @@ class UserState{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     print("noOfNotification is::"+prefs.getString('noOfNotification').toString());
     return (prefs.getString('noOfNotification').toString());
+  }
+  Future getAvatar() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("avatar is::"+prefs.getString('avatar').toString());
+    return (prefs.getString('avatar').toString());
   }
 
   String SendNotificationNumber(){

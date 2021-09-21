@@ -446,7 +446,7 @@ Future LeaveGroup(int id, String token, BuildContext context) async {
 
           }
           int count = 0;
-          Navigator.of(context).popUntil((_) => count++ >= 2);
+          Navigator.of(context).popUntil((_) => count++ >= 3);
         },
         // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
         width: MediaQuery.of(context).size.width * 100 / 360,

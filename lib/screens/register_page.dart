@@ -67,7 +67,7 @@ class _RegisterState extends State<Register> {
 
   Future<void> register() async {
     // getIP();
-    UserServices user = UserServices(url, email, password, firstName,lastName);
+    UserServices user = UserServices(url, email, password, firstName,lastName, '');
     var userLogin = await user.getRegister();
     // print("your user name is ="+ userName);
     // print("your user password is ="+ passWord);
@@ -509,58 +509,7 @@ class _RegisterState extends State<Register> {
                                 height: MediaQuery.of(context).size.height *
                                     (10 / 692),
                               ),
-                              Center(
-                                child: Container(
-                                  child: Text(
-                                    "-----------------   OR REGISTER WITH   -----------------",
-                                    style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: MediaQuery.of(context).size.height *
-                                    (10 / 692),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        widget.buttonPressed = Colors.black;
-                                      });
-                                    },
-                                    icon: Icon(
-                                      FontAwesomeIcons.facebookF,
-                                      color: widget.buttonPressed,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      FontAwesomeIcons.google,
-                                      color: Kcolor,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      FontAwesomeIcons.twitter,
-                                      color: Kcolor,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      FontAwesomeIcons.linkedin,
-                                      color: Kcolor,
-                                    ),
-                                  )
-                                ],
-                              ),
+
                               SizedBox(
                                 height: MediaQuery.of(context).size.height *
                                     (10 / 692),
