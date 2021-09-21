@@ -187,9 +187,7 @@ class _ReviewersLoadingState extends State<ReviewersLoading> {
                                 ),
                               )
                             : Text(
-                                "Create Instant group \n with " +
-                                    widget.reviwersEmails.length.toString() +
-                                    " \n reviewers",
+                                "Create Instant group",
                                 textAlign: TextAlign.center,
                               ),
                         onPressed: () async {

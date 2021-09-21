@@ -46,6 +46,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Reviewia',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData.light().copyWith(
         primaryColor: Colors.blue,
         accentColor: Color(0xFFFFFFFF),
