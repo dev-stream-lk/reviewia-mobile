@@ -8,6 +8,7 @@ import 'package:reviewia/services/userState.dart';
 import 'package:reviewia/structures/postView.dart';
 
 class ProductViewCard extends StatefulWidget {
+  late String userName ;
   late String createdBy;
   late String title;
   late String description;
@@ -36,17 +37,18 @@ class _ProductViewCardState extends State<ProductViewCard> {
     'https://cdn.tmobile.com/content/dam/t-mobile/en-p/cell-phones/apple/Apple-iPhone-12/Blue/Apple-iPhone-12-Blue-backimage.png'
   ];
 
-  late String userName;
+
   Future getUserDate() async {
     var dd = await UserState().getUserName();
+    print(dd.toString());
     setState(() {
-      userName = dd;
+      widget.userName = dd.toString();
     });
   }
 
   @override
   void initState() {
-    getUserDate();
+    // getUserDate();
     super.initState();
   }
 
@@ -86,6 +88,7 @@ class _ProductViewCardState extends State<ProductViewCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  SizedBox(width: 10,),
                   Expanded(
                     flex: 1,
                     child: CircleAvatar(
@@ -124,29 +127,31 @@ class _ProductViewCardState extends State<ProductViewCard> {
                         onSelected: (item) {
                           selectedOption(item.toString(),widget.todos.postId,context);
                           print(item);},
-                        itemBuilder: userName != widget.todos.email? (context) => [
-                          PopupMenuItem(
-                            value: 2,
-                            child: Text(
-                              "Add Favorite",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: 4,
-                            child: Text(
-                              "Create a group",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: 6,
-                            child: Text(
-                              "Report the post",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          )
-                        ]:(context) => [
+                        itemBuilder:
+                        // widget.userName != widget.todos.email? (context) => [
+                        //   PopupMenuItem(
+                        //     value: 2,
+                        //     child: Text(
+                        //       "Add Favorite",
+                        //       style: TextStyle(color: Colors.black),
+                        //     ),
+                        //   ),
+                        //   PopupMenuItem(
+                        //     value: 4,
+                        //     child: Text(
+                        //       "Create a group",
+                        //       style: TextStyle(color: Colors.black),
+                        //     ),
+                        //   ),
+                        //   PopupMenuItem(
+                        //     value: 6,
+                        //     child: Text(
+                        //       "Report the post",
+                        //       style: TextStyle(color: Colors.black),
+                        //     ),
+                        //   )
+                        // ]:
+                          (context) => [
                           PopupMenuItem(
                             value: 2,
                             child: Text(

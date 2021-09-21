@@ -426,7 +426,7 @@ class _ReviewCardsState extends State<ReviewCards> {
                         onRatingUpdate: (rating) {},
                       ),
                       Container(
-                        width: 85,
+                        width: 90,
                         margin: EdgeInsets.only(
                             left: MediaQuery.of(context).size.width * 20 / 360),
                         child: Row(
