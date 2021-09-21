@@ -42,7 +42,7 @@ class _LoginSystemState extends State<LoginSystem> {
 
 
   Future<void> login() async {
-    UserServices user = UserServices(url, userName, passWord, "","");
+    UserServices user = UserServices(url, userName, passWord, "","","");
     var userLogin = await user.getLogin();
     // print("your user name is ="+ userName);
     // print("your user password is ="+ passWord);
@@ -139,7 +139,7 @@ class _LoginSystemState extends State<LoginSystem> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(
-                  flex: 2,
+                  flex: 4,
                   child: Center(
                     child: Container(
                       child: Text(
@@ -150,7 +150,7 @@ class _LoginSystemState extends State<LoginSystem> {
                   ),
                 ),
                 Expanded(
-                  flex: 6,
+                  flex: 5,
                   child: Container(
                     padding: EdgeInsets.all(
                         MediaQuery.of(context).size.width * 0.07),
@@ -338,44 +338,7 @@ class _LoginSystemState extends State<LoginSystem> {
                               height: MediaQuery.of(context).size.height *
                                   (10 / 692),
                             ),
-                            Center(
-                              child: Container(
-                                child: Text(
-                                    "-----------------   OR REGISTER WITH   -----------------",style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontSize: 12,
-                                ),),
-                              ),
-                            ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height *
-                                  (10 / 692),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(FontAwesomeIcons.facebookF,color: Kcolor,),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(FontAwesomeIcons.google,color: Kcolor,),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(FontAwesomeIcons.twitter,color: Kcolor,),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(FontAwesomeIcons.linkedin,color: Kcolor,),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height *
-                                  (10 / 692),
-                            ),
+
                             Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

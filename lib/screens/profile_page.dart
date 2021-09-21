@@ -41,19 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String lasteName ='';
   String urlReal ='';
   String urlEmu='';
-  // String updateProfileUrl=realDeviceUpdateProfile;
-  List<String> type = ["Service","Product"];
-  List<String> brands = [
-    "Home Lands",
-    "Arduino",
-    "Atlas",
-  ];
-  List<String> category = [
-    "Education",
-    "Electronic",
-    "Jobs",
-    "Properties",
-  ];
+  String avatar = '';
   @override
   void initState() {
     // TODO: implement initState
@@ -70,9 +58,10 @@ class _ProfilePageState extends State<ProfilePage> {
     urlEmu =mobileEmu+emailit;
     url = url+emailit;
 
-    var userDetails =await UserServices(url, "email"," password", "firstName", "lastName").getUserDetails();
+    var userDetails =await UserServices(url, "email"," password", "firstName", "lastName","avatar").getUserDetails();
     String  _firstName = userDetails['firstName'];
     String  _lastName = userDetails['lastName'];
+    String _avatar = userDetails['avatar'];
     String displayName = await UserState().setStateDisplayName(_firstName+" "+_lastName);
     print(displayName);
     // print("userDetails:  "+ n);
@@ -80,6 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
       email = emailit;
       firstName=_firstName;
       lasteName =_lastName;
+      avatar = _avatar;
     });
 
 
@@ -130,6 +120,159 @@ class _ProfilePageState extends State<ProfilePage> {
               icon: Icon(Icons.search)),
         ],
       ),
+      // drawer: Container(
+      //   width: MediaQuery.of(context).size.width * 0.8,
+      //   child: new Drawer(
+      //     child: ListView(
+      //       // Important: Remove any padding from the ListView.
+      //       padding: EdgeInsets.zero,
+      //       children: <Widget>[
+      //         Container(
+      //           height: MediaQuery.of(context).size.height * 0.5,
+      //
+      //           child: DrawerHeader(
+      //
+      //               child: Padding(
+      //                 padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
+      //                 child: Column(
+      //
+      //                   children: [
+      //                     Text('Search for..',
+      //                       style: TextStyle(
+      //                         color: Kcolor,
+      //                         fontSize: 24,
+      //                         fontFamily: 'Roboto',
+      //                         fontWeight: FontWeight.w500,
+      //                       ),
+      //
+      //                     ),
+      //                     SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+      //                     FindDropdown(
+      //                       items: type,
+      //                       onChanged: (item) {
+      //                         print(item);
+      //                       },
+      //                       selectedItem: "Select type",
+      //                       showSearchBox: false,
+      //                       searchBoxDecoration: InputDecoration(
+      //                           hintText: "Search",
+      //                           border: OutlineInputBorder()),
+      //                       backgroundColor: Colors.white,
+      //                       validate: (String? item) {
+      //                         if (item == null)
+      //                           return "Required field";
+      //                         else if (item == "Brasil")
+      //                           return "Invalid item";
+      //                         else
+      //                           return null;
+      //                       },
+      //                     ),
+      //                     FindDropdown(
+      //                       items: category,
+      //                       onChanged: (item) {
+      //                         print(item);
+      //                       },
+      //                       selectedItem: "Select category",
+      //                       showSearchBox: true,
+      //                       searchBoxDecoration: InputDecoration(
+      //                           hintText: "Search",
+      //                           border: OutlineInputBorder()),
+      //                       backgroundColor: Colors.white,
+      //                       validate: (String? item) {
+      //                         if (item == null)
+      //                           return "Required field";
+      //                         else if (item == "Brasil")
+      //                           return "Invalid item";
+      //                         else
+      //                           return null;
+      //                       },
+      //                     ),
+      //                     FindDropdown(
+      //                       items: brands,
+      //                       onChanged: (item) {
+      //                         print(item);
+      //                       },
+      //                       selectedItem: "Select brand",
+      //                       showSearchBox: true,
+      //                       searchBoxDecoration: InputDecoration(
+      //                           hintText: "Search",
+      //                           border: OutlineInputBorder()),
+      //                       backgroundColor: Colors.white,
+      //                       validate: (String? item) {
+      //                         if (item == null)
+      //                           return "Required field";
+      //                         else if (item == "Brasil")
+      //                           return "Invalid item";
+      //                         else
+      //                           return null;
+      //                       },
+      //                     ),
+      //                   ],
+      //                 ),
+      //               ),
+      //               decoration: BoxDecoration(
+      //                 color: Color(0xFFCCDCF3),
+      //               ),
+      //               margin: EdgeInsets.all(0.0),
+      //               padding: EdgeInsets.all(0.0)
+      //           ),
+      //         ),
+      //
+      //         Divider(height: MediaQuery.of(context).size.height * 0.02),
+      //         ListTile(
+      //           title: Text(
+      //             'Contact Us',
+      //             style: TextStyle(
+      //               color: Kcolor,
+      //               fontSize: 20,
+      //               fontFamily: 'Roboto',
+      //               fontWeight: FontWeight.w500,
+      //             ),
+      //
+      //           ),
+      //           onTap: () {
+      //             Navigator.pushNamed(context, ContactUs.id);
+      //           },
+      //         ),
+      //         Divider(height: MediaQuery.of(context).size.height * 0.02),
+      //
+      //         ListTile(
+      //           title: Text(
+      //             'My Groups',
+      //             style: TextStyle(
+      //               color: Kcolor,
+      //               fontSize: 20,
+      //               fontFamily: 'Roboto',
+      //               fontWeight: FontWeight.w500,
+      //             ),
+      //
+      //           ),
+      //           onTap: () {
+      //             Navigator.pushNamed(context, ChatList.id);
+      //           },
+      //         ),
+      //         Divider(height: MediaQuery.of(context).size.height * 0.02),
+      //         ListTile(
+      //           title: Text(
+      //             'Log Out',
+      //             style: TextStyle(
+      //               color: Kcolor,
+      //               fontSize: 20,
+      //               fontFamily: 'Roboto',
+      //               fontWeight: FontWeight.w500,
+      //             ),
+      //
+      //           ),
+      //           onTap: () {
+      //             Navigator.pushNamed(context, Login.id);
+      //           },
+      //         ),
+      //         Divider(height: MediaQuery.of(context).size.height * 0.02),
+      //
+      //       ],
+      //     ),
+      //   ),
+      // ),
       drawer: Container(
         width: MediaQuery.of(context).size.width * 0.8,
         child: new Drawer(
@@ -138,96 +281,48 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               Container(
-                height: MediaQuery.of(context).size.height * 0.5,
-
-                child: DrawerHeader(
-
-                    child: Padding(
-                      padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
-                      child: Column(
-
-                        children: [
-                          Text('Search for..',
-                            style: TextStyle(
-                              color: Kcolor,
-                              fontSize: 24,
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w500,
-                            ),
-
-                          ),
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.04),
-                          FindDropdown(
-                            items: type,
-                            onChanged: (item) {
-                              print(item);
-                            },
-                            selectedItem: "Select type",
-                            showSearchBox: false,
-                            searchBoxDecoration: InputDecoration(
-                                hintText: "Search",
-                                border: OutlineInputBorder()),
-                            backgroundColor: Colors.white,
-                            validate: (String? item) {
-                              if (item == null)
-                                return "Required field";
-                              else if (item == "Brasil")
-                                return "Invalid item";
-                              else
-                                return null;
-                            },
-                          ),
-                          FindDropdown(
-                            items: category,
-                            onChanged: (item) {
-                              print(item);
-                            },
-                            selectedItem: "Select category",
-                            showSearchBox: true,
-                            searchBoxDecoration: InputDecoration(
-                                hintText: "Search",
-                                border: OutlineInputBorder()),
-                            backgroundColor: Colors.white,
-                            validate: (String? item) {
-                              if (item == null)
-                                return "Required field";
-                              else if (item == "Brasil")
-                                return "Invalid item";
-                              else
-                                return null;
-                            },
-                          ),
-                          FindDropdown(
-                            items: brands,
-                            onChanged: (item) {
-                              print(item);
-                            },
-                            selectedItem: "Select brand",
-                            showSearchBox: true,
-                            searchBoxDecoration: InputDecoration(
-                                hintText: "Search",
-                                border: OutlineInputBorder()),
-                            backgroundColor: Colors.white,
-                            validate: (String? item) {
-                              if (item == null)
-                                return "Required field";
-                              else if (item == "Brasil")
-                                return "Invalid item";
-                              else
-                                return null;
-                            },
-                          ),
-                        ],
+                height: MediaQuery.of(context).size.height * 0.25,
+                child: UserAccountsDrawerHeader(
+                  accountName: Text(firstName+ " "+lasteName, style: TextStyle(fontSize: 20),),
+                  accountEmail: Text(email),
+                  currentAccountPicture: CircleAvatar(
+                    backgroundColor:
+                    Theme.of(context).platform == TargetPlatform.iOS
+                        ? Colors.blue
+                        : Colors.white,
+                    // child: Text(
+                    //   "A",
+                    //   style: TextStyle(fontSize: 40.0),
+                    // ),
+                    // backgroundColor: Colors.white,
+                    child: ClipOval(
+                      child: Image.network(
+                        avatar,
+                        fit: BoxFit.cover,
+                        width: 120.0,
+                        height: 120.0,
                       ),
                     ),
-                    decoration: BoxDecoration(
-                      color: Color(0xFFCCDCF3),
-                    ),
-                    margin: EdgeInsets.all(0.0),
-                    padding: EdgeInsets.all(0.0)
+                  ),
                 ),
               ),
-
+              Divider(height: MediaQuery.of(context).size.height * 0.02),
+              ListTile(
+                title: Text(
+                  'My Groups',
+                  style: TextStyle(
+                    color: Kcolor,
+                    fontSize: 20,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                trailing: Icon(Icons.arrow_forward),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, ChatList.id);
+                },
+              ),
               Divider(height: MediaQuery.of(context).size.height * 0.02),
               ListTile(
                 title: Text(
@@ -238,27 +333,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.w500,
                   ),
-
                 ),
+                trailing: Icon(Icons.arrow_forward),
                 onTap: () {
+                  Navigator.of(context).pop();
                   Navigator.pushNamed(context, ContactUs.id);
-                },
-              ),
-              Divider(height: MediaQuery.of(context).size.height * 0.02),
-
-              ListTile(
-                title: Text(
-                  'My Groups',
-                  style: TextStyle(
-                    color: Kcolor,
-                    fontSize: 20,
-                    fontFamily: 'Roboto',
-                    fontWeight: FontWeight.w500,
-                  ),
-
-                ),
-                onTap: () {
-                  Navigator.pushNamed(context, ChatList.id);
                 },
               ),
               Divider(height: MediaQuery.of(context).size.height * 0.02),
@@ -271,14 +350,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.w500,
                   ),
-
                 ),
+                trailing: Icon(Icons.arrow_forward),
                 onTap: () {
+                  Navigator.of(context).pop();
+                  //settheUserProfile('', '');
                   Navigator.pushNamed(context, Login.id);
                 },
               ),
               Divider(height: MediaQuery.of(context).size.height * 0.02),
-
             ],
           ),
         ),
@@ -308,8 +388,16 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: MediaQuery.of(context).size.height * 200 / 659,
                   child: Center(
                     child: CircleAvatar(
-                      backgroundColor: Color(0xFFC494C4),
-                      backgroundImage: AssetImage('images/profile.png'),
+                      backgroundColor: Colors.white,
+                      child: ClipOval(
+                        child: Image.network(
+                          avatar,
+                          fit: BoxFit.cover,
+                          width: 120.0,
+                          height: 120.0,
+                        ),
+                      ),
+                      //backgroundImage: NetworkImage('Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrQGdtYWlsLmNvbSIsImF1dGhvcml0aWVzIjoiVVNFUiIsImlhdCI6MTYzMjE2OTQwMiwiZXhwIjoxNjMzMzcyMjAwfQ.tNtsTAnIO5RIp47_AC1VsvBmA5BgS5ZJ-OWBODFiowM'),
                       radius: MediaQuery.of(context).size.width * 79 / 360,
                     ),
                   ),
@@ -348,7 +436,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             var updatedUrl = urlUpdate+email+"&first="+firstName+"&last="+lasteName;
                             print(updatedUrlReal);
                              print(updatedUrlEmu);
-                            var userDetails =await UserServices(updatedUrl, "email"," ", firstName, lasteName).updatedProfile();
+                            var userDetails =await UserServices(updatedUrl, "email"," ", firstName, lasteName, "avatar").updatedProfile();
                             if(userDetails.toString()=="Updated completd"){
                               Alert(
                                 context: context,

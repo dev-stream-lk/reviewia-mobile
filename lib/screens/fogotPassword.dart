@@ -30,6 +30,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   double h = 0;
   double w = 0;
   String password = "";
+  String email = "";
+  String confirmPassword = '';
 
   @override
   void initState() {
@@ -64,11 +66,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   _resetPassword() async {
     buildLoading(context);
-    String uN = await UserState().getUserName();
     String url = KBaseUrl + "api/registration/reset";
-    var userDetails =await UserServices(url, uN.toString() ,password, "firstName", "lastName").passwordReset();
+    var userDetails =await UserServices(url, email ,password, "firstName", "lastName", "").passwordReset();
     print(userDetails.toString());
-    if(userDetails == 500){
+    if(userDetails == 201){
       int count = 0;
       Alert(
         context: context,
@@ -93,6 +94,17 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   }
 
+  String? validatePasswordSame(value){
+    print(value.toString()+" its is passwrd"+ password);
+    if(value!.isEmpty){
+      return "Required Field";
+    }else if(value.toString()!=password){
+      return "Passwords Not match";
+    }else{
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,7 +117,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Expanded(
-                  flex: 2,
+                  flex: 3,
                   child: Center(
                     child: Container(
 
@@ -116,14 +128,15 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     ),
                   ),
                 ),
+                // Expanded(
+                //   flex: 1,
+                //   child: Container(),
+                //   // child: Center(
+                //   //   child: ImageBox(),
+                //   // ),
+                // ),
                 Expanded(
-                  flex: 5,
-                  child: Center(
-                    child: ImageBox(),
-                  ),
-                ),
-                Expanded(
-                  flex: 6,
+                  flex: 10,
                   child: Container(
                     padding: EdgeInsets.all(
                         MediaQuery.of(context).size.width * 0.07),
@@ -168,29 +181,38 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     height: MediaQuery.of(context).size.height *
                                         (15 / 692),
                                   ),
-                                  // TextField(
-                                  //   decoration: InputDecoration(
-                                  //     hintText: "Email",
-                                  //     labelText: "Email",
-                                  //     labelStyle: TextStyle(
-                                  //       fontSize: 12,
-                                  //       color: Colors.black,
-                                  //     ),
-                                  //     hintStyle: TextStyle(
-                                  //       fontSize: 15,
-                                  //       color: Colors.black,
-                                  //     ),
-                                  //     border: OutlineInputBorder(),
-                                  //     suffixIcon: Icon(
-                                  //       FontAwesomeIcons.envelope,
-                                  //       color: Colors.black,
-                                  //     ),
-                                  //   ),
-                                  //   obscureText: false,
-                                  //   onChanged: (val) {
-                                  //     print(val);
-                                  //   },
-                                  // ),
+                                  TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: "Email",
+                                      labelText: "Email",
+                                      labelStyle: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.black,
+                                      ),
+                                      hintStyle: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                      ),
+                                      border: OutlineInputBorder(),
+                                      suffixIcon: Icon(
+                                        FontAwesomeIcons.envelope,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                                    validator: validateResetPassword.validateEmail,
+                                    obscureText: false,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        email=val;
+                                      });
+                                    },
+
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        (15 / 692),
+                                  ),
 
                                   TextFormField(
                                     decoration: InputDecoration(
@@ -243,6 +265,56 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     height: MediaQuery.of(context).size.height *
                                         (15 / 692),
                                   ),
+                                  TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: "Confirm Password",
+                                      labelText: "Confirm Password",
+                                      labelStyle: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.black,
+                                      ),
+                                      hintStyle: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                      ),
+                                      border: OutlineInputBorder(),
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          widget.iconConfirm,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            widget._secureTextConfirm =
+                                            !widget._secureTextConfirm;
+                                            if (widget._secureTextConfirm ==
+                                                false) {
+                                              widget.iconConfirm =
+                                                  Icons.remove_red_eye_outlined;
+                                            } else {
+                                              widget.iconConfirm =
+                                                  Icons.password;
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                                    validator: validatePasswordSame ,
+                                    obscureText: widget._secureTextConfirm,
+                                    onChanged: (val) {
+                                      print("before "+ password);
+                                      print(val);
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        (0.25 / 692),
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        (15 / 692),
+                                  ),
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
                                         (15 / 692),
@@ -272,7 +344,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   color: Kcolor,
                                   onPressed: () {
                                     var result = validateResetPassword.validPasswordReg(password);
-                                    if(result == null){
+                                    var resultEmail = validateResetPassword.validateEmail(email);
+                                    var passwordSame = validatePasswordSame(confirmPassword);
+                                    if(result == null && resultEmail == null && passwordSame == null){
                                       _resetPassword();
                                     }
                                     // Navigator.push(context,
