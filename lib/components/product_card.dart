@@ -129,6 +129,7 @@ class _ProductCardState extends State<ProductCard> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      SizedBox(width: 10,),
                       Expanded(
                         flex: 1,
                         child: CircleAvatar(

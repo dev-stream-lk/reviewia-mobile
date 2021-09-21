@@ -69,6 +69,7 @@ class _ProductViewState extends State<ProductView> {
     });
   }
   Future getRefreshData() async {
+    loadPost();
     getReviews();
   }
 
