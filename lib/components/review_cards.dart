@@ -22,7 +22,9 @@ class ReviewCards extends StatefulWidget {
       required this.reviewedBy,
       required this.detail,
       required this.rate,
-      required this.reviewCardAllDetails,required this.isColored, required this.context});
+      required this.reviewCardAllDetails,
+      required this.isColored,
+      required this.context});
 
   @override
   _ReviewCardsState createState() => _ReviewCardsState();
@@ -30,7 +32,7 @@ class ReviewCards extends StatefulWidget {
 
 class _ReviewCardsState extends State<ReviewCards> {
   late String status = "still not assign";
-  String email="";
+  String email = "";
   final inputController = TextEditingController();
   //late double newRate;
   bool _isLoading = false;
@@ -46,8 +48,8 @@ class _ReviewCardsState extends State<ReviewCards> {
 
     setState(() {
       inputController.text = widget.detail;
-          email = userName;
-          //newRate = widget.rate;
+      email = userName;
+      //newRate = widget.rate;
     });
     for (int i = 0; i < widget.reviewCardAllDetails.likedList.length; i++) {
       if (userName.toString() ==
@@ -72,12 +74,9 @@ class _ReviewCardsState extends State<ReviewCards> {
   @override
   void initState() {
     userReaction();
-    setState(() {
-
-    });
+    setState(() {});
     super.initState();
   }
-
 
   List<dynamic> reason = <dynamic>[];
 
@@ -94,15 +93,15 @@ class _ReviewCardsState extends State<ReviewCards> {
         });
   }
 
-  _reportAlart(String reason) async{
+  _reportAlart(String reason) async {
     buildLoading(context);
     var tk = await UserState().getToken();
     var uN = await UserState().getUserName();
-    var n = await ReprotItem( uN,tk, widget.reviewId.toString(), "r", reason);
+    var n = await ReprotItem(uN, tk, widget.reviewId.toString(), "r", reason);
     var response = int.parse(n.statusCode.toString());
     assert(response is int);
     int count = 0;
-    if(response == 201){
+    if (response == 201) {
       print("Reported");
       //Navigator.pop(context);
       Alert(
@@ -127,12 +126,12 @@ class _ReviewCardsState extends State<ReviewCards> {
   }
 
   _ReportReview() async {
-
     return showDialog(
       context: context,
       builder: (context) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           elevation: 100, //16
           child: Container(
             height: MediaQuery.of(context).size.height * (320 / 765),
@@ -145,7 +144,8 @@ class _ReviewCardsState extends State<ReviewCards> {
                   child: MultiSelectFormField(
                     autovalidate: false,
                     chipBackGroundColor: Colors.blue,
-                    chipLabelStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                    chipLabelStyle: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
                     dialogTextStyle: TextStyle(fontWeight: FontWeight.bold),
                     checkBoxActiveColor: Colors.blue,
                     checkBoxCheckColor: Colors.white,
@@ -192,11 +192,11 @@ class _ReviewCardsState extends State<ReviewCards> {
                   padding: EdgeInsets.all(8),
                   child: ElevatedButton(
                     child: Text('Report'),
-                    onPressed: (){
+                    onPressed: () {
                       print("report");
                       setState(() {
-                        String Newreason ="";
-                        for(var item in reason){
+                        String Newreason = "";
+                        for (var item in reason) {
                           Newreason = Newreason + '${item}, ';
                         }
                         _reportAlart(Newreason);
@@ -210,7 +210,6 @@ class _ReviewCardsState extends State<ReviewCards> {
         );
       },
     );
-
   }
 
   UpdateReview() async {
@@ -224,19 +223,24 @@ class _ReviewCardsState extends State<ReviewCards> {
     // print("Name is " + displayName.toString());
     // print("token is " + token.toString());
     // print("userName is " + userName.toString());
-    var n = await UpdateReviewById(widget.reviewId.toString(),uN.toString(), tk.toString(),
-        dp.toString(), widget.reviewCardAllDetails.postId, widget.rate, inputController.text);
-    print("My response : "+ n.statusCode.toString());
+    var n = await UpdateReviewById(
+        widget.reviewId.toString(),
+        uN.toString(),
+        tk.toString(),
+        dp.toString(),
+        widget.reviewCardAllDetails.postId,
+        widget.rate,
+        inputController.text);
+    print("My response : " + n.statusCode.toString());
 
     var response = int.parse(n.statusCode.toString());
     assert(response is int);
 
-    if(response == 201){
+    if (response == 201) {
       Navigator.pop(context);
       // loadPost();
       // getReviews();
-    }
-    else if(response == 412){
+    } else if (response == 412) {
       return Alert(
         context: context,
         type: AlertType.error,
@@ -248,7 +252,7 @@ class _ReviewCardsState extends State<ReviewCards> {
               "Okay",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            onPressed: ()  {
+            onPressed: () {
               Navigator.pop(context);
             },
             // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
@@ -256,8 +260,7 @@ class _ReviewCardsState extends State<ReviewCards> {
           ),
         ],
       ).show();
-    }
-    else{
+    } else {
       return Alert(
         context: context,
         type: AlertType.error,
@@ -269,7 +272,7 @@ class _ReviewCardsState extends State<ReviewCards> {
               "Okay",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            onPressed: ()  {
+            onPressed: () {
               Navigator.pop(context);
             },
             // onPressed: () =>Navigator.pushNamed(context, HomePage.id,arguments:HomeData(userName)),
@@ -278,7 +281,6 @@ class _ReviewCardsState extends State<ReviewCards> {
         ],
       ).show();
     }
-
   }
 
   @override
@@ -289,11 +291,9 @@ class _ReviewCardsState extends State<ReviewCards> {
       // padding:EdgeInsets.only(bottom: 10, top: 10, left: 10, right: 10),
       decoration: BoxDecoration(
         // color: Colors.cyan,
-        color: widget.isColored=='yes'?KSelectedFeedback:Colors.white,
+        color: widget.isColored == 'yes' ? KSelectedFeedback : Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(5)),
-        boxShadow: [
-          KBoxShadow
-        ],
+        boxShadow: [KBoxShadow],
       ),
       child: Column(
         children: [
@@ -328,62 +328,69 @@ class _ReviewCardsState extends State<ReviewCards> {
                             color: KDetailColor.withOpacity(KOpacityOnDetail),
                           ),
                         ),
-                        Text(int.parse(widget.reviewCardAllDetails.createdAt
-                                    .substring(11, 13)) >
-                                12
-                            ? widget.reviewCardAllDetails.createdAt
-                                    .substring(11, 16) +
-                                "pm"
-                            : widget.reviewCardAllDetails.createdAt
-                                    .substring(11, 16) +
-                                "am",style:  TextStyle(
-                          fontWeight: FontWeight.w100,
-                          color: KDetailColor.withOpacity(KOpacityOnDetail),
-                        ),)
+                        Text(
+                          int.parse(widget.reviewCardAllDetails.createdAt
+                                      .substring(11, 13)) >
+                                  12
+                              ? widget.reviewCardAllDetails.createdAt
+                                      .substring(11, 16) +
+                                  "pm"
+                              : widget.reviewCardAllDetails.createdAt
+                                      .substring(11, 16) +
+                                  "am",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w100,
+                            color: KDetailColor.withOpacity(KOpacityOnDetail),
+                          ),
+                        )
                       ],
                     ),
                   ),
                 ),
-                email != ""?Expanded(
-                    flex: 1,
-                    child: PopupMenuButton(
-                      icon: Icon(Icons.more_vert),
-                      onSelected: (item) => {
-                        if(item == 2){
-                          _bootomPage( widget.context)
-                        }
-                        else{
-                          _ReportReview()
-                        }
-                      },
-                      itemBuilder: email == widget.reviewCardAllDetails.email?(context) => [
-                        PopupMenuItem<int>(
-                          value: 2,
-                          child: Text(
-                            "Edit",
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      ]:(context) => [
-                        PopupMenuItem<int>(
-                          value: 0,
-                          child: Text(
-                            "Report",
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      ],
-                    )): CircularProgressIndicator(),
+                email != ""
+                    ? Expanded(
+                        flex: 1,
+                        child: PopupMenuButton(
+                          icon: Icon(Icons.more_vert),
+                          onSelected: (item) => {
+                            if (item == 2)
+                              {_bootomPage(widget.context)}
+                            else
+                              {_ReportReview()}
+                          },
+                          itemBuilder: email ==
+                                  widget.reviewCardAllDetails.email
+                              ? (context) => [
+                                    PopupMenuItem<int>(
+                                      value: 2,
+                                      child: Text(
+                                        "Edit",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                  ]
+                              : (context) => [
+                                    PopupMenuItem<int>(
+                                      value: 0,
+                                      child: Text(
+                                        "Report",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                  ],
+                        ))
+                    : CircularProgressIndicator(),
               ],
             ),
           ),
           Container(
             child: Expanded(
                 flex: 1,
-                child: Container(
+                child: SingleChildScrollView(
+                    child: Container(
+
                   alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 10 / 360),
+                  padding: EdgeInsets.all(MediaQuery.of(context).size.width * 10 / 360),
                   child: Text(
                     widget.detail,
                     style: TextStyle(
@@ -391,7 +398,7 @@ class _ReviewCardsState extends State<ReviewCards> {
                     ),
                   ),
                   // color: Colors.red,
-                )),
+                ))),
           ),
           Container(
             child: Expanded(
@@ -534,6 +541,7 @@ class _ReviewCardsState extends State<ReviewCards> {
       ),
     );
   }
+
   void _bootomPage(BuildContext context) {
     showModalBottomSheet(
         context: context,
@@ -589,7 +597,7 @@ class _ReviewCardsState extends State<ReviewCards> {
                                   color: Colors.black,
                                 ),
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
+                                    BorderRadius.all(Radius.circular(20))),
                             child: Padding(
                               padding: const EdgeInsets.all(12.0),
                               child: TextFormField(
@@ -626,14 +634,14 @@ class _ReviewCardsState extends State<ReviewCards> {
                                   itemCount: 5,
                                   itemSize: 35,
                                   itemPadding:
-                                  EdgeInsets.symmetric(horizontal: 4.0),
+                                      EdgeInsets.symmetric(horizontal: 4.0),
                                   itemBuilder: (context, _) => Icon(
                                     Icons.star,
                                     color: Kcolor,
                                   ),
                                   onRatingUpdate: (rating) {
                                     setState(() {
-                                       widget.rate = rating;
+                                      widget.rate = rating;
                                     });
                                   },
                                 ),
@@ -650,8 +658,8 @@ class _ReviewCardsState extends State<ReviewCards> {
                                   vertical: MediaQuery.of(context).size.height *
                                       (12.5 / 692),
                                   horizontal:
-                                  MediaQuery.of(context).size.width *
-                                      (40 / 360)),
+                                      MediaQuery.of(context).size.width *
+                                          (40 / 360)),
                               color: Kcolor,
                               onPressed: () {
                                 UpdateReview();
